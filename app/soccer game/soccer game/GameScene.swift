@@ -13,6 +13,7 @@ class GameScene: SKScene {
     
     private var label : SKLabelNode?
     private var spinnyNode : SKShapeNode?
+    private var backLabel : SKLabelNode?
     
     override func didMove(to view: SKView) {
         
@@ -22,6 +23,8 @@ class GameScene: SKScene {
             label.alpha = 0.0
             label.run(SKAction.fadeIn(withDuration: 2.0))
         }
+        
+        self.backLabel = self.childNode(withName: "Back Label") as? SKLabelNode
         
         // Create shape node to use during mouse interaction
         let w = (self.size.width + self.size.height) * 0.05
@@ -44,6 +47,13 @@ class GameScene: SKScene {
             n.strokeColor = SKColor.green
             self.addChild(n)
         }
+        
+        if let n = self.backLabel{
+            if n.contains(pos){
+                self.moveToMainMenu()
+            }
+        }
+        
     }
     
     func touchMoved(toPoint pos : CGPoint) {

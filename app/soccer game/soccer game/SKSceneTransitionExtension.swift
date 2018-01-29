@@ -40,5 +40,21 @@ extension SKScene{
         
     }
     
+    func moveToMainMenu(){
+        
+        if let scene = GameScene(fileNamed: "MainMenu"){
+            // Set the scale mode to scale to fit the window
+            scene.scaleMode = .aspectFill
+            
+            
+            // Present the scene
+            if let view = self.view{
+                view.presentScene(scene)
+            }
+        }
+        
+    }
+    
+    
     
 }
