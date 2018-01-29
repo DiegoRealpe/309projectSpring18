@@ -24,9 +24,6 @@ class MatchMakingScene: SKScene {
         
         self.currentseconds = totalCount
         
-//        if let cdLabel = self.countdownLabel{
-//            cdLabel.text = String(totalSeconds)
-//        }
         countdownAction = makeCountdownAction()
         
         startCountdown()
@@ -67,20 +64,6 @@ class MatchMakingScene: SKScene {
         }
     }
 
-    func moveToGameScene(){
-        
-        if let scene = GameScene(fileNamed: "GameScene"){
-            // Set the scale mode to scale to fit the window
-            scene.scaleMode = .aspectFill
-            
-            
-            // Present the scene
-            if let view = self.view{
-                view.presentScene(scene)
-            }
-        }
-        
-    }
     
     
 }
