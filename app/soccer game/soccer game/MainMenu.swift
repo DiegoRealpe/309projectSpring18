@@ -22,8 +22,37 @@ class MainMenu: SKScene {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        blinkLabel(label: self.title)
+        
+        let unwrappedPractice = self.childNode(withName: "Practice Background")
+        let unwrappedJoin = self.childNode(withName: "Join Background")
+        
+        if let t = touches.first ,let practice = unwrappedPractice, let join = unwrappedJoin{
+            let point = t.location(in: self)
+            if practice.contains(point){
+                moveToGameScene()
+                blinkLabel(label: self.title)
+            }else if join.contains(point){
+                moveToGameScene()
+            }
+        }
+        
     }
+    
+    func moveToGameScene(){
+        
+        if let scene = GameScene(fileNamed: "GameScene"){
+            // Set the scale mode to scale to fit the window
+            scene.scaleMode = .aspectFill
+            
+            
+            // Present the scene
+            if let view = self.view{
+                view.presentScene(scene)
+            }
+        }
+        
+    }
+    
     
     
     func fadeInLabel(label : SKLabelNode?){
