@@ -32,7 +32,7 @@ class MainMenu: SKScene {
                 moveToGameScene()
                 blinkLabel(label: self.title)
             }else if join.contains(point){
-                moveToGameScene()
+                moveToMatchMakingScene()
             }
         }
         
@@ -53,6 +53,20 @@ class MainMenu: SKScene {
         
     }
     
+    func moveToMatchMakingScene(){
+        
+        if let scene = GameScene(fileNamed: "MatchMakingScene"){
+            // Set the scale mode to scale to fit the window
+            scene.scaleMode = .aspectFill
+            
+            
+            // Present the scene
+            if let view = self.view{
+                view.presentScene(scene)
+            }
+        }
+        
+    }
     
     
     func fadeInLabel(label : SKLabelNode?){
