@@ -72,6 +72,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3A74A608201FB90D00A1583F /* main menu */ = {
+			isa = PBXGroup;
+			children = (
+				3A74A5FB201E6C3E00A1583F /* MainMenu.sks */,
+				3A74A5FD201E6FDB00A1583F /* MainMenu.swift */,
+			);
+			path = "main menu";
+			sourceTree = "<group>";
+		};
+		3A74A609201FB92500A1583F /* game scene */ = {
+			isa = PBXGroup;
+			children = (
+				4C98FBB8201E658600378614 /* GameScene.sks */,
+				4C98FBBC201E658600378614 /* GameScene.swift */,
+			);
+			path = "game scene";
+			sourceTree = "<group>";
+		};
+		3A74A60C201FB99700A1583F /* match making */ = {
+			isa = PBXGroup;
+			children = (
+				3A74A5FF201F7E1900A1583F /* MatchMakingScene.sks */,
+				3A74A601201F7F6D00A1583F /* MatchMakingScene.swift */,
+			);
+			path = "match making";
+			sourceTree = "<group>";
+		};
 		4C98FBAA201E658600378614 = {
 			isa = PBXGroup;
 			children = (
@@ -94,18 +121,15 @@
 			isa = PBXGroup;
 			children = (
 				4C98FBB6201E658600378614 /* AppDelegate.swift */,
-				4C98FBB8201E658600378614 /* GameScene.sks */,
-				3A74A5FF201F7E1900A1583F /* MatchMakingScene.sks */,
+				3A74A609201FB92500A1583F /* game scene */,
+				3A74A60C201FB99700A1583F /* match making */,
 				4C98FBBA201E658600378614 /* Actions.sks */,
-				4C98FBBC201E658600378614 /* GameScene.swift */,
 				4C98FBBE201E658600378614 /* GameViewController.swift */,
 				4C98FBC0201E658600378614 /* Main.storyboard */,
 				4C98FBC3201E658700378614 /* Assets.xcassets */,
 				4C98FBC5201E658700378614 /* LaunchScreen.storyboard */,
 				4C98FBC8201E658700378614 /* Info.plist */,
-				3A74A5FB201E6C3E00A1583F /* MainMenu.sks */,
-				3A74A5FD201E6FDB00A1583F /* MainMenu.swift */,
-				3A74A601201F7F6D00A1583F /* MatchMakingScene.swift */,
+				3A74A608201FB90D00A1583F /* main menu */,
 				3A74A603201F86ED00A1583F /* SKSceneTransitionExtension.swift */,
 			);
 			path = "soccer game";
