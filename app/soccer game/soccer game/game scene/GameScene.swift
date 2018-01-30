@@ -19,25 +19,12 @@ class GameScene: SKScene {
         
         // Get label node from scene and store it for use later
         self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
-        fadeInLabel()
+        fadeInMainLabel()
         
         self.backLabel = self.childNode(withName: "Back Label") as? SKLabelNode
         
-        // Create shape node to use during mouse interaction
-        let w = (self.size.width + self.size.height) * 0.05
-        
-        self.circleMold = SKShapeNode.init(circleOfRadius : w)
-        
-        if let spinnyNode = self.circleMold {
-            spinnyNode.lineWidth = 2.5
-            
-            spinnyNode.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat(Double.pi), duration: 1)))
-            spinnyNode.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
-                                              SKAction.fadeOut(withDuration: 0.5),
-                                              SKAction.removeFromParent()]))
-        }
+        makeCircleMold()
     }
-    
     
     func touchDown(atPoint pos : CGPoint) {
         if let n = self.circleMold?.copy() as! SKShapeNode? {
@@ -95,10 +82,26 @@ class GameScene: SKScene {
         // Called before each frame is rendered
     }
     
-    private func fadeInLabel() {
+    private func fadeInMainLabel() {
         if let label = self.label {
             label.alpha = 0.0
             label.run(SKAction.fadeIn(withDuration: 2.0))
+        }
+    }
+    
+    private func makeCircleMold() {
+        //make size calculations based on the screen sizes
+        let w = (self.size.width + self.size.height) * 0.05
+        
+        self.circleMold = SKShapeNode.init(circleOfRadius : w)
+        
+        if let spinnyNode = self.circleMold {
+            spinnyNode.lineWidth = 2.5
+            
+            spinnyNode.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat(Double.pi), duration: 1)))
+            spinnyNode.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
+                                              SKAction.fadeOut(withDuration: 0.5),
+                                              SKAction.removeFromParent()]))
         }
     }
     

@@ -36,9 +36,9 @@ class MatchMakingScene: SKScene {
             self.currentseconds = self.totalCount
             if let cdLabel = self.countdownLabel{
                 cdLabel.text = String(i)
-                if let act = self.countdownAction{
-                    cdLabel.run(SKAction.sequence([SKAction.wait(forDuration: self.countTime),act]))
-                }
+                
+                cdLabel.run(SKAction.sequence([SKAction.wait(forDuration: self.countTime),self.countdownAction!]))
+                
             }
             
         }
