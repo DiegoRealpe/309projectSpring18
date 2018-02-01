@@ -1,3 +1,5 @@
+
+
 //
 //  GameScene.swift
 //  soccer game
@@ -12,26 +14,21 @@ import GameplayKit
 class GameScene: SKScene {
     
     private var label : SKLabelNode?
-    private var circleMold : SKShapeNode?
     private var backLabel : SKLabelNode?
+    private var joyStick : JoyStick?
     
     override func didMove(to view: SKView) {
         
         // Get label node from scene and store it for use later
         self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
         fadeInMainLabel()
-        
         self.backLabel = self.childNode(withName: "Back Label") as? SKLabelNode
         
-        makeCircleMold()
+        
+        self.joyStick = JoyStick(parent: self, radius: 50.0, startPoint: CGPoint(x: 0, y: 0))
     }
     
     func touchDown(atPoint pos : CGPoint) {
-        if let n = self.circleMold?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.green
-            self.addChild(n)
-        }
         
         if let n = self.backLabel{
             if n.contains(pos){
@@ -42,23 +39,22 @@ class GameScene: SKScene {
     }
     
     func touchMoved(toPoint pos : CGPoint) {
-        if let n = self.circleMold?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.blue
-            self.addChild(n)
-        }
+        
+        
     }
     
     func touchUp(atPoint pos : CGPoint) {
-        if let n = self.circleMold?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.red
-            self.addChild(n)
-        }
+        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        //self.joyStick?.moveOuterTo(touches : touches)
+        self.joyStick?.acceptNewTouch(touches: touches, parent : self)
+        let str = self.joyStick!.getDebugMessage()
+        
         if let label = self.label {
+            label.text = str
             label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
         }
         
@@ -66,6 +62,9 @@ class GameScene: SKScene {
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        self.joyStick?.acceptTouchMoved(touches: touches)
+        
         for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
     }
     
@@ -89,20 +88,5 @@ class GameScene: SKScene {
         }
     }
     
-    private func makeCircleMold() {
-        //make size calculations based on the screen sizes
-        let w = (self.size.width + self.size.height) * 0.05
-        
-        self.circleMold = SKShapeNode.init(circleOfRadius : w)
-        
-        if let spinnyNode = self.circleMold {
-            spinnyNode.lineWidth = 2.5
-            
-            spinnyNode.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat(Double.pi), duration: 1)))
-            spinnyNode.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
-                                              SKAction.fadeOut(withDuration: 0.5),
-                                              SKAction.removeFromParent()]))
-        }
-    }
-    
 }
+

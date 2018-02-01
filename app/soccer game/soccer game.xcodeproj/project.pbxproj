@@ -12,6 +12,8 @@
 		3A74A600201F7E1900A1583F /* MatchMakingScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A74A5FF201F7E1900A1583F /* MatchMakingScene.sks */; };
 		3A74A602201F7F6D00A1583F /* MatchMakingScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A74A601201F7F6D00A1583F /* MatchMakingScene.swift */; };
 		3A74A604201F86ED00A1583F /* SKSceneTransitionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A74A603201F86ED00A1583F /* SKSceneTransitionExtension.swift */; };
+		3AB377DE2023B5980019E73E /* Joystick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB377DD2023B5980019E73E /* Joystick.swift */; };
+		3AB377E02023B5C50019E73E /* CGPointExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB377DF2023B5C50019E73E /* CGPointExtension.swift */; };
 		4C98FBB7201E658600378614 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C98FBB6201E658600378614 /* AppDelegate.swift */; };
 		4C98FBB9201E658600378614 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 4C98FBB8201E658600378614 /* GameScene.sks */; };
 		4C98FBBB201E658600378614 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 4C98FBBA201E658600378614 /* Actions.sks */; };
@@ -39,6 +41,8 @@
 		3A74A5FF201F7E1900A1583F /* MatchMakingScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MatchMakingScene.sks; sourceTree = "<group>"; };
 		3A74A601201F7F6D00A1583F /* MatchMakingScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchMakingScene.swift; sourceTree = "<group>"; };
 		3A74A603201F86ED00A1583F /* SKSceneTransitionExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKSceneTransitionExtension.swift; sourceTree = "<group>"; };
+		3AB377DD2023B5980019E73E /* Joystick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Joystick.swift; sourceTree = "<group>"; };
+		3AB377DF2023B5C50019E73E /* CGPointExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGPointExtension.swift; sourceTree = "<group>"; };
 		4C98FBB3201E658600378614 /* soccer game.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "soccer game.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C98FBB6201E658600378614 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4C98FBB8201E658600378614 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -86,6 +90,7 @@
 			children = (
 				4C98FBB8201E658600378614 /* GameScene.sks */,
 				4C98FBBC201E658600378614 /* GameScene.swift */,
+				3AB377DD2023B5980019E73E /* Joystick.swift */,
 			);
 			path = "game scene";
 			sourceTree = "<group>";
@@ -131,6 +136,7 @@
 				4C98FBC8201E658700378614 /* Info.plist */,
 				3A74A608201FB90D00A1583F /* main menu */,
 				3A74A603201F86ED00A1583F /* SKSceneTransitionExtension.swift */,
+				3AB377DF2023B5C50019E73E /* CGPointExtension.swift */,
 			);
 			path = "soccer game";
 			sourceTree = "<group>";
@@ -251,7 +257,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AB377DE2023B5980019E73E /* Joystick.swift in Sources */,
 				4C98FBBD201E658600378614 /* GameScene.swift in Sources */,
+				3AB377E02023B5C50019E73E /* CGPointExtension.swift in Sources */,
 				4C98FBBF201E658600378614 /* GameViewController.swift in Sources */,
 				3A74A604201F86ED00A1583F /* SKSceneTransitionExtension.swift in Sources */,
 				4C98FBB7201E658600378614 /* AppDelegate.swift in Sources */,
