@@ -11,16 +11,18 @@ import SpriteKit
 
 class JoyStick{
     
-    
+    private var parent : SKNode
     private var innerCircle : SKShapeNode
     private var outerCircle : SKShapeNode
-    private var startPoint : CGPoint
+    private var radius : Double
     
-    init(parent : SKScene, radius : Double, startPoint : CGPoint){
+    
+    init(parent : SKNode, radius : Double, startPoint : CGPoint){
         
-        self.startPoint = startPoint
+        self.radius = radius
         self.outerCircle = makeCircleMold(radius: radius, fillColor: UIColor.blue)
         self.innerCircle = makeCircleMold(radius: radius*0.75, fillColor: UIColor.brown)
+        self.parent = parent
         
         moveOuterTo(point: startPoint)
         
@@ -29,21 +31,23 @@ class JoyStick{
         self.outerCircle.addChild(self.innerCircle)
     }
     
-    func acceptNewTouch(touches: Set<UITouch>, parent : SKNode){
+    func acceptNewTouch(touches: Set<UITouch>){
         //right now it will make  joystick on the touch closest to the origin, this may need to change
         let touch = closestTouchTo(touches: touches, node: outerCircle)
         
-        moveOuterTo(point: touch.location(in: parent))
+        moveOuterTo(point: touch.location(in: self.parent))
         moveInnerTo(point: CGPoint.zero)
     }
+    
     
     
     func acceptTouchMoved(touches: Set<UITouch>){
         let touch = closestTouchTo(touches: touches, node: outerCircle)
         
-        print(touch.location(in: outerCircle))
+        let outerRelativeDisplayPoint = translatePointToStayInOuter(scenePoint: touch.location(in: parent))
         
-        moveInnerTo(point: touch.location(in: outerCircle))
+        
+        moveInnerTo(point : outerRelativeDisplayPoint)
     }
     
     func moveOuterTo(point : CGPoint){
@@ -57,6 +61,20 @@ class JoyStick{
     func getDebugMessage() -> String{
         //return String(describing : self.outerCircle.position.x)+","+String(describing : self.outerCircle.position.x)
         return String(describing : self.outerCircle.position)
+    }
+    
+    func translatePointToStayInOuter(scenePoint : CGPoint) -> CGPoint{
+        
+        let distance = Double(outerCircle.position.distanceTo(scenePoint))
+        let xDiff = Double(scenePoint.x - outerCircle.position.x)
+        let yDiff = Double(scenePoint.y - outerCircle.position.y)
+        
+        if distance > radius{
+            let divider = distance/self.radius
+            return CGPoint(x :xDiff/divider,y :yDiff/divider)
+        }else{
+            return CGPoint(x : xDiff, y : yDiff)
+        }
     }
     
 }
@@ -78,6 +96,7 @@ func closestTouchTo(touches : Set<UITouch>, node :SKNode) -> UITouch{
     
     return closest
 }
+
 
 fileprivate func makeCircleMold(radius : Double, fillColor : UIColor) -> SKShapeNode{
     let circ = SKShapeNode.init(circleOfRadius : CGFloat(radius))

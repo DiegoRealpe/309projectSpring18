@@ -50,7 +50,7 @@ class GameScene: SKScene {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         //self.joyStick?.moveOuterTo(touches : touches)
-        self.joyStick?.acceptNewTouch(touches: touches, parent : self)
+        self.joyStick?.acceptNewTouch(touches: touches)
         let str = self.joyStick!.getDebugMessage()
         
         if let label = self.label {

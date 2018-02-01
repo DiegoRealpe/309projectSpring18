@@ -14,6 +14,7 @@
 		3A74A604201F86ED00A1583F /* SKSceneTransitionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A74A603201F86ED00A1583F /* SKSceneTransitionExtension.swift */; };
 		3AB377DE2023B5980019E73E /* Joystick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB377DD2023B5980019E73E /* Joystick.swift */; };
 		3AB377E02023B5C50019E73E /* CGPointExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB377DF2023B5C50019E73E /* CGPointExtension.swift */; };
+		3AB377E32023B9D30019E73E /* HttpSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB377E22023B9D30019E73E /* HttpSender.swift */; };
 		4C98FBB7201E658600378614 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C98FBB6201E658600378614 /* AppDelegate.swift */; };
 		4C98FBB9201E658600378614 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 4C98FBB8201E658600378614 /* GameScene.sks */; };
 		4C98FBBB201E658600378614 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 4C98FBBA201E658600378614 /* Actions.sks */; };
@@ -43,6 +44,7 @@
 		3A74A603201F86ED00A1583F /* SKSceneTransitionExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKSceneTransitionExtension.swift; sourceTree = "<group>"; };
 		3AB377DD2023B5980019E73E /* Joystick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Joystick.swift; sourceTree = "<group>"; };
 		3AB377DF2023B5C50019E73E /* CGPointExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGPointExtension.swift; sourceTree = "<group>"; };
+		3AB377E22023B9D30019E73E /* HttpSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpSender.swift; sourceTree = "<group>"; };
 		4C98FBB3201E658600378614 /* soccer game.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "soccer game.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C98FBB6201E658600378614 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4C98FBB8201E658600378614 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -104,6 +106,14 @@
 			path = "match making";
 			sourceTree = "<group>";
 		};
+		3AB377E12023B7420019E73E /* communcations */ = {
+			isa = PBXGroup;
+			children = (
+				3AB377E22023B9D30019E73E /* HttpSender.swift */,
+			);
+			path = communcations;
+			sourceTree = "<group>";
+		};
 		4C98FBAA201E658600378614 = {
 			isa = PBXGroup;
 			children = (
@@ -125,6 +135,7 @@
 		4C98FBB5201E658600378614 /* soccer game */ = {
 			isa = PBXGroup;
 			children = (
+				3AB377E12023B7420019E73E /* communcations */,
 				4C98FBB6201E658600378614 /* AppDelegate.swift */,
 				3A74A609201FB92500A1583F /* game scene */,
 				3A74A60C201FB99700A1583F /* match making */,
@@ -263,6 +274,7 @@
 				4C98FBBF201E658600378614 /* GameViewController.swift in Sources */,
 				3A74A604201F86ED00A1583F /* SKSceneTransitionExtension.swift in Sources */,
 				4C98FBB7201E658600378614 /* AppDelegate.swift in Sources */,
+				3AB377E32023B9D30019E73E /* HttpSender.swift in Sources */,
 				3A74A5FE201E6FDB00A1583F /* MainMenu.swift in Sources */,
 				3A74A602201F7F6D00A1583F /* MatchMakingScene.swift in Sources */,
 			);
