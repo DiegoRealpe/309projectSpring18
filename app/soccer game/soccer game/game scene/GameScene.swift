@@ -64,6 +64,11 @@ class GameScene: SKScene {
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         self.joyStick?.acceptTouchMoved(touches: touches)
+        let str = self.joyStick!.getDebugMessage()
+        if let label = self.label {
+            label.text = str
+        }
+        
         
         for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
     }

@@ -16,6 +16,10 @@ class JoyStick{
     private var outerCircle : SKShapeNode
     private var radius : Double
     
+    //between -1 and 1
+    private var xDirection : Double
+    private var yDirection : Double
+    
     
     init(parent : SKNode, radius : Double, startPoint : CGPoint){
         
@@ -23,6 +27,8 @@ class JoyStick{
         self.outerCircle = makeCircleMold(radius: radius, fillColor: UIColor.blue)
         self.innerCircle = makeCircleMold(radius: radius*0.75, fillColor: UIColor.brown)
         self.parent = parent
+        self.xDirection = 0
+        self.yDirection = 0
         
         moveOuterTo(point: startPoint)
         
@@ -45,7 +51,7 @@ class JoyStick{
         let touch = closestTouchTo(touches: touches, node: outerCircle)
         
         let outerRelativeDisplayPoint = translatePointToStayInOuter(scenePoint: touch.location(in: parent))
-        
+        assignDirection()
         
         moveInnerTo(point : outerRelativeDisplayPoint)
     }
@@ -59,8 +65,7 @@ class JoyStick{
     }
     
     func getDebugMessage() -> String{
-        //return String(describing : self.outerCircle.position.x)+","+String(describing : self.outerCircle.position.x)
-        return String(describing : self.outerCircle.position)
+        return String(xDirection) + "," + String(yDirection)
     }
     
     func translatePointToStayInOuter(scenePoint : CGPoint) -> CGPoint{
@@ -68,13 +73,22 @@ class JoyStick{
         let distance = Double(outerCircle.position.distanceTo(scenePoint))
         let xDiff = Double(scenePoint.x - outerCircle.position.x)
         let yDiff = Double(scenePoint.y - outerCircle.position.y)
-        
-        if distance > radius{
+
+        if distance > self.radius{
             let divider = distance/self.radius
             return CGPoint(x :xDiff/divider,y :yDiff/divider)
         }else{
             return CGPoint(x : xDiff, y : yDiff)
         }
+    }
+    
+    //uses the position of the inner node
+    func assignDirection(){
+        let x = Double(self.innerCircle.position.x)
+        let y = Double(self.innerCircle.position.y)
+        
+        self.xDirection = x/radius
+        self.yDirection = y/radius
     }
     
 }
