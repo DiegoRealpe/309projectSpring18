@@ -17,8 +17,8 @@ class JoyStick{
     private var radius : Double
     
     //between -1 and 1
-    private var xDirection : Double
-    private var yDirection : Double
+    var xDirection : Double
+    var yDirection : Double
     
     
     init(parent : SKNode, radius : Double, startPoint : CGPoint){
