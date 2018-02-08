@@ -21,7 +21,7 @@ class GameScene: SKScene {
     
     let movementSpeed = 100.0
     
-    override func didMove(to view: SKView) {
+    override func didMove(to view: SKView) { 
         
         // Get label node from scene and store it for use later
         self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
@@ -73,6 +73,8 @@ class GameScene: SKScene {
             if let label = self.label {
                 label.text = str
             }
+            
+            
             let dx = js.xDirection * movementSpeed
             let dy = js.yDirection * movementSpeed
             self.playerNode?.physicsBody?.velocity = CGVector(dx: dx, dy: dy)

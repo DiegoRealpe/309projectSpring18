@@ -7,6 +7,7 @@
 //
 
 import SpriteKit
+import Alamofire
 
 class MainMenu: SKScene {
     
@@ -18,6 +19,10 @@ class MainMenu: SKScene {
         self.title = self.childNode(withName: "TitleLabel") as? SKLabelNode
         
         fadeInLabel(label: self.title)
+        
+        //Alamofire.request(.GET, "http://httpbin.org/get")
+        
+        Alamofire.request("http://localhost:8080", method: .get)
         
     }
     
