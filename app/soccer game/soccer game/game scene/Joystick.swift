@@ -38,17 +38,23 @@ class JoyStick{
     }
     
     func acceptNewTouch(touches: Set<UITouch>){
+        let filteredTouchSet = touches.filter(isInBottomLeftQuadrant(_:))
         //right now it will make  joystick on the touch closest to the origin, this may need to change
-        let touch = closestTouchTo(touches: touches, node: outerCircle)
-        
-        moveOuterTo(point: touch.location(in: self.parent))
-        moveInnerTo(point: CGPoint.zero)
+        if let touch = closestTouchTo(touches: filteredTouchSet, node: outerCircle){
+            moveOuterTo(point: touch.location(in: self.parent))
+            moveInnerTo(point: CGPoint.zero)
+        }
+    }
+    
+    func isInBottomLeftQuadrant(_ touch : UITouch) -> Bool{
+        let loc = touch.location(in: self.parent)
+        return loc.x < 0 && loc.y < 0
     }
     
     
     
     func acceptTouchMoved(touches: Set<UITouch>){
-        let touch = closestTouchTo(touches: touches, node: outerCircle)
+        let touch = closestTouchTo(touches: touches, node: outerCircle)!
         
         let outerRelativeDisplayPoint = translatePointToStayInOuter(scenePoint: touch.location(in: parent))
         assignDirection()
@@ -94,21 +100,24 @@ class JoyStick{
 }
 
 //should be called only if touches is not empty
-func closestTouchTo(touches : Set<UITouch>, node :SKNode) -> UITouch{
+func closestTouchTo(touches : Set<UITouch>, node :SKNode) -> UITouch?{
     var iter = touches.makeIterator()
     
-    var closest = iter.next()!
-    var closestCloseness = closest.location(in: node).distanceTo(node.position)
-    
-    while let next = iter.next(){
-        let nextCloseness = next.location(in: node).distanceTo(node.position)
-        if nextCloseness < closestCloseness{
-            closest = next
-            closestCloseness = nextCloseness
+    if var closest = iter.next(){ //find closest if there were touches
+        var closestCloseness = closest.location(in: node).distanceTo(node.position)
+        
+        while let next = iter.next(){
+            let nextCloseness = next.location(in: node).distanceTo(node.position)
+            if nextCloseness < closestCloseness{
+                closest = next
+                closestCloseness = nextCloseness
+            }
         }
+        
+        return closest
+    }else{
+        return nil //return nil if there were no touches
     }
-    
-    return closest
 }
 
 
