@@ -39,6 +39,7 @@ class JoyStick{
     
     func acceptNewTouch(touches: Set<UITouch>){
         let filteredTouchSet = touches.filter(isInBottomLeftQuadrant(_:))
+        
         //right now it will make  joystick on the touch closest to the origin, this may need to change
         if let touch = closestTouchTo(touches: filteredTouchSet, node: outerCircle){
             moveOuterTo(point: touch.location(in: self.parent))
@@ -54,12 +55,17 @@ class JoyStick{
     
     
     func acceptTouchMoved(touches: Set<UITouch>){
-        let touch = closestTouchTo(touches: touches, node: outerCircle)!
+        let filteredTouchSet = touches.filter(isInBottomLeftQuadrant(_:))
         
-        let outerRelativeDisplayPoint = translatePointToStayInOuter(scenePoint: touch.location(in: parent))
-        assignDirection()
-        
-        moveInnerTo(point : outerRelativeDisplayPoint)
+        //find touch closest to the center of the joysick
+        //if there is a touch matching positional reqs
+        if let touch = closestTouchTo(touches: filteredTouchSet, node: outerCircle){
+            
+            let outerRelativeDisplayPoint = translatePointToStayInOuter(scenePoint: touch.location(in: parent))
+            assignDirection()
+            
+            moveInnerTo(point : outerRelativeDisplayPoint)
+        }
     }
     
     func moveOuterTo(point : CGPoint){
