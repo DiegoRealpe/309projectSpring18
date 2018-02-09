@@ -55,7 +55,7 @@ class JoyStick{
     
     
     func acceptTouchMoved(touches: Set<UITouch>){
-        let filteredTouchSet = touches.filter(isInBottomLeftQuadrant(_:))
+        let filteredTouchSet = touches//touches.filter(isInBottomLeftQuadrant(_:))
         
         //find touch closest to the center of the joysick
         //if there is a touch matching positional reqs
