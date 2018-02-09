@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3A360C5C202BE97C00775AAC /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A360C5B202BE97B00775AAC /* Alamofire.framework */; };
-		3A360C5D202BE97C00775AAC /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A360C5B202BE97B00775AAC /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3A74A5FC201E6C3E00A1583F /* MainMenu.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A74A5FB201E6C3E00A1583F /* MainMenu.sks */; };
 		3A74A5FE201E6FDB00A1583F /* MainMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A74A5FD201E6FDB00A1583F /* MainMenu.swift */; };
 		3A74A600201F7E1900A1583F /* MatchMakingScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A74A5FF201F7E1900A1583F /* MatchMakingScene.sks */; };
@@ -17,6 +15,12 @@
 		3AB377DE2023B5980019E73E /* Joystick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB377DD2023B5980019E73E /* Joystick.swift */; };
 		3AB377E02023B5C50019E73E /* CGPointExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB377DF2023B5C50019E73E /* CGPointExtension.swift */; };
 		3AB377E32023B9D30019E73E /* HttpSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB377E22023B9D30019E73E /* HttpSender.swift */; };
+		3ADFD625202E22C800AE586D /* SwiftSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADFD623202E22C700AE586D /* SwiftSocket.framework */; };
+		3ADFD626202E22C800AE586D /* SwiftSocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADFD623202E22C700AE586D /* SwiftSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3ADFD627202E22C800AE586D /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADFD624202E22C800AE586D /* Alamofire.framework */; };
+		3ADFD628202E22C800AE586D /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADFD624202E22C800AE586D /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3ADFD62B202E263900AE586D /* CommTestScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADFD62A202E263900AE586D /* CommTestScreen.swift */; };
+		3ADFD62D202E265100AE586D /* CommTestScreen.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3ADFD62C202E265100AE586D /* CommTestScreen.sks */; };
 		4C98FBB7201E658600378614 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C98FBB6201E658600378614 /* AppDelegate.swift */; };
 		4C98FBB9201E658600378614 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 4C98FBB8201E658600378614 /* GameScene.sks */; };
 		4C98FBBB201E658600378614 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 4C98FBBA201E658600378614 /* Actions.sks */; };
@@ -39,13 +43,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		3A360C5E202BE97C00775AAC /* Embed Frameworks */ = {
+		3ADFD629202E22C800AE586D /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				3A360C5D202BE97C00775AAC /* Alamofire.framework in Embed Frameworks */,
+				3ADFD626202E22C800AE586D /* SwiftSocket.framework in Embed Frameworks */,
+				3ADFD628202E22C800AE586D /* Alamofire.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -53,8 +58,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		3A360C57202BE75B00775AAC /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = ../../../carthage/Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
-		3A360C5B202BE97B00775AAC /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		3A74A5FB201E6C3E00A1583F /* MainMenu.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MainMenu.sks; sourceTree = "<group>"; };
 		3A74A5FD201E6FDB00A1583F /* MainMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenu.swift; sourceTree = "<group>"; };
 		3A74A5FF201F7E1900A1583F /* MatchMakingScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MatchMakingScene.sks; sourceTree = "<group>"; };
@@ -63,6 +66,10 @@
 		3AB377DD2023B5980019E73E /* Joystick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Joystick.swift; sourceTree = "<group>"; };
 		3AB377DF2023B5C50019E73E /* CGPointExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGPointExtension.swift; sourceTree = "<group>"; };
 		3AB377E22023B9D30019E73E /* HttpSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpSender.swift; sourceTree = "<group>"; };
+		3ADFD623202E22C700AE586D /* SwiftSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftSocket.framework; path = Carthage/Build/iOS/SwiftSocket.framework; sourceTree = "<group>"; };
+		3ADFD624202E22C800AE586D /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
+		3ADFD62A202E263900AE586D /* CommTestScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommTestScreen.swift; sourceTree = "<group>"; };
+		3ADFD62C202E265100AE586D /* CommTestScreen.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = CommTestScreen.sks; sourceTree = "<group>"; };
 		4C98FBB3201E658600378614 /* soccer game.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "soccer game.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C98FBB6201E658600378614 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4C98FBB8201E658600378614 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -83,7 +90,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3A360C5C202BE97C00775AAC /* Alamofire.framework in Frameworks */,
+				3ADFD625202E22C800AE586D /* SwiftSocket.framework in Frameworks */,
+				3ADFD627202E22C800AE586D /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,6 +137,8 @@
 			isa = PBXGroup;
 			children = (
 				3AB377E22023B9D30019E73E /* HttpSender.swift */,
+				3ADFD62A202E263900AE586D /* CommTestScreen.swift */,
+				3ADFD62C202E265100AE586D /* CommTestScreen.sks */,
 			);
 			path = communcations;
 			sourceTree = "<group>";
@@ -136,8 +146,8 @@
 		4C98FBAA201E658600378614 = {
 			isa = PBXGroup;
 			children = (
-				3A360C57202BE75B00775AAC /* Alamofire.framework */,
-				3A360C5B202BE97B00775AAC /* Alamofire.framework */,
+				3ADFD624202E22C800AE586D /* Alamofire.framework */,
+				3ADFD623202E22C700AE586D /* SwiftSocket.framework */,
 				4C98FBB5201E658600378614 /* soccer game */,
 				4C98FBD0201E658700378614 /* soccer gameTests */,
 				4C98FBB4201E658600378614 /* Products */,
@@ -192,7 +202,7 @@
 				4C98FBAF201E658600378614 /* Sources */,
 				4C98FBB0201E658600378614 /* Frameworks */,
 				4C98FBB1201E658600378614 /* Resources */,
-				3A360C5E202BE97C00775AAC /* Embed Frameworks */,
+				3ADFD629202E22C800AE586D /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -271,6 +281,7 @@
 				3A74A600201F7E1900A1583F /* MatchMakingScene.sks in Resources */,
 				4C98FBB9201E658600378614 /* GameScene.sks in Resources */,
 				4C98FBC4201E658700378614 /* Assets.xcassets in Resources */,
+				3ADFD62D202E265100AE586D /* CommTestScreen.sks in Resources */,
 				4C98FBC7201E658700378614 /* LaunchScreen.storyboard in Resources */,
 				4C98FBBB201E658600378614 /* Actions.sks in Resources */,
 			);
@@ -297,6 +308,7 @@
 				3A74A604201F86ED00A1583F /* SKSceneTransitionExtension.swift in Sources */,
 				4C98FBB7201E658600378614 /* AppDelegate.swift in Sources */,
 				3AB377E32023B9D30019E73E /* HttpSender.swift in Sources */,
+				3ADFD62B202E263900AE586D /* CommTestScreen.swift in Sources */,
 				3A74A5FE201E6FDB00A1583F /* MainMenu.swift in Sources */,
 				3A74A602201F7F6D00A1583F /* MatchMakingScene.swift in Sources */,
 			);
