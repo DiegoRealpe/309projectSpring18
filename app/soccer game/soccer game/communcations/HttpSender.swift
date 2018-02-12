@@ -8,7 +8,7 @@
 
 import Foundation
 
-
+//stub for if we standardize all of this
 func SendGet(message : String){
     
     
