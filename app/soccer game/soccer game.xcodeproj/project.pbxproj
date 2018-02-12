@@ -14,7 +14,6 @@
 		3A74A604201F86ED00A1583F /* SKSceneTransitionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A74A603201F86ED00A1583F /* SKSceneTransitionExtension.swift */; };
 		3AB377DE2023B5980019E73E /* Joystick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB377DD2023B5980019E73E /* Joystick.swift */; };
 		3AB377E02023B5C50019E73E /* CGPointExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB377DF2023B5C50019E73E /* CGPointExtension.swift */; };
-		3AB377E32023B9D30019E73E /* HttpSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB377E22023B9D30019E73E /* HttpSender.swift */; };
 		3ADFD625202E22C800AE586D /* SwiftSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADFD623202E22C700AE586D /* SwiftSocket.framework */; };
 		3ADFD626202E22C800AE586D /* SwiftSocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADFD623202E22C700AE586D /* SwiftSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3ADFD627202E22C800AE586D /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADFD624202E22C800AE586D /* Alamofire.framework */; };
@@ -65,7 +64,6 @@
 		3A74A603201F86ED00A1583F /* SKSceneTransitionExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKSceneTransitionExtension.swift; sourceTree = "<group>"; };
 		3AB377DD2023B5980019E73E /* Joystick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Joystick.swift; sourceTree = "<group>"; };
 		3AB377DF2023B5C50019E73E /* CGPointExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGPointExtension.swift; sourceTree = "<group>"; };
-		3AB377E22023B9D30019E73E /* HttpSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpSender.swift; sourceTree = "<group>"; };
 		3ADFD623202E22C700AE586D /* SwiftSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftSocket.framework; path = Carthage/Build/iOS/SwiftSocket.framework; sourceTree = "<group>"; };
 		3ADFD624202E22C800AE586D /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		3ADFD62A202E263900AE586D /* CommTestScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommTestScreen.swift; sourceTree = "<group>"; };
@@ -136,7 +134,6 @@
 		3AB377E12023B7420019E73E /* communcations */ = {
 			isa = PBXGroup;
 			children = (
-				3AB377E22023B9D30019E73E /* HttpSender.swift */,
 				3ADFD62A202E263900AE586D /* CommTestScreen.swift */,
 				3ADFD62C202E265100AE586D /* CommTestScreen.sks */,
 			);
@@ -307,7 +304,6 @@
 				4C98FBBF201E658600378614 /* GameViewController.swift in Sources */,
 				3A74A604201F86ED00A1583F /* SKSceneTransitionExtension.swift in Sources */,
 				4C98FBB7201E658600378614 /* AppDelegate.swift in Sources */,
-				3AB377E32023B9D30019E73E /* HttpSender.swift in Sources */,
 				3ADFD62B202E263900AE586D /* CommTestScreen.swift in Sources */,
 				3A74A5FE201E6FDB00A1583F /* MainMenu.swift in Sources */,
 				3A74A602201F7F6D00A1583F /* MatchMakingScene.swift in Sources */,
