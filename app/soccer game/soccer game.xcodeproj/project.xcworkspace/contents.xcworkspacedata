@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:soccer game.xcodeproj">
+      location = "group:/Users/rtoepfer/Desktop/MG_6_Futbol2D/app/soccer game/soccer game/Actions.sks">
+   </FileRef>
+   <FileRef
+      location = "self:">
    </FileRef>
 </Workspace>

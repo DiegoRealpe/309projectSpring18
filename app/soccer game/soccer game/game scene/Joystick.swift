@@ -16,23 +16,24 @@ class JoyStick{
     private var outerCircle : SKShapeNode
     private var radius : Double
     
-    //between -1 and 1
+    //between -1 and 1 such that x^2 + y^2 <= 1
+    //exposed to be read as outputs
     var xDirection : Double
     var yDirection : Double
-    
     
     init(parent : SKNode, radius : Double, startPoint : CGPoint){
         
         self.radius = radius
-        self.outerCircle = makeCircleMold(radius: radius, fillColor: UIColor.blue)
-        self.innerCircle = makeCircleMold(radius: radius*0.75, fillColor: UIColor.brown)
+        self.outerCircle = makeCircle(radius: radius, fillColor: UIColor.blue)
+        self.innerCircle = makeCircle(radius: radius*0.75, fillColor: UIColor.brown)
         self.parent = parent
         self.xDirection = 0
         self.yDirection = 0
         
+        //move joystick to initial position
         moveOuterTo(point: startPoint)
         
-        
+        //add joystick nodes to their parents
         parent.addChild(self.outerCircle)
         self.outerCircle.addChild(self.innerCircle)
     }
@@ -40,7 +41,7 @@ class JoyStick{
     func acceptNewTouch(touches: Set<UITouch>){
         let filteredTouchSet = touches.filter(isInBottomLeftQuadrant(_:))
         
-        //right now it will make  joystick on the touch closest to the origin, this may need to change
+        //right now it will make  joystick on the touch closest to the last position, this may need to change
         if let touch = closestTouchTo(touches: filteredTouchSet, node: outerCircle){
             moveOuterTo(point: touch.location(in: self.parent))
             moveInnerTo(point: CGPoint.zero)
@@ -53,18 +54,18 @@ class JoyStick{
     }
     
     
-    
     func acceptTouchMoved(touches: Set<UITouch>){
-        let filteredTouchSet = touches//touches.filter(isInBottomLeftQuadrant(_:))
+        let filteredTouchSet = touches
         
-        //find touch closest to the center of the joysick
-        //if there is a touch matching positional reqs
+        //respond to touch closest to the center of the joysick
         if let touch = closestTouchTo(touches: filteredTouchSet, node: outerCircle){
             
-            let outerRelativeDisplayPoint = translatePointToStayInOuter(scenePoint: touch.location(in: parent))
-            assignDirection()
+            //translate point to keep position in
+            let finalPoint = translatePointToStayInOuter(scenePoint: touch.location(in: parent))
             
-            moveInnerTo(point : outerRelativeDisplayPoint)
+            moveInnerTo(point : finalPoint)
+            
+            setXYDirection()
         }
     }
     
@@ -95,39 +96,34 @@ class JoyStick{
     }
     
     //uses the position of the inner node
-    func assignDirection(){
+    func setXYDirection(){
         let x = Double(self.innerCircle.position.x)
         let y = Double(self.innerCircle.position.y)
         
+        //keep output independent of joystick size by dividing out raius
         self.xDirection = x/radius
         self.yDirection = y/radius
     }
     
-}
-
-//should be called only if touches is not empty
-func closestTouchTo(touches : Set<UITouch>, node :SKNode) -> UITouch?{
-    var iter = touches.makeIterator()
+    func closestTouchTo(touches : Set<UITouch>, node :SKNode) -> UITouch?{
+        
+        return touches.min(by: areTouchesInAscendingOrderByDistanceToCenter(first:second:))
+    }
     
-    if var closest = iter.next(){ //find closest if there were touches
-        var closestCloseness = closest.location(in: node).distanceTo(node.position)
+    //used to filter set for min in accordance to swift's built-in set functionality
+    private func areTouchesInAscendingOrderByDistanceToCenter(first : UITouch, second : UITouch) -> Bool{
+        let compareNode = self.outerCircle
         
-        while let next = iter.next(){
-            let nextCloseness = next.location(in: node).distanceTo(node.position)
-            if nextCloseness < closestCloseness{
-                closest = next
-                closestCloseness = nextCloseness
-            }
-        }
+        //compare to (0,0) since locations are centered relative to the compareNode
+        let firstDistance = first.location(in: compareNode).distanceTo(.zero)
+        let secondDistance = second.location(in: compareNode).distanceTo(.zero)
         
-        return closest
-    }else{
-        return nil //return nil if there were no touches
+        return firstDistance < secondDistance
     }
 }
 
 
-fileprivate func makeCircleMold(radius : Double, fillColor : UIColor) -> SKShapeNode{
+fileprivate func makeCircle(radius : Double, fillColor : UIColor) -> SKShapeNode{
     let circ = SKShapeNode.init(circleOfRadius : CGFloat(radius))
     circ.fillColor = fillColor
     

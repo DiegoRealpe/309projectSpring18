@@ -14,26 +14,24 @@ class MatchMakingScene: SKScene {
     let countTime = 0.5
     
     var countdownLabel : SKLabelNode?
-    var currentseconds : Int?
+    var currentSeconds : Int?
     var countdownAction : SKAction?
-    
     
     override func didMove(to view: SKView) {
         
+        //get nodes from parent
         self.countdownLabel = self.childNode(withName: "Time Label") as? SKLabelNode
         
-        self.currentseconds = totalCount
+        self.currentSeconds = totalCount
         
         countdownAction = makeCountdownAction()
         
         startCountdown()
-        
-        
     }
     
     func startCountdown(){
-        if let i = self.currentseconds{
-            self.currentseconds = self.totalCount
+        if let i = self.currentSeconds{
+            self.currentSeconds = self.totalCount
             if let cdLabel = self.countdownLabel{
                 cdLabel.text = String(i)
                 
@@ -45,20 +43,29 @@ class MatchMakingScene: SKScene {
         
     }
     
+    //make countdown action makes an SKAction that accesses local fields to decide to move to the gamescene
+    //or call itself and wait another interval
     func makeCountdownAction() -> SKAction {
         return SKAction.run {
             if let cdLabel = self.countdownLabel{
-                if let i = self.currentseconds{
-                    self.currentseconds = i - 1
+                
+                if let i = self.currentSeconds{
+                    
+                    //decrenemt seconds and apply to label
+                    self.currentSeconds = i - 1
                     cdLabel.text = String(i)
+                    
+                    //move to game scene at conclusion of countdown 
                     if i <= 0{
                         self.moveToGameScene()
                     }
                 }
                 
+                //restart action in a recursive manner
                 if let act = self.countdownAction{
                     cdLabel.run(SKAction.sequence([SKAction.wait(forDuration: self.countTime),act]))
                 }
+            
             }
             
         }
