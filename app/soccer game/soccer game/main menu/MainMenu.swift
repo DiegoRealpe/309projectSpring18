@@ -12,27 +12,31 @@ import Alamofire
 class MainMenu: SKScene {
     
     var title : SKLabelNode?
+    var practiceBG : SKNode?
+    var joinBG : SKNode?
+    var comm : SKNode?
     
     override func didMove(to view: SKView) {
         print("got to main menu")
         
+        //get scene subnodes
         self.title = self.childNode(withName: "TitleLabel") as? SKLabelNode
+        self.practiceBG = self.childNode(withName: "Practice Background")
+        self.joinBG = self.childNode(withName: "Join Background")
+        self.comm = self.childNode(withName: "Comm Label")
         
         fadeInLabel(label: self.title)
-        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
-        let wrappedPractice = self.childNode(withName: "Practice Background")
-        let wrappedJoin = self.childNode(withName: "Join Background")
-        let wrappedComm = self.childNode(withName: "Comm Label")
-        
-        if let t = touches.first ,let practice = wrappedPractice, let join = wrappedJoin, let comm = wrappedComm{
+        //if necesarry nodes and one touch exist
+        if let t = touches.first ,let practice = self.practiceBG, let join = self.joinBG, let comm = self.comm{
             let point = t.location(in: self)
+            
+            //see if touch contains first
             if practice.contains(point){
                 moveToGameScene()
-                blinkLabel(label: self.title)
             }else if join.contains(point){
                 moveToMatchMakingScene()
             }
@@ -43,19 +47,12 @@ class MainMenu: SKScene {
         
     }
     
-    
-    
     func fadeInLabel(label : SKLabelNode?){
         if let nonOptLabel = label{
             nonOptLabel.alpha = 0.0
             nonOptLabel.run(SKAction.fadeIn(withDuration: 2.0))
         }
     }
-    
-    func blinkLabel(label : SKLabelNode?){
-        if let nonOptLabel = label{
-            nonOptLabel.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
-        }
-    }
+
     
 }
