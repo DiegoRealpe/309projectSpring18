@@ -14,6 +14,7 @@
 		3A74A604201F86ED00A1583F /* SKSceneTransitionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A74A603201F86ED00A1583F /* SKSceneTransitionExtension.swift */; };
 		3AB377DE2023B5980019E73E /* Joystick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB377DD2023B5980019E73E /* Joystick.swift */; };
 		3AB377E02023B5C50019E73E /* CGPointExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB377DF2023B5C50019E73E /* CGPointExtension.swift */; };
+		3ACF30282032ACF4009DC766 /* TCPResultExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACF30272032ACF4009DC766 /* TCPResultExtension.swift */; };
 		3ADFD625202E22C800AE586D /* SwiftSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADFD623202E22C700AE586D /* SwiftSocket.framework */; };
 		3ADFD626202E22C800AE586D /* SwiftSocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADFD623202E22C700AE586D /* SwiftSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3ADFD627202E22C800AE586D /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADFD624202E22C800AE586D /* Alamofire.framework */; };
@@ -63,6 +64,7 @@
 		3A74A603201F86ED00A1583F /* SKSceneTransitionExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKSceneTransitionExtension.swift; sourceTree = "<group>"; };
 		3AB377DD2023B5980019E73E /* Joystick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Joystick.swift; sourceTree = "<group>"; };
 		3AB377DF2023B5C50019E73E /* CGPointExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGPointExtension.swift; sourceTree = "<group>"; };
+		3ACF30272032ACF4009DC766 /* TCPResultExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCPResultExtension.swift; sourceTree = "<group>"; };
 		3ADFD623202E22C700AE586D /* SwiftSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftSocket.framework; path = Carthage/Build/iOS/SwiftSocket.framework; sourceTree = "<group>"; };
 		3ADFD624202E22C800AE586D /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		3ADFD62A202E263900AE586D /* CommTestScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommTestScreen.swift; sourceTree = "<group>"; };
@@ -173,6 +175,7 @@
 				3A74A608201FB90D00A1583F /* main menu */,
 				3A74A603201F86ED00A1583F /* SKSceneTransitionExtension.swift */,
 				3AB377DF2023B5C50019E73E /* CGPointExtension.swift */,
+				3ACF30272032ACF4009DC766 /* TCPResultExtension.swift */,
 			);
 			path = "soccer game";
 			sourceTree = "<group>";
@@ -300,6 +303,7 @@
 				4C98FBBF201E658600378614 /* GameViewController.swift in Sources */,
 				3A74A604201F86ED00A1583F /* SKSceneTransitionExtension.swift in Sources */,
 				4C98FBB7201E658600378614 /* AppDelegate.swift in Sources */,
+				3ACF30282032ACF4009DC766 /* TCPResultExtension.swift in Sources */,
 				3ADFD62B202E263900AE586D /* CommTestScreen.swift in Sources */,
 				3A74A5FE201E6FDB00A1583F /* MainMenu.swift in Sources */,
 				3A74A602201F7F6D00A1583F /* MatchMakingScene.swift in Sources */,
