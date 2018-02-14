@@ -7,7 +7,7 @@
 //
 
 import SpriteKit
-//import Alamofire
+import Alamofire
 
 class MainMenu: SKScene {
     
@@ -15,7 +15,7 @@ class MainMenu: SKScene {
     var practiceBG : SKNode?
     var joinBG : SKNode?
     var comm : SKNode?
-    
+    var account:SKNode?
     override func didMove(to view: SKView) {
         print("got to main menu")
         

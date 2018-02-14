@@ -16,10 +16,6 @@
 		3AB377DE2023B5980019E73E /* Joystick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB377DD2023B5980019E73E /* Joystick.swift */; };
 		3AB377E02023B5C50019E73E /* CGPointExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB377DF2023B5C50019E73E /* CGPointExtension.swift */; };
 		3ACF30282032ACF4009DC766 /* TCPResultExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACF30272032ACF4009DC766 /* TCPResultExtension.swift */; };
-		3ADFD625202E22C800AE586D /* SwiftSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADFD623202E22C700AE586D /* SwiftSocket.framework */; };
-		3ADFD626202E22C800AE586D /* SwiftSocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADFD623202E22C700AE586D /* SwiftSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3ADFD627202E22C800AE586D /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADFD624202E22C800AE586D /* Alamofire.framework */; };
-		3ADFD628202E22C800AE586D /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3ADFD624202E22C800AE586D /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3ADFD62B202E263900AE586D /* CommTestScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADFD62A202E263900AE586D /* CommTestScreen.swift */; };
 		3ADFD62D202E265100AE586D /* CommTestScreen.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3ADFD62C202E265100AE586D /* CommTestScreen.sks */; };
 		4C98FBB7201E658600378614 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C98FBB6201E658600378614 /* AppDelegate.swift */; };
@@ -32,6 +28,10 @@
 		4C98FBD2201E658700378614 /* soccer_gameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C98FBD1201E658700378614 /* soccer_gameTests.swift */; };
 		4CC91D9C20339A7800FB9236 /* NewAccountOrLogin.sks in Resources */ = {isa = PBXBuildFile; fileRef = 4CC91D9B20339A7800FB9236 /* NewAccountOrLogin.sks */; };
 		4CC91D9E20339BA700FB9236 /* NewAccountOrLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC91D9D20339BA700FB9236 /* NewAccountOrLogin.swift */; };
+		4CC91DBD2034D80F00FB9236 /* SwiftSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CC91DBC2034D80E00FB9236 /* SwiftSocket.framework */; };
+		4CC91DBE2034D80F00FB9236 /* SwiftSocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4CC91DBC2034D80E00FB9236 /* SwiftSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4CC91DC12034D82E00FB9236 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CC91DC02034D82E00FB9236 /* Alamofire.framework */; };
+		4CC91DC22034D82E00FB9236 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4CC91DC02034D82E00FB9236 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,14 +45,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		3ADFD629202E22C800AE586D /* Embed Frameworks */ = {
+		4CC91DBF2034D80F00FB9236 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				3ADFD626202E22C800AE586D /* SwiftSocket.framework in Embed Frameworks */,
-				3ADFD628202E22C800AE586D /* Alamofire.framework in Embed Frameworks */,
+				4CC91DBE2034D80F00FB9236 /* SwiftSocket.framework in Embed Frameworks */,
+				4CC91DC22034D82E00FB9236 /* Alamofire.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -69,8 +69,6 @@
 		3AB377DD2023B5980019E73E /* Joystick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Joystick.swift; sourceTree = "<group>"; };
 		3AB377DF2023B5C50019E73E /* CGPointExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGPointExtension.swift; sourceTree = "<group>"; };
 		3ACF30272032ACF4009DC766 /* TCPResultExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCPResultExtension.swift; sourceTree = "<group>"; };
-		3ADFD623202E22C700AE586D /* SwiftSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftSocket.framework; path = Carthage/Build/iOS/SwiftSocket.framework; sourceTree = "<group>"; };
-		3ADFD624202E22C800AE586D /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		3ADFD62A202E263900AE586D /* CommTestScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommTestScreen.swift; sourceTree = "<group>"; };
 		3ADFD62C202E265100AE586D /* CommTestScreen.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = CommTestScreen.sks; sourceTree = "<group>"; };
 		4C98FBB3201E658600378614 /* soccer game.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "soccer game.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -87,6 +85,8 @@
 		4C98FBD3201E658700378614 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4CC91D9B20339A7800FB9236 /* NewAccountOrLogin.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = NewAccountOrLogin.sks; path = ../../../../../../NewAccountOrLogin.sks; sourceTree = "<group>"; };
 		4CC91D9D20339BA700FB9236 /* NewAccountOrLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAccountOrLogin.swift; sourceTree = "<group>"; };
+		4CC91DBC2034D80E00FB9236 /* SwiftSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SwiftSocket.framework; sourceTree = "<group>"; };
+		4CC91DC02034D82E00FB9236 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Alamofire.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,8 +94,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3ADFD625202E22C800AE586D /* SwiftSocket.framework in Frameworks */,
-				3ADFD627202E22C800AE586D /* Alamofire.framework in Frameworks */,
+				4CC91DBD2034D80F00FB9236 /* SwiftSocket.framework in Frameworks */,
+				4CC91DC12034D82E00FB9236 /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -150,11 +150,12 @@
 		4C98FBAA201E658600378614 = {
 			isa = PBXGroup;
 			children = (
-				3ADFD624202E22C800AE586D /* Alamofire.framework */,
-				3ADFD623202E22C700AE586D /* SwiftSocket.framework */,
+				4CC91DC02034D82E00FB9236 /* Alamofire.framework */,
+				4CC91DBC2034D80E00FB9236 /* SwiftSocket.framework */,
 				4C98FBB5201E658600378614 /* soccer game */,
 				4C98FBD0201E658700378614 /* soccer gameTests */,
 				4C98FBB4201E658600378614 /* Products */,
+				4CC91DB22034D58E00FB9236 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -206,6 +207,13 @@
 			path = Accounts;
 			sourceTree = "<group>";
 		};
+		4CC91DB22034D58E00FB9236 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -216,7 +224,7 @@
 				4C98FBAF201E658600378614 /* Sources */,
 				4C98FBB0201E658600378614 /* Frameworks */,
 				4C98FBB1201E658600378614 /* Resources */,
-				3ADFD629202E22C800AE586D /* Embed Frameworks */,
+				4CC91DBF2034D80F00FB9236 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -482,8 +490,9 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = R4RLVQP887;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(inherited)",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "soccer game/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
@@ -502,8 +511,9 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = R4RLVQP887;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
+					"$(inherited)",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = "soccer game/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.2;

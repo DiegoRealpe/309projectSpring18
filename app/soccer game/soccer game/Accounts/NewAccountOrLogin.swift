@@ -8,12 +8,9 @@
 import SpriteKit
 //import Alamofire
 
-class MainMenu: SKScene {
+class NewAccountOrLogin: SKScene {
     
-    var title : SKLabelNode?
-    var practiceBG : SKNode?
-    var joinBG : SKNode?
-    var comm : SKNode?
+    var back : SKNode?
     
     override func didMove(to view: SKView) {
         print("got to main menu")
@@ -23,7 +20,7 @@ class MainMenu: SKScene {
         
         
         
-        fadeInLabel(label: self.title)
+        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
