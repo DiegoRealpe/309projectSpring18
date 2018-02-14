@@ -19,15 +19,17 @@ class GameScene: SKScene {
     private var backLabel : SKLabelNode?
     private var joyStick : JoyStick?
     private var playerNode : SKSpriteNode?
+    private var ballNode : SKSpriteNode?
     
     let movementSpeed = 100.0
     
     override func didMove(to view: SKView) { 
         
         // get optional nodes from scene
-        self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
+        self.label = self.childNode(withName: "Hello Label") as? SKLabelNode
         self.backLabel = self.childNode(withName: "Back Label") as? SKLabelNode
         self.playerNode = self.childNode(withName:"Player Node") as? SKSpriteNode
+        self.ballNode = self.childNode(withName: "Ball") as? SKSpriteNode
         
         
         self.joyStick = JoyStick(parent: self, radius: 50.0, startPoint: CGPoint(x: 0, y: 0))
@@ -39,8 +41,19 @@ class GameScene: SKScene {
         if let n = self.backLabel{
             if n.contains(pos){
                 self.moveToMainMenu()
+                
             }
         }
+    }
+    
+    func setBallPositionAndVelocity(position : CGPoint, velocity : CGVector){
+        guard let ball = self.ballNode else{
+            print("ball was not found")
+            return
+        }
+        
+        ball.position = position
+        ball.physicsBody?.velocity = velocity
         
     }
     

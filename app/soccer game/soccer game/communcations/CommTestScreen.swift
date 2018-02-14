@@ -46,14 +46,15 @@ class CommTestScreen: SKScene {
     
     func sendTcp(){
         let client = TCPClient(address: "localhost", port: 7234)
-        client.connect(timeout: 2).logError()
+        client.connect(timeout: 30).logError()
         //client.send(string: "hello server\n").logError()
 
         
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
             if let recieved = client.read(50){
-                print(String(bytes: recieved, encoding: .utf8)!)
-                client.send(string: "ryan ").logError()
+                print("recieved: " + String(bytes: recieved, encoding: .utf8)!)
+                client.send(string: "bob: ").logError()
+                print("sent: bob")
                 self.step2(client: client)
             }
         })
@@ -61,14 +62,17 @@ class CommTestScreen: SKScene {
     }
     
     func step2(client : TCPClient){
+    
         
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
             if let recieved = client.read(100){
-                print(String(bytes: recieved, encoding: .utf8)!)
-                
-                //client.send(string : ":quit").logError()
-                client.close()
+                print("recieved: " + String(bytes: recieved, encoding: .utf8)!)
             }
+            
+            client.send(string: "message!!&&&& ").logError()
+            print("sent: message!!&&&&")
+            //client.send(string : ":quit").logError()
+            client.close()
         })
         
         
