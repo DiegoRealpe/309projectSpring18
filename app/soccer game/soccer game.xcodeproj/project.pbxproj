@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A5475682034BEBB0082947E /* ManagedTCPConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5475672034BEBB0082947E /* ManagedTCPConnection.swift */; };
 		3A74A5FC201E6C3E00A1583F /* MainMenu.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A74A5FB201E6C3E00A1583F /* MainMenu.sks */; };
 		3A74A5FE201E6FDB00A1583F /* MainMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A74A5FD201E6FDB00A1583F /* MainMenu.swift */; };
 		3A74A600201F7E1900A1583F /* MatchMakingScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A74A5FF201F7E1900A1583F /* MatchMakingScene.sks */; };
@@ -57,6 +58,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3A5475672034BEBB0082947E /* ManagedTCPConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedTCPConnection.swift; sourceTree = "<group>"; };
 		3A74A5FB201E6C3E00A1583F /* MainMenu.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MainMenu.sks; sourceTree = "<group>"; };
 		3A74A5FD201E6FDB00A1583F /* MainMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenu.swift; sourceTree = "<group>"; };
 		3A74A5FF201F7E1900A1583F /* MatchMakingScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MatchMakingScene.sks; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 			children = (
 				3ADFD62A202E263900AE586D /* CommTestScreen.swift */,
 				3ADFD62C202E265100AE586D /* CommTestScreen.sks */,
+				3A5475672034BEBB0082947E /* ManagedTCPConnection.swift */,
 			);
 			path = communcations;
 			sourceTree = "<group>";
@@ -302,6 +305,7 @@
 				3AB377E02023B5C50019E73E /* CGPointExtension.swift in Sources */,
 				4C98FBBF201E658600378614 /* GameViewController.swift in Sources */,
 				3A74A604201F86ED00A1583F /* SKSceneTransitionExtension.swift in Sources */,
+				3A5475682034BEBB0082947E /* ManagedTCPConnection.swift in Sources */,
 				4C98FBB7201E658600378614 /* AppDelegate.swift in Sources */,
 				3ACF30282032ACF4009DC766 /* TCPResultExtension.swift in Sources */,
 				3ADFD62B202E263900AE586D /* CommTestScreen.swift in Sources */,

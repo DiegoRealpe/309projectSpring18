@@ -17,7 +17,8 @@ class CommTestScreen: SKScene {
     private var debugLabel:SKLabelNode?
     private var sendTCPLabel:SKLabelNode?
     
-    //private var client:TCPClient?
+    
+    private var stopTCPCycle = false
     
     //sandbox here
     override func didMove(to view: SKView) {
@@ -32,55 +33,17 @@ class CommTestScreen: SKScene {
         //testHttp() //use refer string response to recievedResponse
     }
     
-    private func startTCPClient(){
-        //self.client = TCPClient(address: "localhost", port: 7234)
-    }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let touch = touches.first, let tcpLabel = self.sendTCPLabel{
             if(tcpLabel.contains(touch.location(in: self))){
-                sendTcp()
+                
             }
         }
     }
     
-    func sendTcp(){
-        let client = TCPClient(address: "localhost", port: 7234)
-        client.connect(timeout: 30).logError()
-        //client.send(string: "hello server\n").logError()
-
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
-            if let recieved = client.read(50){
-                print("recieved: " + String(bytes: recieved, encoding: .utf8)!)
-                client.send(string: "bob: ").logError()
-                print("sent: bob")
-                self.step2(client: client)
-            }
-        })
-        
-    }
     
-    func step2(client : TCPClient){
     
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
-            if let recieved = client.read(100){
-                print("recieved: " + String(bytes: recieved, encoding: .utf8)!)
-            }
-            
-            client.send(string: "message!!&&&& ").logError()
-            print("sent: message!!&&&&")
-            //client.send(string : ":quit").logError()
-            client.close()
-        })
-        
-        
-    }
-    
-    func tcpLogic(client : TCPClient){
-        
-    }
     
     fileprivate func testHttp(){
         Alamofire.request("http://localhost:8080", method: .get)
