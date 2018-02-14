@@ -33,7 +33,7 @@ class CommTestScreen: SKScene {
     }
     
     private func startTCPClient(){
-        //self.client = TCPClient(address: "localhost", port: 7234)
+        self.client = TCPClient(address: "localhost", port: 7234)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

@@ -1,11 +1,10 @@
 //
-//  MainMenu.swift
+//  NewAccountOrLogin.swift
 //  soccer game
 //
-//  Created by rtoepfer on 1/28/18.
+//  Created by Mark Schwartz on 2/13/18.
 //  Copyright © 2018 MG 6. All rights reserved.
 //
-
 import SpriteKit
 //import Alamofire
 
@@ -20,11 +19,9 @@ class MainMenu: SKScene {
         print("got to main menu")
         
         //get scene subnodes
-        self.title = self.childNode(withName: "TitleLabel") as? SKLabelNode
-        self.practiceBG = self.childNode(withName: "Practice Background")
-        self.joinBG = self.childNode(withName: "Join Background")
-        self.comm = self.childNode(withName: "Comm Label")
-        self.account = self.childNode(withName: "Account")
+        self.back = self.childNode(withName: "Back Button")
+        
+        
         
         fadeInLabel(label: self.title)
     }
@@ -32,21 +29,12 @@ class MainMenu: SKScene {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         //if necesarry nodes and one touch exist
-        if let t = touches.first ,let practice = self.practiceBG, let join = self.joinBG, let comm = self.comm, let account = self.account{
+        if let t = touches.first ,let back = self.back{
             let point = t.location(in: self)
             
             //see if touch contains first
-            if practice.contains(point){
-                moveToGameScene()
-            }else if join.contains(point){
-                moveToMatchMakingScene()
-            }
-            /*else if comm.contains(point){
-                moveToCommTestScreen()
-            }*/
-            else if account.contains(point)
-            {
-                moveToAccountScreen()
+            if back.contains(point){
+                moveToMainMenu()
             }
         }
         
@@ -58,6 +46,7 @@ class MainMenu: SKScene {
             nonOptLabel.run(SKAction.fadeIn(withDuration: 2.0))
         }
     }
-
+    
     
 }
+
