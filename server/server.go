@@ -5,6 +5,7 @@ import ( "fmt"
 	"net/http"
 	"bufio"
 	"strconv"
+	"io"
 )
 
 var ports []int
@@ -12,6 +13,7 @@ var ports []int
 func handler(w http.ResponseWriter, r *http.Request){
 
 	if len(ports) <= 1 {
+		io.WriteString(w, "no ports avaliable, sorry fam")
 		return
 	}
 
@@ -20,18 +22,23 @@ func handler(w http.ResponseWriter, r *http.Request){
 	ports = ports[:len(ports) - 1]
 
 	stringport := strconv.Itoa(usedport)
-	
-	fmt.Fprintf(w, stringport)
-	stringport = ":" + stringport
-	ln, _ := net.Listen("tcp", stringport)
-	
-	conn, _ := ln.Accept()
-	
-	writer := bufio.NewWriter(conn)
-	writer.WriteString("welcome to port " + stringport + " :)\n")
-	writer.Flush()
 
-	ports = append(ports, usedport)
+	io.WriteString(w, stringport)
+
+
+	go func() {
+		ln, _ := net.Listen("tcp",":" + stringport)
+		
+		conn, _ := ln.Accept()
+		
+		writer := bufio.NewWriter(conn)
+		writer.WriteString("welcome to port " + stringport + " :)\n")
+		writer.Flush()
+		conn.Close()
+
+		ports = append(ports, usedport)
+	}()
+
 }
 
 
@@ -39,9 +46,8 @@ func handler(w http.ResponseWriter, r *http.Request){
 func main(){
 	ports = []int{0, 3127, 8476, 1736, 5543, 9078}	
 
-	http.HandleFunc("/", nil)
-	http.HandleFunc("/tcpport", handler)
-	err := http.ListenAndServe(":80", nil)
+	http.HandleFunc("/", handler)
+	err := http.ListenAndServe(":132", nil)
 
 	if err != nil {
 		fmt.Println(err.Error())
