@@ -47,7 +47,7 @@ func main(){
 	ports = []int{0, 3127, 8476, 1736, 5543, 9078}	
 
 	http.HandleFunc("/", handler)
-	err := http.ListenAndServe(":132", nil)
+	err := http.ListenAndServe(":80", nil)
 
 	if err != nil {
 		fmt.Println(err.Error())
