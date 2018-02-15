@@ -13,7 +13,7 @@ class NewAccountOrLogin: SKScene {
     var back : SKNode?
     
     override func didMove(to view: SKView) {
-        print("got to main menu")
+        print("got to accounts")
         
         //get scene subnodes
         self.back = self.childNode(withName: "Back Button")
