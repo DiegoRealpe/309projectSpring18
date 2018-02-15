@@ -5,26 +5,36 @@ package main
 import (
 	"database/sql"
 
+	"fmt"
+	"log"
+	"net/http"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 )
 
+//App struct where we have the db and router
 type App struct {
-	Router *mux.Router
+	router *mux.Router
 	db     *sql.DB
 }
 
-func (a *App) Initialize(user, password, dbname string) {
-	a.db, err := sql.Open("mysql",
+//Initialize the db and router
+func (a *App) Initialize() {
+	var err error
+	a.db, err = sql.Open("mysql",
 		"dbu309mg6:1XFA40wc@tcp(mysql.cs.iastate.edu:3306)/db309mg6")
 	if err != nil {
 		fmt.Println(err)
 	}
-	defer db.Close()
-	err = db.Ping()
+	err = a.db.Ping()
 	if err != nil {
 		fmt.Println(err)
 	}
+	a.router = mux.NewRouter()
 }
 
-func (a *App) Run(addr string) {}
+//Run listen and serve
+func (a *App) Run() {
+	log.Fatal(http.ListenAndServe(":8000", a.router))
+}

@@ -1,11 +1,14 @@
-//Player ...
+package main
+
 import (
 	"encoding/json"
 	"net/http"
 
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 )
 
+//Player ...
 type Player struct {
 	ID          string `json:"id,omitempty"`
 	Nickname    string `json:"nickname,omitempty"`

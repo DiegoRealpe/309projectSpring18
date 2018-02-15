@@ -3,11 +3,8 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"log"
-	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/gorilla/mux"
 )
 
 //QueryDeleteUser Clears user in database
@@ -101,32 +98,19 @@ func main() {
 
 	a := App{}
 	a.Initialize()
+	defer a.db.Close()
 
-	a.Run(":8080")
-
-	QuerySearchUser(db, "Nickname", "Nolan")
+	QuerySearchUser(a.db, "Nickname", "Nolan")
 
 	return
 	fmt.Println("Server")
-	AllPlayers = append(AllPlayers, Player{ID: "1", Nickname: "Nolan", GamesPlayed: "0", GoalsScored: "0"})
-	AllPlayers = append(AllPlayers, Player{ID: "2", Nickname: "Diego", GamesPlayed: "5", GoalsScored: "10"})
-	router := mux.NewRouter()
-	router.HandleFunc("/player", GetAllPlayers).Methods("GET")
-	router.HandleFunc("/player/{id}", GetPlayer).Methods("GET")
-	router.HandleFunc("/player/{id}", CreatePlayer).Methods("POST")
-	router.HandleFunc("/player/{id}", DeletePlayer).Methods("DELETE")
-	log.Fatal(http.ListenAndServe(":8000", router))
+
+	a.router.HandleFunc("/player", GetAllPlayers).Methods("GET")
+	a.router.HandleFunc("/player/{id}", GetPlayer).Methods("GET")
+	a.router.HandleFunc("/player/{id}", CreatePlayer).Methods("POST")
+	a.router.HandleFunc("/player/{id}", DeletePlayer).Methods("DELETE")
+	a.Run()
 }
 
 //AllPlayers complete list
 var AllPlayers []Player
-
-/*db.Query(`CREATE DATABASE Diego_Test;
-USE Diego_Test;
-CREATE TABLE Clients (
-	ID INT PRIMARY KEY,
-	Nickname VARCHAR(50) NOT NULL,
-	GamesPlayed INT NOT NULL,
-	GamesWon INT NOT NULL,
-	GoalsScored INT NOT NULL,
-	Online INT NOT NULL)`)*/
