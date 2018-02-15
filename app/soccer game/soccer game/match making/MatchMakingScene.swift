@@ -27,6 +27,7 @@ class MatchMakingScene: SKScene {
         countdownAction = makeCountdownAction()
         
         startCountdown()
+        
     }
     
     func startCountdown(){
@@ -57,7 +58,7 @@ class MatchMakingScene: SKScene {
                     
                     //move to game scene at conclusion of countdown 
                     if i <= 0{
-                        self.moveToGameScene()
+                        self.transitionToGameScene()
                     }
                 }
                 
@@ -72,5 +73,12 @@ class MatchMakingScene: SKScene {
     }
 
     
+    func transitionToGameScene(){
+        self.moveToGameScene(dataFunction : addGameSceneData(_:))
+    }
     
+    func addGameSceneData(_ dict: NSMutableDictionary){
+        dict.setValue("testvalue", forKey: "test")
+        dict.setValue(2, forKey: "test2")
+    }
 }

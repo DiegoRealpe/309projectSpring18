@@ -11,18 +11,35 @@ import SpriteKit
 extension SKScene{
     
     func moveToGameScene(){
-        
         if let scene = GameScene(fileNamed: "GameScene"){
             // Set the scale mode to scale to fit the window
             scene.scaleMode = .aspectFill
+            
+            // Present the scene
+            if let view = self.view{
+                view.presentScene(scene)
+                
+            }
+        }
+    }
+    
+    func moveToGameScene(dataFunction : (NSMutableDictionary) -> Void){
+        if let scene = GameScene(fileNamed: "GameScene"){
+            // Set the scale mode to scale to fit the window
+            scene.scaleMode = .aspectFill
+            scene.userData = NSMutableDictionary()
+            let userData: NSMutableDictionary = scene.userData!
+            dataFunction(userData)
+            
+            print(userData.allValues)
             
             
             // Present the scene
             if let view = self.view{
                 view.presentScene(scene)
+                
             }
         }
-        
     }
     
     func moveToMatchMakingScene(){

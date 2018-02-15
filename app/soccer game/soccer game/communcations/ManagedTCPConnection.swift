@@ -12,6 +12,7 @@ import SwiftSocket
 class ManagedTCPConnection{
     
     var client : TCPClient
+    let port : Int32
     
     //read by dispatcher queues to determine when to stop
     var stopRunning : Bool
@@ -19,6 +20,7 @@ class ManagedTCPConnection{
     init(address : String, port : Int32){
         self.client = TCPClient(address: address, port: port)
         self.stopRunning = false
+        self.port = port
         
         print("connecting to \(address), port \(port)")
         
