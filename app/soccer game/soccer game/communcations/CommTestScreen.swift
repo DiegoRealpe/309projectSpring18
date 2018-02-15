@@ -13,8 +13,8 @@ import SwiftSocket
 //for a screen to test network communications in an enviroment with no reprecussions, will not be in final producrt
 class CommTestScreen: SKScene {
     
-    let host = "localhost"
-    let httpport = 8080
+    let host = "proj-309-MG-6.cs.iastate.edu"
+    let httpport = 80
     
     //label for output
     private var httpHandshakeLabel:SKLabelNode?
@@ -74,7 +74,8 @@ class CommTestScreen: SKScene {
     
     
     fileprivate func askServerForTCPPort(){
-        Alamofire.request("http://\(self.host):\(self.httpport)", method: .get)
+        print("http://\(self.host):\(self.httpport)/tcpport")
+        Alamofire.request("http://\(self.host):\(self.httpport)/tcpport", method: .get)
             .responseString(completionHandler: respondToPortHandshake(_:))
     }
     
@@ -88,7 +89,7 @@ class CommTestScreen: SKScene {
                 return
             }
             
-            self.tcpConn = ManagedTCPConnection(address : "localhost", port : port)
+            self.tcpConn = ManagedTCPConnection(address : self.host, port : port)
         }
     }
     

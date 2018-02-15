@@ -57,14 +57,9 @@ class ManagedTCPConnection{
     
     //starts dispatch queue that calls itself after completion
     func tcpCycle(){
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(250), execute: {
-            self.respondToTCPDataSent()
-            
-            //call tcpCycle to start another dispatch Queue
-            if self.stopRunning{
-                self.client.close()
-            }else{
-                self.tcpCycle()
+        DispatchQueue.main.async( execute: {
+            while !self.stopRunning{
+                self.respondToTCPDataSent()
             }
         })
     }
