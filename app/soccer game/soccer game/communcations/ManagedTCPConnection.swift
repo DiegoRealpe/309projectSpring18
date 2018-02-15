@@ -14,42 +14,56 @@ class ManagedTCPConnection{
     var client : TCPClient
     
     //read by dispatcher queues to determine when to stop
-    var stopRunning = true
+    var stopRunning : Bool
     
-    //is currently running
-    var isRunning : Bool
-    
-    init(address : String, port : Int32, start : Bool){
+    init(address : String, port : Int32){
         self.client = TCPClient(address: address, port: port)
+        self.stopRunning = false
         
-        if start {
-            self.isRunning = true
-            self.stopRunning = false
-            client.connect(timeout: 30).logError()
-            startTCPCycle(client: self.client)
-        }else{
-            self.isRunning = false
+        print("connecting to \(address), port \(port)")
+        
+        client.connect(timeout: 30).logError()
+        startTCPCycle()
+    }
+    
+    
+    func sendTCP(message : String){
+        guard !stopRunning else{
+            //todo: determint behavior for this
+            return
         }
-    }
-    
-    func startTCPCycle(client tcp : TCPClient){
         
+        self.client.send(string: message).logError()
+        print("sent: \"\(message)\"")
+    }
+    
+    func stop(){
+        print("stopping tcp connection")
+        stopRunning = true
+    }
+    
+    fileprivate func startTCPCycle(){
+        tcpCycle()
     }
     
     
-    fileprivate func respondToTCPDataSent(client tcp : TCPClient) {
-        if let recieved = tcp.read(50){
+    fileprivate func respondToTCPDataSent() {
+        if let recieved = self.client.read(50){
             print("recieved: " + String(bytes: recieved, encoding: .utf8)!)
         }
     }
     
     //starts dispatch queue that calls itself after completion
-    func tcpCycle(client tcp : TCPClient){
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(50), execute: {
-            self.respondToTCPDataSent(client : tcp)
+    func tcpCycle(){
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(250), execute: {
+            self.respondToTCPDataSent()
             
             //call tcpCycle to start another dispatch Queue
-            self.tcpCycle(client: tcp)
+            if self.stopRunning{
+                self.client.close()
+            }else{
+                self.tcpCycle()
+            }
         })
     }
     

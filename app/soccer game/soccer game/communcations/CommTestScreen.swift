@@ -16,9 +16,10 @@ class CommTestScreen: SKScene {
     //label for output
     private var debugLabel:SKLabelNode?
     private var sendTCPLabel:SKLabelNode?
+    private var stopTCPLabel:SKLabelNode?
+    private var sendHelloLabel:SKLabelNode?
     
-    
-    private var stopTCPCycle = false
+    private var tcpConn : ManagedTCPConnection?
     
     //sandbox here
     override func didMove(to view: SKView) {
@@ -27,22 +28,26 @@ class CommTestScreen: SKScene {
         
         self.debugLabel = self.childNode(withName: "Debug Label") as? SKLabelNode
         self.sendTCPLabel = self.childNode(withName: "Send Tcp") as? SKLabelNode
-        
-        
+        self.stopTCPLabel = self.childNode(withName: "Close Tcp") as? SKLabelNode
+        self.sendHelloLabel = self.childNode(withName: "Send Hello") as? SKLabelNode
         
         //testHttp() //use refer string response to recievedResponse
     }
     
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let touch = touches.first, let tcpLabel = self.sendTCPLabel{
-            if(tcpLabel.contains(touch.location(in: self))){
-                
+        if let touch = touches.first{
+            if let tcpLabel = self.sendTCPLabel, tcpLabel.contains(touch.location(in: self)){
+                self.tcpConn = ManagedTCPConnection(address : "localhost", port : 7234)
+            }
+            else if let stopLabel = self.stopTCPLabel, stopLabel.contains(touch.location(in: self)){
+                self.tcpConn?.stop()
+            }
+            else if let sendLabel = self.sendHelloLabel, sendLabel.contains(touch.location(in: self)){
+                self.tcpConn?.sendTCP(message: "hello")
             }
         }
     }
-    
-    
     
     
     fileprivate func testHttp(){
