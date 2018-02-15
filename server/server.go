@@ -22,7 +22,8 @@ func handler(w http.ResponseWriter, r *http.Request){
 	stringport := strconv.Itoa(usedport)
 	
 	fmt.Fprintf(w, stringport)
-	ln, _ := net.Listen("tcp", ":" + stringport)
+	stringport = ":" + stringport
+	ln, _ := net.Listen("tcp", stringport)
 	
 	conn, _ := ln.Accept()
 	
