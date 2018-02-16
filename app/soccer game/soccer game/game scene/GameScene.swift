@@ -97,11 +97,17 @@ class GameScene: SKScene {
             let dy = js.yDirection * movementSpeed
             self.playerNode?.physicsBody?.velocity = CGVector(dx: dx, dy: dy)
            
+            
             let positionTuple = self.playerNode?.position
-            
             let playerState = ClientPlayerStatePacket.init(xPos:Int32(positionTuple!.x) , yPos: Int32(positionTuple!.y), xV: Int32(dx), yV: Int32(dy))
-            
             var playerByteArray = playerState.toByteArray()
+            
+            var tcpConn : ManagedTCPConnection?
+            
+            tcpConn = ManagedTCPConnection(address : "proj-309-mg-6.cs.iastate.edu", port : 5543)
+            tcpConn?.sendTCP(message: "OK")
+        
+            
         }
         
         
