@@ -94,6 +94,8 @@ class GameScene: SKScene {
             let dx = js.xDirection * movementSpeed
             let dy = js.yDirection * movementSpeed
             self.playerNode?.physicsBody?.velocity = CGVector(dx: dx, dy: dy)
+            
+            
         
         }
         
