@@ -28,10 +28,12 @@
 		4C98FBD2201E658700378614 /* soccer_gameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C98FBD1201E658700378614 /* soccer_gameTests.swift */; };
 		4CC91D9C20339A7800FB9236 /* NewAccountOrLogin.sks in Resources */ = {isa = PBXBuildFile; fileRef = 4CC91D9B20339A7800FB9236 /* NewAccountOrLogin.sks */; };
 		4CC91D9E20339BA700FB9236 /* NewAccountOrLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC91D9D20339BA700FB9236 /* NewAccountOrLogin.swift */; };
-		4CC91DBD2034D80F00FB9236 /* SwiftSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CC91DBC2034D80E00FB9236 /* SwiftSocket.framework */; };
-		4CC91DBE2034D80F00FB9236 /* SwiftSocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4CC91DBC2034D80E00FB9236 /* SwiftSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4CC91DC12034D82E00FB9236 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CC91DC02034D82E00FB9236 /* Alamofire.framework */; };
-		4CC91DC22034D82E00FB9236 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4CC91DC02034D82E00FB9236 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4CC91DCA20360E6800FB9236 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC91DC920360E6800FB9236 /* LoginController.swift */; };
+		4CC91DCE203624DB00FB9236 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4CC91DCD203624DB00FB9236 /* Login.storyboard */; };
+		4CF92799203744F300E66DCE /* SwiftSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CF92797203744F200E66DCE /* SwiftSocket.framework */; };
+		4CF9279A203744F300E66DCE /* SwiftSocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4CF92797203744F200E66DCE /* SwiftSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4CF9279B203744F300E66DCE /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CF92798203744F300E66DCE /* Alamofire.framework */; };
+		4CF9279C203744F300E66DCE /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4CF92798203744F300E66DCE /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,8 +53,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				4CC91DBE2034D80F00FB9236 /* SwiftSocket.framework in Embed Frameworks */,
-				4CC91DC22034D82E00FB9236 /* Alamofire.framework in Embed Frameworks */,
+				4CF9279A203744F300E66DCE /* SwiftSocket.framework in Embed Frameworks */,
+				4CF9279C203744F300E66DCE /* Alamofire.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -85,8 +87,10 @@
 		4C98FBD3201E658700378614 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4CC91D9B20339A7800FB9236 /* NewAccountOrLogin.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = NewAccountOrLogin.sks; path = ../../../../../../NewAccountOrLogin.sks; sourceTree = "<group>"; };
 		4CC91D9D20339BA700FB9236 /* NewAccountOrLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAccountOrLogin.swift; sourceTree = "<group>"; };
-		4CC91DBC2034D80E00FB9236 /* SwiftSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SwiftSocket.framework; sourceTree = "<group>"; };
-		4CC91DC02034D82E00FB9236 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Alamofire.framework; sourceTree = "<group>"; };
+		4CC91DC920360E6800FB9236 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
+		4CC91DCD203624DB00FB9236 /* Login.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Login.storyboard; sourceTree = "<group>"; };
+		4CF92797203744F200E66DCE /* SwiftSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SwiftSocket.framework; sourceTree = "<group>"; };
+		4CF92798203744F300E66DCE /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Alamofire.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,8 +98,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4CC91DBD2034D80F00FB9236 /* SwiftSocket.framework in Frameworks */,
-				4CC91DC12034D82E00FB9236 /* Alamofire.framework in Frameworks */,
+				4CF92799203744F300E66DCE /* SwiftSocket.framework in Frameworks */,
+				4CF9279B203744F300E66DCE /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -150,8 +154,8 @@
 		4C98FBAA201E658600378614 = {
 			isa = PBXGroup;
 			children = (
-				4CC91DC02034D82E00FB9236 /* Alamofire.framework */,
-				4CC91DBC2034D80E00FB9236 /* SwiftSocket.framework */,
+				4CF92798203744F300E66DCE /* Alamofire.framework */,
+				4CF92797203744F200E66DCE /* SwiftSocket.framework */,
 				4C98FBB5201E658600378614 /* soccer game */,
 				4C98FBD0201E658700378614 /* soccer gameTests */,
 				4C98FBB4201E658600378614 /* Products */,
@@ -203,6 +207,8 @@
 			children = (
 				4CC91D9B20339A7800FB9236 /* NewAccountOrLogin.sks */,
 				4CC91D9D20339BA700FB9236 /* NewAccountOrLogin.swift */,
+				4CC91DC920360E6800FB9236 /* LoginController.swift */,
+				4CC91DCD203624DB00FB9236 /* Login.storyboard */,
 			);
 			path = Accounts;
 			sourceTree = "<group>";
@@ -306,6 +312,7 @@
 				4CC91D9C20339A7800FB9236 /* NewAccountOrLogin.sks in Resources */,
 				3ADFD62D202E265100AE586D /* CommTestScreen.sks in Resources */,
 				4C98FBC7201E658700378614 /* LaunchScreen.storyboard in Resources */,
+				4CC91DCE203624DB00FB9236 /* Login.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -326,6 +333,7 @@
 				3AB377DE2023B5980019E73E /* Joystick.swift in Sources */,
 				4C98FBBD201E658600378614 /* GameScene.swift in Sources */,
 				3AB377E02023B5C50019E73E /* CGPointExtension.swift in Sources */,
+				4CC91DCA20360E6800FB9236 /* LoginController.swift in Sources */,
 				4CC91D9E20339BA700FB9236 /* NewAccountOrLogin.swift in Sources */,
 				4C98FBBF201E658600378614 /* GameViewController.swift in Sources */,
 				3A74A604201F86ED00A1583F /* SKSceneTransitionExtension.swift in Sources */,
