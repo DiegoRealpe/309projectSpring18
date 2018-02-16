@@ -80,14 +80,11 @@ func main(){
 		g.writer[i] = bufio.NewWriter(g.connections[i])
 	}
 
-	go func() {
-		ListenAndSend(g, 0)
-	}()
-
-	go func() {
-		ListenAndSend(g, 1)
-	}()
-	
+	for i - 0; i < len(g.connections); i++{
+		go func() {
+			ListenAndSend(g, i)
+		}()
+	}
 }
 //restful api
 //crud api
