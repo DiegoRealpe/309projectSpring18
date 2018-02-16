@@ -21,6 +21,7 @@
 		3ACF30282032ACF4009DC766 /* TCPResultExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACF30272032ACF4009DC766 /* TCPResultExtension.swift */; };
 		3ADFD62B202E263900AE586D /* CommTestScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADFD62A202E263900AE586D /* CommTestScreen.swift */; };
 		3ADFD62D202E265100AE586D /* CommTestScreen.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3ADFD62C202E265100AE586D /* CommTestScreen.sks */; };
+		4C0C36A820374FF70074C06A /* ClientPlayerStatePacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C0C36A720374FF70074C06A /* ClientPlayerStatePacket.swift */; };
 		4C98FBB7201E658600378614 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C98FBB6201E658600378614 /* AppDelegate.swift */; };
 		4C98FBB9201E658600378614 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 4C98FBB8201E658600378614 /* GameScene.sks */; };
 		4C98FBBD201E658600378614 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C98FBBC201E658600378614 /* GameScene.swift */; };
@@ -78,6 +79,7 @@
 		3ACF30272032ACF4009DC766 /* TCPResultExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCPResultExtension.swift; sourceTree = "<group>"; };
 		3ADFD62A202E263900AE586D /* CommTestScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommTestScreen.swift; sourceTree = "<group>"; };
 		3ADFD62C202E265100AE586D /* CommTestScreen.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = CommTestScreen.sks; sourceTree = "<group>"; };
+		4C0C36A720374FF70074C06A /* ClientPlayerStatePacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientPlayerStatePacket.swift; sourceTree = "<group>"; };
 		4C98FBB3201E658600378614 /* soccer game.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "soccer game.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C98FBB6201E658600378614 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4C98FBB8201E658600378614 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
