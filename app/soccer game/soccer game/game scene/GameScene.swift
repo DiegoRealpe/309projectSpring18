@@ -95,11 +95,15 @@ class GameScene: SKScene {
             let dy = js.yDirection * movementSpeed
             self.playerNode?.physicsBody?.velocity = CGVector(dx: dx, dy: dy)
             
+            
+            
         }
+        
         
         
         for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
     }
+    
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches { self.touchUp(atPoint: t.location(in: self)) }
