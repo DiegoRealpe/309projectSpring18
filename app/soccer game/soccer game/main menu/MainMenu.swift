@@ -41,9 +41,9 @@ class MainMenu: SKScene {
             }else if join.contains(point){
                 moveToMatchMakingScene()
             }
-            /*else if comm.contains(point){
+            else if comm.contains(point){
                 moveToCommTestScreen()
-            }*/
+            }
             else if account.contains(point)
             {
                 moveToAccountScreen()

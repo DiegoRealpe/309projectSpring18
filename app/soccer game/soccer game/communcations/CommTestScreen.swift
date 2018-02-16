@@ -34,9 +34,6 @@ class CommTestScreen: SKScene {
         //testHttp() //use refer string response to recievedResponse
     }
     
-    private func startTCPClient(){
-      //  self.client = TCPClient(address: "localhost", port: 7234)
-    }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let touch = touches.first{
@@ -56,7 +53,7 @@ class CommTestScreen: SKScene {
     }
     
     
-    fileprivate func testHttp(){
+    private func testHttp(){
         Alamofire.request("http://localhost:8080", method: .get)
                 .responseString(completionHandler: recievedResponse(_:))
     }

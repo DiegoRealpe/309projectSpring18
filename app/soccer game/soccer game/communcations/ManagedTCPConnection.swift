@@ -10,48 +10,66 @@ import Foundation
 import SwiftSocket
 
 class ManagedTCPConnection{
-
+    
+    var datahandler : ([Byte]) -> Void = { data in
+        print("recieved: " + String(bytes: data, encoding: .utf8)!)
+    }
+    
     var client : TCPClient
-
+    let port : Int32
+    
     //read by dispatcher queues to determine when to stop
-    var stopRunning = true
-
-    //is currently running
-    var isRunning : Bool
-
-    init(address : String, port : Int32, start : Bool){
+    var stopRunning : Bool
+    
+    init(address : String, port : Int32){
         self.client = TCPClient(address: address, port: port)
+        self.stopRunning = false
+        self.port = port
+        
+        print("connecting to \(address), port \(port)")
+        
+        client.connect(timeout: 30).logError()
+        startTCPCycle()
+    }
+    
+    
+    func sendTCP(message : String){
+        guard !stopRunning else{
+            //todo: determint behavior for this
+            return
+        }
+        
+        self.client.send(string: message).logError()
+        print("sent: \"\(message)\"")
+    }
+    
+    func stop(){
+        print("stopping tcp connection")
+        stopRunning = true
+    }
+    
+    fileprivate func startTCPCycle(){
+        tcpCycle()
+    }
+    
+    
+    fileprivate func respondToTCPDataSent() {
+        
+        let data = self.client.read(25)
 
-        if start {
-            self.isRunning = true
-            self.stopRunning = false
-            client.connect(timeout: 30).logError()
-            startTCPCycle(client: self.client)
-        }else{
-            self.isRunning = false
+        if let recieved = data{
+            datahandler(recieved)
         }
     }
-
-    func startTCPCycle(client tcp : TCPClient){
-
-    }
-
-
-    fileprivate func respondToTCPDataSent(client tcp : TCPClient) {
-        if let recieved = tcp.read(50){
-            print("recieved: " + String(bytes: recieved, encoding: .utf8)!)
-        }
-    }
-
+    
     //starts dispatch queue that calls itself after completion
-    func tcpCycle(client tcp : TCPClient){
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(50), execute: {
-            self.respondToTCPDataSent(client : tcp)
-
-            //call tcpCycle to start another dispatch Queue
-            self.tcpCycle(client: tcp)
+    func tcpCycle(){
+        DispatchQueue.global().async( execute: {
+            while !self.stopRunning{
+                self.respondToTCPDataSent()
+            }
         })
     }
-
+    
 }
 
