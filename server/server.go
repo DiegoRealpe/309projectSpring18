@@ -41,7 +41,7 @@ func handler(w http.ResponseWriter, r *http.Request){
 		conn, _ := ln.Accept()
 		
 		writer := bufio.NewWriter(conn)
-		writer.WriteString("welcome to port " + stringport + " :)\nAre you ready to play some FUTBOL?????")
+		writer.WriteString("welcome to port " + stringport + " stranger\nAre you ready to play some FUTBOL?????")
 		writer.Flush()
 
 		connPasser <- conn
@@ -80,7 +80,7 @@ func main(){
 		g.writer[i] = bufio.NewWriter(g.connections[i])
 	}
 
-	for i - 0; i < len(g.connections); i++{
+	for i = 0; i < len(g.connections); i++{
 		go func() {
 			ListenAndSend(g, i)
 		}()
