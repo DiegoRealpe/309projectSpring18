@@ -11,9 +11,6 @@ import Alamofire
 
 class MatchMakingScene: SKScene {
     
-    let host = "proj-309-MG-6.cs.iastate.edu"
-    let httpport = 80
-    
     let totalCount = 3
     let countTime = 0.5
     
@@ -32,16 +29,20 @@ class MatchMakingScene: SKScene {
         guard let first = touches.first else{
             return
         }
+        let location = first.location(in: self)
         
-        
+        if let label = self.connectLabel, label.contains(location) {
+            askServerForTCPPort()
+        }
         
     }
     
     fileprivate func askServerForTCPPort(){
         self.connectLabel?.text = "connecting ..."
         
-        print("http://\(self.host):\(self.httpport)/tcpport")
-        Alamofire.request("http://\(self.host):\(self.httpport)/tcpport", method: .get)
+        let requestString = "http://\(CommunicationProperties.host):\(CommunicationProperties.httpport)/tcpport"
+        print("sending get to \(requestString)")
+        Alamofire.request(requestString, method: .get)
             .responseString(completionHandler: respondToPortHandshake(_:))
     }
     
@@ -50,12 +51,13 @@ class MatchMakingScene: SKScene {
         if let data:Data = response.data, let str:String = String(data: data, encoding: .utf8){
             print("got response \"\(str)\"")
             
+            //parse port from response string
             guard let port = Int32(str) else{
                 print("did not recieve correctly formatted port sesponse, not connecting")
                 return
             }
             
-            self.tcpConn = ManagedTCPConnection(address : self.host, port : port)
+            self.tcpConn = ManagedTCPConnection(address : CommunicationProperties.host, port : port)
             transitionToGameScene()
         }
     }

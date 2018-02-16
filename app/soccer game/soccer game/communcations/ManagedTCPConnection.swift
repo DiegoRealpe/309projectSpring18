@@ -11,6 +11,10 @@ import SwiftSocket
 
 class ManagedTCPConnection{
     
+    var datahandler : ([Byte]) -> Void = { data in
+        print("recieved: " + String(bytes: data, encoding: .utf8)!)
+    }
+    
     var client : TCPClient
     let port : Int32
     
@@ -50,14 +54,17 @@ class ManagedTCPConnection{
     
     
     fileprivate func respondToTCPDataSent() {
-        if let recieved = self.client.read(50){
-            print("recieved: " + String(bytes: recieved, encoding: .utf8)!)
+        
+        let data = self.client.read(25)
+
+        if let recieved = data{
+            datahandler(recieved)
         }
     }
     
     //starts dispatch queue that calls itself after completion
     func tcpCycle(){
-        DispatchQueue.main.async( execute: {
+        DispatchQueue.global().async( execute: {
             while !self.stopRunning{
                 self.respondToTCPDataSent()
             }
