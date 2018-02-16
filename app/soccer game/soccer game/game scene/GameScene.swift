@@ -90,13 +90,18 @@ class GameScene: SKScene {
                 label.text = str
             }
             
+            
+            
             //capture and react to joystick position
             let dx = js.xDirection * movementSpeed
             let dy = js.yDirection * movementSpeed
             self.playerNode?.physicsBody?.velocity = CGVector(dx: dx, dy: dy)
+           
+            let positionTuple = self.playerNode?.position
             
+            let playerState = ClientPlayerStatePacket.init(xPos:Int32(positionTuple!.x) , yPos: Int32(positionTuple!.y), xV: Int32(dx), yV: Int32(dy))
             
-        
+            var playerByteArray = playerState.toByteArray()
         }
         
         
