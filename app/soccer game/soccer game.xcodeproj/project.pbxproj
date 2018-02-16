@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A31696E2037505900DA2DCC /* NewAccountOrLogin.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A31696D2037505900DA2DCC /* NewAccountOrLogin.sks */; };
+		3A316970203750B200DA2DCC /* GameSceneServerResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A31696F203750B200DA2DCC /* GameSceneServerResponder.swift */; };
 		3A5475682034BEBB0082947E /* ManagedTCPConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5475672034BEBB0082947E /* ManagedTCPConnection.swift */; };
 		3A54756C20372C230082947E /* CommunicationProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A54756B20372C230082947E /* CommunicationProperties.swift */; };
 		3A74A5FC201E6C3E00A1583F /* MainMenu.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A74A5FB201E6C3E00A1583F /* MainMenu.sks */; };
@@ -28,7 +30,6 @@
 		4C98FBC4201E658700378614 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C98FBC3201E658700378614 /* Assets.xcassets */; };
 		4C98FBC7201E658700378614 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C98FBC5201E658700378614 /* LaunchScreen.storyboard */; };
 		4C98FBD2201E658700378614 /* soccer_gameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C98FBD1201E658700378614 /* soccer_gameTests.swift */; };
-		4CC91D9C20339A7800FB9236 /* NewAccountOrLogin.sks in Resources */ = {isa = PBXBuildFile; fileRef = 4CC91D9B20339A7800FB9236 /* NewAccountOrLogin.sks */; };
 		4CC91D9E20339BA700FB9236 /* NewAccountOrLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC91D9D20339BA700FB9236 /* NewAccountOrLogin.swift */; };
 		4CC91DCA20360E6800FB9236 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC91DC920360E6800FB9236 /* LoginController.swift */; };
 		4CC91DCE203624DB00FB9236 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4CC91DCD203624DB00FB9236 /* Login.storyboard */; };
@@ -64,6 +65,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3A31696D2037505900DA2DCC /* NewAccountOrLogin.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = NewAccountOrLogin.sks; sourceTree = "<group>"; };
+		3A31696F203750B200DA2DCC /* GameSceneServerResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSceneServerResponder.swift; sourceTree = "<group>"; };
 		3A5475672034BEBB0082947E /* ManagedTCPConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedTCPConnection.swift; sourceTree = "<group>"; };
 		3A54756B20372C230082947E /* CommunicationProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunicationProperties.swift; sourceTree = "<group>"; };
 		3A74A5FB201E6C3E00A1583F /* MainMenu.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MainMenu.sks; sourceTree = "<group>"; };
@@ -89,7 +92,6 @@
 		4C98FBCD201E658700378614 /* soccer gameTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "soccer gameTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C98FBD1201E658700378614 /* soccer_gameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = soccer_gameTests.swift; sourceTree = "<group>"; };
 		4C98FBD3201E658700378614 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4CC91D9B20339A7800FB9236 /* NewAccountOrLogin.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = NewAccountOrLogin.sks; path = ../../../../../../NewAccountOrLogin.sks; sourceTree = "<group>"; };
 		4CC91D9D20339BA700FB9236 /* NewAccountOrLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAccountOrLogin.swift; sourceTree = "<group>"; };
 		4CC91DC920360E6800FB9236 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		4CC91DCD203624DB00FB9236 /* Login.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Login.storyboard; sourceTree = "<group>"; };
@@ -132,7 +134,7 @@
 				4C98FBB8201E658600378614 /* GameScene.sks */,
 				4C98FBBC201E658600378614 /* GameScene.swift */,
 				3AB377DD2023B5980019E73E /* Joystick.swift */,
-				4C0C36A720374FF70074C06A /* ClientPlayerStatePacket.swift */,
+				3A31696F203750B200DA2DCC /* GameSceneServerResponder.swift */,
 			);
 			path = "game scene";
 			sourceTree = "<group>";
@@ -211,7 +213,7 @@
 		4CC91D9A20339A1C00FB9236 /* Accounts */ = {
 			isa = PBXGroup;
 			children = (
-				4CC91D9B20339A7800FB9236 /* NewAccountOrLogin.sks */,
+				3A31696D2037505900DA2DCC /* NewAccountOrLogin.sks */,
 				4CC91D9D20339BA700FB9236 /* NewAccountOrLogin.swift */,
 				4CC91DC920360E6800FB9236 /* LoginController.swift */,
 				4CC91DCD203624DB00FB9236 /* Login.storyboard */,
@@ -312,10 +314,10 @@
 			files = (
 				3A74A5FC201E6C3E00A1583F /* MainMenu.sks in Resources */,
 				4C98FBC2201E658600378614 /* Main.storyboard in Resources */,
+				3A31696E2037505900DA2DCC /* NewAccountOrLogin.sks in Resources */,
 				3A74A600201F7E1900A1583F /* MatchMakingScene.sks in Resources */,
 				4C98FBB9201E658600378614 /* GameScene.sks in Resources */,
 				4C98FBC4201E658700378614 /* Assets.xcassets in Resources */,
-				4CC91D9C20339A7800FB9236 /* NewAccountOrLogin.sks in Resources */,
 				3ADFD62D202E265100AE586D /* CommTestScreen.sks in Resources */,
 				4C98FBC7201E658700378614 /* LaunchScreen.storyboard in Resources */,
 				4CC91DCE203624DB00FB9236 /* Login.storyboard in Resources */,
@@ -338,7 +340,7 @@
 			files = (
 				3AB377DE2023B5980019E73E /* Joystick.swift in Sources */,
 				4C98FBBD201E658600378614 /* GameScene.swift in Sources */,
-				4C0C36A820374FF70074C06A /* ClientPlayerStatePacket.swift in Sources */,
+				3A316970203750B200DA2DCC /* GameSceneServerResponder.swift in Sources */,
 				3AB377E02023B5C50019E73E /* CGPointExtension.swift in Sources */,
 				4CC91DCA20360E6800FB9236 /* LoginController.swift in Sources */,
 				4CC91D9E20339BA700FB9236 /* NewAccountOrLogin.swift in Sources */,
