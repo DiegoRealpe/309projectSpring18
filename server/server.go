@@ -67,7 +67,7 @@ func main() {
 	i := 0
 
 	for connected := range connPasser {//when a player connects, initialize their readers and writers
-		if i > 1 {break}
+		
 		g.connections[i] = connected
 		g.reader[i] = bufio.NewReader(g.connections[i])
 		g.writer[i] = bufio.NewWriter(g.connections[i])
@@ -95,6 +95,7 @@ func main() {
 
 		
 		i++
+		if i > 1 {break}
 	}
 	ListenAndSend(g, 0)
 	ListenAndSend(g, 1)
