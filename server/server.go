@@ -74,7 +74,6 @@ func main() {
 			g.writer[i].Write(hellobyte)
 			g.writer[i].Flush()
 
-			go func(){
 				time.Sleep(2*time.Second)
 				testpacket := ServerPacket{
 					serverPlayerState: 121,
@@ -90,8 +89,7 @@ func main() {
 				
 				g.writer[i].Write(testbytes)
 				g.writer[i].Flush()
-			
-			}()
+
 			
 			i++
 		}
