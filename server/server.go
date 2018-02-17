@@ -66,46 +66,36 @@ func main() {
 
 	i := 0
 
-	for i < 2 {//don't start recieving or sending packets until we have two players
-		for connected := range connPasser {//when a player connects, initialize their readers and writers
-			g.connections[i] = connected
-			g.reader[i] = bufio.NewReader(g.connections[i])
-			g.writer[i] = bufio.NewWriter(g.connections[i])
-			hellobyte := []byte{byte(122), byte(i)}
-			g.writer[i].Write(hellobyte)
-			g.writer[i].Flush()
-			
-				time.Sleep(2*time.Second)
-				testpacket := ServerPacket{//testing; to be removed later
-					serverPlayerState: 121,
-					playernumber: uint8(i),
-					xPosition: 0,
-					yPosition: 0,
-					xVelocity: 0,
-					yVelocity: 0,
-					timestamp: 0,
-				}
-
-				testbytes := ParseServerPacket(testpacket)
-				
-				g.writer[i].Write(testbytes)
-				g.writer[i].Flush()
-
-			
-			i++
+	for connected := range connPasser {//when a player connects, initialize their readers and writers
+		g.connections[i] = connected
+		g.reader[i] = bufio.NewReader(g.connections[i])
+		g.writer[i] = bufio.NewWriter(g.connections[i])
+		hellobyte := []byte{byte(122), byte(i)}
+		g.writer[i].Write(hellobyte)
+		g.writer[i].Flush()
+		
+		time.Sleep(2*time.Second)
+		testpacket := ServerPacket{//testing; to be removed later
+			serverPlayerState: 121,
+			playernumber: uint8(i),
+			xPosition: 0,
+			yPosition: 0,
+			xVelocity: 0,
+			yVelocity: 0,
+			timestamp: 0,
 		}
+		
+		testbytes := ParseServerPacket(testpacket)
+		
+		g.writer[i].Write(testbytes)
+		g.writer[i].Flush()
+		
+		go func() {
+			ListenAndSend(g, i)
+		}()
+		
+		i++
 	}
-
-	
-
-	
-	go func() {
-		ListenAndSend(g, 0)
-	}()
-
-	go func() {
-		ListenAndSend(g, 1)
-	}()
-	fmt.Println("we got here fam")
 }
+
 
