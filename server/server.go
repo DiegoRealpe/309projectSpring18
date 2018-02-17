@@ -99,6 +99,8 @@ func main() {
 	}
 	ListenAndSend(g, 0)
 	ListenAndSend(g, 1)
+
+	for{}
 	
 }
 
