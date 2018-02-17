@@ -23,6 +23,8 @@ class GameScene: SKScene {
     
     let movementSpeed = 100.0
     
+    var packetTypeDict : [UInt8:PacketType] = [:]
+    
     override func didMove(to view: SKView) { 
         
         // get optional nodes from scene
@@ -30,9 +32,12 @@ class GameScene: SKScene {
         self.backLabel = self.childNode(withName: "Back Label") as? SKLabelNode
         self.playerNode = self.childNode(withName:"Player Node") as? SKSpriteNode
         self.ballNode = self.childNode(withName: "Ball") as? SKSpriteNode
-        
-        
         self.joyStick = JoyStick(parent: self, radius: 50.0, startPoint: CGPoint(x: 0, y: 0))
+        
+        self.buildPacketTypeDict()
+        self.userData?.value(forKey: )
+        
+        
     }
     
     //for individual touches
@@ -130,6 +135,10 @@ class GameScene: SKScene {
     }
     
     
+    func buildPacketTypeDict(){
+        self.packetTypeDict[121] = PacketType(dataSize: 17, handlerFunction: executePositionPacket(data:))
+    }
+    
     func executePositionPacket(data : [UInt8]){
         guard data.count == 17 else{
             print("executePositionPackets did not have correct data size. expected 17, was",data.count)
@@ -163,7 +172,8 @@ class GameScene: SKScene {
     
     
     func ApplyPositionPacketToPlayer(player : SKSpriteNode, point : CGPoint, vector : CGVector){
-        
+        player.position = point
+        player.physicsBody?.velocity = vector
     }
 }
 
