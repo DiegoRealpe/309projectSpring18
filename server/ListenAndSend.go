@@ -36,6 +36,7 @@ func ListenAndSend(g Game, connNumber int) {
 				//broadcast that message to the clients
 				for _, reciever := range g.writer {
 					reciever.Write(sendbytes)
+					reciever.Flush()
 				}
 
 			}
