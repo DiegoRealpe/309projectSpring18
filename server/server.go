@@ -72,6 +72,23 @@ func main() {
 			hellobyte := []byte{byte(122), byte(i)}
 			g.writer[i].Write(hellobyte)
 			g.writer[i].Flush()
+
+			go func(){
+				time.Sleep(2*time.Second)
+				testpacket := ServerPacket{
+					serverPlayerState: 121,
+					playernumber: i,
+					xPosition: 0,
+					yPosition: 0,
+					xVelocity: 0,
+					yVelocity: 0,
+					timestamp: 0,
+				}
+				g.writer[i].Write(testpacket)
+				g.writer[i].Flush()
+			
+			}()
+			
 			i++
 		}
 	}
