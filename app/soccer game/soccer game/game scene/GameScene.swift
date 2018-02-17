@@ -20,12 +20,15 @@ class GameScene: SKScene {
     private var joyStick : JoyStick?
     private var playerNode : SKSpriteNode?
     private var ballNode : SKSpriteNode?
+    private var managedTcpConnection : ManagedTCPConnection?
     
     let movementSpeed = 100.0
     
     var packetTypeDict : [UInt8:PacketType] = [:]
     
-    override func didMove(to view: SKView) { 
+    
+    
+    override func didMove(to view: SKView) {
         
         // get optional nodes from scene
         self.label = self.childNode(withName: "Hello Label") as? SKLabelNode
@@ -34,10 +37,22 @@ class GameScene: SKScene {
         self.ballNode = self.childNode(withName: "Ball") as? SKSpriteNode
         self.joyStick = JoyStick(parent: self, radius: 50.0, startPoint: CGPoint(x: 0, y: 0))
         
-        self.buildPacketTypeDict()
-        self.userData?.value(forKey: )
+        configureManagedTCPConnection()
+        configurePacketResponder()
+    }
+    
+    func configurePacketResponder() {
+        buildPacketTypeDict()
         
-        
+        if let spr = self.userData?.value(forKey: UserDataKeys.socketPacketResponder.rawValue) as? SocketPacketResponder {
+            spr.packetTypeDict = self.packetTypeDict
+        }
+    }
+    
+    func configureManagedTCPConnection(){
+        if let mtcp = self.userData?.value(forKey: UserDataKeys.socketPacketResponder.rawValue) as? ManagedTCPConnection {
+            self.managedTcpConnection = mtcp
+        }
     }
     
     //for individual touches
