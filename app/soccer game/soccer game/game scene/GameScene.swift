@@ -14,7 +14,7 @@ import GameplayKit
 class GameScene: SKScene {
     
     //label used for debugging, not part of final project
-    private var label : SKLabelNode?
+    private var mockPacketLabel : SKLabelNode?
     
     private var backLabel : SKLabelNode?
     private var joyStick : JoyStick?
@@ -30,11 +30,13 @@ class GameScene: SKScene {
     override func didMove(to view: SKView) {
         
         // get optional nodes from scene
-        self.label = self.childNode(withName: "Hello Label") as? SKLabelNode
         self.backLabel = self.childNode(withName: "Back Label") as? SKLabelNode
         self.playerNode = self.childNode(withName:"Player Node") as? SKSpriteNode
         self.ballNode = self.childNode(withName: "Ball") as? SKSpriteNode
         self.joyStick = JoyStick(parent: self, radius: 50.0, startPoint: CGPoint(x: 0, y: 0))
+        self.mockPacketLabel = self.childNode(withName: "Mock Packet") as? SKLabelNode
+        
+        print(self.mockPacketLabel!)
         
         configureManagedTCPConnection()
         configurePacketResponder()
@@ -59,10 +61,21 @@ class GameScene: SKScene {
     //for individual touches
     func touchDown(atPoint pos : CGPoint) {
         
-        if let n = self.backLabel{
-            if n.contains(pos){
-                self.moveToMainMenu()
+        if self.backLabel?.contains(pos) == true{
+            print("back to main menu")
+            self.moveToMainMenu()
+        }else if self.mockPacketLabel?.contains(pos) == true{
+            print("touched the mock")
+            if let spr = self.userData?.value(forKey: UserDataKeys.socketPacketResponder.rawValue) as? SocketPacketResponder {
                 
+                print("mocking command")
+                
+                let bytes : [UInt8] = [121,0,0,0,0,0,0,0,0,0,88,78,67,33,99,23,123,45]
+                spr.respond(data: bytes)
+                
+                
+            }else{
+                print("did not find socket packet responder")
             }
         }
     }
@@ -91,12 +104,6 @@ class GameScene: SKScene {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         self.joyStick?.acceptNewTouch(touches: touches)
-        let str = self.joyStick!.getDebugMessage()
-        
-        //update label
-        if let label = self.label {
-            label.text = str
-        }
         
         for t in touches { self.touchDown(atPoint: t.location(in: self)) }
     }
@@ -106,12 +113,6 @@ class GameScene: SKScene {
         //unwrap joystick
         if let js = self.joyStick{
             js.acceptTouchMoved(touches: touches)
-            let str = js.getDebugMessage()
-            if let label = self.label {
-                label.text = str
-            }
-            
-            
             
             //capture and react to joystick position
             let dx = js.xDirection * movementSpeed
@@ -123,7 +124,7 @@ class GameScene: SKScene {
             //let playerState = ClientPlayerStatePacket.init(xPos:Int32(positionTuple!.x) , yPos: Int32(positionTuple!.y), xV: Int32(dx), yV: Int32(dy))
             //var playerByteArray = playerState.toByteArray()
             
-            var tcpConn : ManagedTCPConnection?
+            //var tcpConn : ManagedTCPConnection?
             
             //tcpConn = ManagedTCPConnection(address : "proj-309-mg-6.cs.iastate.edu", port : 5543)
             //tcpConn?.sendTCP(message: "OK")
@@ -152,14 +153,16 @@ class GameScene: SKScene {
     
     
     func buildPacketTypeDict(){
-        self.packetTypeDict[121] = PacketType(dataSize: 17, handlerFunction: executePositionPacket(data:))
+        self.packetTypeDict[121] = PacketType(dataSize: 18, handlerFunction: executePositionPacket(data:))
     }
     
     func executePositionPacket(data : [UInt8]){
-        guard data.count == 17 else{
+        guard data.count == 18 else{
             print("executePositionPackets did not have correct data size. expected 17, was",data.count)
             return
         }
+        
+        print(data)
         
         let playerNum = data[1]
         let xPosBytes = Array(data[2...5])
