@@ -40,10 +40,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 		conn, _ := ln.Accept()
 
-		writer := bufio.NewWriter(conn)
-		writer.WriteString("welcome to port " + stringport + " stranger\nAre you ready to play some FUTBOL?????")
-		writer.Flush()
-
 		connPasser <- conn
 	}()
 
@@ -71,14 +67,15 @@ func main() {
 	for i < 2 {
 		for connected := range connPasser {
 			g.connections[i] = connected
+			g.reader[i] = bufio.NewReader(g.connections[i])
+			g.writer[i] = bufio.NewWriter(g.connections[i])
+			hellobyte := []byte{byte(122), byte(i)}
+			g.writer[i].Write(hellobyte)
+			g.writer[i].Flush()
 			i++
 		}
 	}
 
-	for i = 0; i < len(g.connections); i++ { //create readers and writers for the connections
-		g.reader[i] = bufio.NewReader(g.connections[i])
-		g.writer[i] = bufio.NewWriter(g.connections[i])
-	}
 
 	for i = 0; i < len(g.connections); i++ {
 		go func() {
