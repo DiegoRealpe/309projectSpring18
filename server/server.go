@@ -97,10 +97,12 @@ func main() {
 	}
 
 
-	for i = 0; i < len(g.connections); i++ {//when everyone is connected, start recieving packets
-		go func() {
-			ListenAndSend(g, i)
-		}()
-	}
+	go func() {
+		ListenAndSend(g, 0)
+	}()
+
+	go func() {
+		ListenAndSend(g, 1)
+	}()
 }
 
