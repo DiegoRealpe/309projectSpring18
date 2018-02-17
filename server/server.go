@@ -21,6 +21,7 @@ type Game struct {
 	writer      [2]*bufio.Writer
 }
 
+//when an http request is sent, send the requester a port and start listening on that port
 func handler(w http.ResponseWriter, r *http.Request) {
 
 	if len(ports) < 1 {
@@ -36,7 +37,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	io.WriteString(w, stringport)
 
-	go func() {
+	go func() {//accept the first attempted connection on the port
 		ln, _ := net.Listen("tcp", ":"+stringport)
 
 		conn, _ := ln.Accept()
@@ -54,7 +55,7 @@ func main() {
 
 	connPasser = make(chan net.Conn)
 
-	go func() {
+	go func() {//handle http requests
 		http.HandleFunc("/", handler)
 		err := http.ListenAndServe(":80", nil)
 
@@ -65,17 +66,17 @@ func main() {
 
 	i := 0
 
-	for i < 2 {
-		for connected := range connPasser {
+	for i < 2 {//don't start recieving or sending packets until we have two players
+		for connected := range connPasser {//when a player connects, initialize their readers and writers
 			g.connections[i] = connected
 			g.reader[i] = bufio.NewReader(g.connections[i])
 			g.writer[i] = bufio.NewWriter(g.connections[i])
 			hellobyte := []byte{byte(122), byte(i)}
 			g.writer[i].Write(hellobyte)
 			g.writer[i].Flush()
-
+			
 				time.Sleep(2*time.Second)
-				testpacket := ServerPacket{
+				testpacket := ServerPacket{//testing; to be removed later
 					serverPlayerState: 121,
 					playernumber: uint8(i),
 					xPosition: 0,
@@ -96,13 +97,10 @@ func main() {
 	}
 
 
-	for i = 0; i < len(g.connections); i++ {
+	for i = 0; i < len(g.connections); i++ {//when everyone is connected, start recieving packets
 		go func() {
 			ListenAndSend(g, i)
 		}()
 	}
 }
 
-//restful api
-//crud api
-//create, read, update, delete
