@@ -27,7 +27,6 @@ class GameScene: SKScene {
     var packetTypeDict : [UInt8:PacketType] = [:]
     
     
-    
     override func didMove(to view: SKView) {
         
         // get optional nodes from scene
@@ -46,12 +45,14 @@ class GameScene: SKScene {
         
         if let spr = self.userData?.value(forKey: UserDataKeys.socketPacketResponder.rawValue) as? SocketPacketResponder {
             spr.packetTypeDict = self.packetTypeDict
+            print(spr)
         }
     }
     
     func configureManagedTCPConnection(){
         if let mtcp = self.userData?.value(forKey: UserDataKeys.socketPacketResponder.rawValue) as? ManagedTCPConnection {
             self.managedTcpConnection = mtcp
+            print(mtcp)
         }
     }
     
@@ -118,14 +119,14 @@ class GameScene: SKScene {
             self.playerNode?.physicsBody?.velocity = CGVector(dx: dx, dy: dy)
            
             
-            let positionTuple = self.playerNode?.position
-            let playerState = ClientPlayerStatePacket.init(xPos:Int32(positionTuple!.x) , yPos: Int32(positionTuple!.y), xV: Int32(dx), yV: Int32(dy))
-            var playerByteArray = playerState.toByteArray()
+            //let positionTuple = self.playerNode?.position
+            //let playerState = ClientPlayerStatePacket.init(xPos:Int32(positionTuple!.x) , yPos: Int32(positionTuple!.y), xV: Int32(dx), yV: Int32(dy))
+            //var playerByteArray = playerState.toByteArray()
             
             var tcpConn : ManagedTCPConnection?
             
-            tcpConn = ManagedTCPConnection(address : "proj-309-mg-6.cs.iastate.edu", port : 5543)
-            tcpConn?.sendTCP(message: "OK")
+            //tcpConn = ManagedTCPConnection(address : "proj-309-mg-6.cs.iastate.edu", port : 5543)
+            //tcpConn?.sendTCP(message: "OK")
         
             
         }

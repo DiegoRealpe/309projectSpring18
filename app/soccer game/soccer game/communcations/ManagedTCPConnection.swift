@@ -11,7 +11,7 @@ import SwiftSocket
 
 class ManagedTCPConnection{
     
-    var datahandler : ([Byte]) -> Void = { data in
+    var datahandler : ([UInt8]) -> Void = { data in
         print("recieved: " + String(bytes: data, encoding: .utf8)!)
     }
     

@@ -58,19 +58,30 @@ class MatchMakingScene: SKScene {
             }
             
             self.tcpConn = ManagedTCPConnection(address : CommunicationProperties.host, port : port)
-            transitionToGameScene()
+            
+            let spr = SocketPacketResponder()
+            //set managedTCPConnection to use spr on read
+            tcpConn?.datahandler = spr.respond(data:)
+            
+            transitionToGameSceneWithData(spr : spr)
         }
     }
     
-    func transitionToGameScene(){
-        self.moveToGameScene(dataFunction : addGameSceneData(_:))
+    func transitionToGameSceneWithData(spr : SocketPacketResponder){
+        let transitionFunction = makeAddGameSceneDataFunction(spr : spr)
+        self.moveToGameScene(dataFunction : transitionFunction)
     }
     
-    func addGameSceneData(_ dict: NSMutableDictionary){
-        dict.setValue("testvalue", forKey: "test")
-        dict.setValue(2, forKey: "test2")
+    func makeAddGameSceneDataFunction(spr : SocketPacketResponder) -> (NSMutableDictionary) -> Void{
         
-        dict.setValue(tcpConn, forKey: "managedTCPConnection")
+        return { (dict) -> Void in
+            
+            dict.setValue(self.tcpConn, forKey: UserDataKeys.managedTCPConnection.rawValue)
+            dict.setValue(spr, forKey: UserDataKeys.socketPacketResponder.rawValue)
+            
+        }
+        
     }
+    
     
 }
