@@ -1,31 +1,33 @@
 package main
 
 import (
+	"bytes"
 	"encoding/binary"
 	"math"
-	"bytes"
 )
 
-type clientPacket struct {
+//ClientPacket with game state to be read by the server
+type ClientPacket struct {
 	clientPlayerState uint8 //Packet number 1
 	xPosition         float32
 	yPosition         float32
-	xVelocity        float32
+	xVelocity         float32
 	yVelocity         float32
 }
 
-type serverPacket struct {
+//ServerPacket with game states to be sent to clients
+type ServerPacket struct {
 	serverPlayerState uint8 //Packet number 2
 	playernumber      uint8
 	xPosition         float32
 	yPosition         float32
-	xVelocity        float32
+	xVelocity         float32
 	yVelocity         float32
 	timestamp         float32
 }
 
-//ParseBytes: Takes array of bytes and parses to a clientpacket struct
-func ParseBytes(rawData []byte) clientPacket {
+//ParseBytes Takes array of bytes and parses to a clientpacket struct
+func ParseBytes(rawData []byte) ClientPacket {
 	if len(rawData) != 17 {
 		panic(rawData)
 	}
@@ -34,21 +36,22 @@ func ParseBytes(rawData []byte) clientPacket {
 	yPosByte := rawData[5:9]
 	xVelByte := rawData[9:13]
 	yVelByte := rawData[13:17]
-	resultPacket := clientPacket{
+	resultPacket := ClientPacket{
 		clientPlayerState: uint8(Statebyte[0]),
 		xPosition:         BytestoFloat32(xPosByte),
 		yPosition:         BytestoFloat32(yPosByte),
-		xVelocity:        BytestoFloat32(xVelByte),
+		xVelocity:         BytestoFloat32(xVelByte),
 		yVelocity:         BytestoFloat32(yVelByte),
 	}
 	return resultPacket
 }
 
-func ParseServerPacket(packet serverPacket) []byte {
+//ParseServerPacket takes a server packet and readies it to be sent as a byte slice
+func ParseServerPacket(packet ServerPacket) []byte {
 	rawData := make([]byte, 22)
 
 	i := 0
-	
+
 	rawData[0] = byte(121)
 	rawData[1] = byte(packet.playernumber)
 	xpos := Float32toBytes(packet.xPosition)
@@ -56,7 +59,7 @@ func ParseServerPacket(packet serverPacket) []byte {
 		rawData[i] = xpos[i]
 	}
 	ypos := Float32toBytes(packet.yPosition)
-	for i = 6; i <= 9; i++{
+	for i = 6; i <= 9; i++ {
 		rawData[i] = ypos[i]
 	}
 	xvel := Float32toBytes(packet.xVelocity)
@@ -68,7 +71,7 @@ func ParseServerPacket(packet serverPacket) []byte {
 		rawData[i] = yvel[i]
 	}
 	time := Float32toBytes(packet.timestamp)
-	for i = 18; i <= 21; i++{
+	for i = 18; i <= 21; i++ {
 		rawData[i] = time[i]
 	}
 
@@ -92,9 +95,3 @@ func Float32toBytes(input float32) []byte {
 
 	return bytebuffer.Bytes()
 }
-/*
-//DecodePackage: Takes array of bytes and parses to a clientpacket struct
-func (b *byteParser) DecodePackage(serverPacket) []Byte {
-	//magic
-}
-*/
