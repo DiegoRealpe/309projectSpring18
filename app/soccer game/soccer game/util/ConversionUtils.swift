@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SpriteKit
 
 func convertToFloat(_ bytes: [UInt8]) -> Float32{
     var f:Float32 = 0.0
@@ -19,4 +20,11 @@ func convertToUInt8(_ float : Float32) -> [UInt8]{
     var bytes: [UInt8] = [0,0,0,0]
     memcpy(&bytes[0], &float2, 4)
     return bytes
+}
+
+
+extension Float{
+    func toCGFloat() -> CGFloat{
+        return CGFloat(self)
+    }
 }

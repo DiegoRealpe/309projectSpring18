@@ -129,5 +129,41 @@ class GameScene: SKScene {
         // Called before each frame is rendered
     }
     
+    
+    func executePositionPacket(data : [UInt8]){
+        guard data.count == 17 else{
+            print("executePositionPackets did not have correct data size. expected 17, was",data.count)
+            return
+        }
+        
+        let playerNum = data[1]
+        let xPosBytes = Array(data[2...5])
+        let yPosBytes = Array(data[6...9])
+        let xVelBytes = Array(data[10...13])
+        let yVelBytes = Array(data[14...17])
+        
+        
+        let xPosFloat = convertToFloat(xPosBytes).toCGFloat()
+        let yPosFloat = convertToFloat(yPosBytes).toCGFloat()
+        let xVelFloat = convertToFloat(xVelBytes).toCGFloat()
+        let yVelFloat = convertToFloat(yVelBytes).toCGFloat()
+        
+        let position = CGPoint (x : xPosFloat, y: yPosFloat)
+        let velocity = CGVector(dx: xVelFloat, dy: yVelFloat)
+        
+        let player:SKSpriteNode = selectPlayer(num: playerNum)
+        
+        ApplyPositionPacketToPlayer(player: player, point: position, vector: velocity)
+    }
+    
+    func selectPlayer(num : UInt8) -> SKSpriteNode{
+        //todo: add checking for valid player number
+        return self.playerNode!
+    }
+    
+    
+    func ApplyPositionPacketToPlayer(player : SKSpriteNode, point : CGPoint, vector : CGVector){
+        
+    }
 }
 
