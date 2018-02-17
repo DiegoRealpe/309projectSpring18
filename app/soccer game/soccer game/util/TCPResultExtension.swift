@@ -12,7 +12,7 @@ import SwiftSocket
 extension Result{
     
     func logError() {
-        logError(message : "there was a socket error:")
+        logError(message : "there was an unspecified socket error:")
     }
     
     func logError(message : String) {
