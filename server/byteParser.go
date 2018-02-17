@@ -45,31 +45,31 @@ func ParseBytes(rawData []byte) clientPacket {
 }
 
 func ParseServerPacket(packet serverPacket) []byte {
-	var rawData []byte
+	rawData := make([]byte, 22)
 
 	i := 0
 	
-	rawData = append(rawData, byte(121))
-	rawData = append(rawData, byte(packet.playernumber))
+	rawData[0] = byte(121)
+	rawData[1] = byte(packet.playernumber)
 	xpos := Float32toBytes(packet.xPosition)
 	for i = 2; i <= 5; i++ {
-		rawData = append(rawData, xpos[i])
+		rawData[i] = xpos[i]
 	}
 	ypos := Float32toBytes(packet.yPosition)
 	for i = 6; i <= 9; i++{
-		rawData = append(rawData, ypos[i])
+		rawData[i] = ypos[i]
 	}
 	xvel := Float32toBytes(packet.xVelocity)
 	for i = 10; i <= 13; i++ {
-		rawData = append(rawData, xvel[i])
+		rawData[i] = xvel[i]
 	}
 	yvel := Float32toBytes(packet.yVelocity)
 	for i = 14; i <= 17; i++ {
-		rawData = append(rawData, yvel[i])
+		rawData[i] = yvel[i]
 	}
 	time := Float32toBytes(packet.timestamp)
 	for i = 18; i <= 21; i++{
-		rawData = append(rawData, time[i])
+		rawData[i] = time[i]
 	}
 
 	return rawData
