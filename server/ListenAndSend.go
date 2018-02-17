@@ -11,6 +11,7 @@ func ListenAndSend(g Game, connNumber int) {
 	for {
 		readbyte, _ := g.reader[connNumber].Peek(1)
 		id := int(readbyte[0])
+		fmt.Println("fuck")
 		if id == 120 {
 			bytemessage, err := g.reader[connNumber].Peek(17)
 			if err != nil {
