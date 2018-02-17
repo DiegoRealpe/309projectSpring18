@@ -60,22 +60,41 @@ class MatchMakingScene: SKScene {
             self.tcpConn = ManagedTCPConnection(address : CommunicationProperties.host, port : port)
             
             let spr = SocketPacketResponder()
+            spr.packetTypeDict = makePacketTypeDict(spr:spr)
+            
             //set managedTCPConnection to use spr on read
             tcpConn?.datahandler = spr.respond(data:)
-            
-            transitionToGameSceneWithData(spr : spr)
         }
     }
     
-    func transitionToGameSceneWithData(spr : SocketPacketResponder){
-        let transitionFunction = makeAddGameSceneDataFunction(spr : spr)
+    func makePacketTypeDict(spr : SocketPacketResponder) -> [UInt8:PacketType]{
+        return [
+            122: PacketType(dataSize: 2, handlerFunction: { (data) in
+                self.recievePlayerNumberCode(data: data, spr: spr)
+            })
+        ]
+    }
+    
+    func recievePlayerNumberCode(data : [UInt8],spr : SocketPacketResponder){
+        guard data.count == 2 else {
+            print("did not recieve correct player code size, expected 2, was",data.count)
+            return
+        }
+        
+        transitionToGameSceneWithData(spr : spr,playerNum: data[1])
+        
+    }
+    
+    func transitionToGameSceneWithData(spr : SocketPacketResponder, playerNum : UInt8){
+        let transitionFunction = makeAddGameSceneDataFunction(spr : spr, playerNum : playerNum)
         self.moveToGameScene(dataFunction : transitionFunction)
     }
     
-    func makeAddGameSceneDataFunction(spr : SocketPacketResponder) -> (NSMutableDictionary) -> Void{
+    func makeAddGameSceneDataFunction(spr : SocketPacketResponder, playerNum : UInt8) -> (NSMutableDictionary) -> Void{
         
         return { (dict) -> Void in
             
+            dict.setValue(playerNum, forKey: UserDataKeys.playerNumber.rawValue)
             dict.setValue(self.tcpConn, forKey: UserDataKeys.managedTCPConnection.rawValue)
             dict.setValue(spr, forKey: UserDataKeys.socketPacketResponder.rawValue)
             
