@@ -7,6 +7,7 @@ import (
 	"net"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 var ports []int
@@ -77,14 +78,17 @@ func main() {
 				time.Sleep(2*time.Second)
 				testpacket := ServerPacket{
 					serverPlayerState: 121,
-					playernumber: i,
+					playernumber: uint8(i),
 					xPosition: 0,
 					yPosition: 0,
 					xVelocity: 0,
 					yVelocity: 0,
 					timestamp: 0,
 				}
-				g.writer[i].Write(testpacket)
+
+				testbytes := ParseServerPacket(testpacket)
+				
+				g.writer[i].Write(testbytes)
 				g.writer[i].Flush()
 			
 			}()
