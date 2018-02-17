@@ -43,6 +43,15 @@ class ManagedTCPConnection{
         print("sent: \"\(message)\"")
     }
     
+    func sendTCP(data : [UInt8]){
+        guard !stopRunning else{
+            //todo: determint behavior for this
+            return
+        }
+        
+        self.client.send(data: data)
+        //print("sent: \"\(data)\"")
+    }
     func stop(){
         print("stopping tcp connection")
         stopRunning = true
@@ -61,6 +70,8 @@ class ManagedTCPConnection{
             datahandler(recieved)
         }
     }
+    
+    
     
     //starts dispatch queue that calls itself after completion
     func tcpCycle(){

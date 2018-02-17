@@ -28,59 +28,26 @@ class ClientPlayerStatePacket
         
         
         var array = [UInt8]()
+        array.reserveCapacity(18)
+        
         array.append(120)
         
-        var xPos = UInt8(xPosFloat & 0x1000)
-        array.append(xPos)
-        
-         xPos = UInt8(xPosFloat & 0x0100)
-        array.append(xPos)
-        
-         xPos = UInt8(xPosFloat & 0x0010)
-        array.append(xPos)
-        
-         xPos = UInt8(xPosFloat & 0x0001)
-        array.append(xPos)
-        
+        let xPos = convertToUInt8(Float(xPosFloat))
+        array.append(contentsOf: xPos)
+    
         
         //yPos stuff
-        var yPos = UInt8(yPosFloat & 0x1000)
-        array.append(yPos)
-        
-        yPos = UInt8(yPosFloat & 0x0100)
-        array.append(yPos)
-        
-        yPos = UInt8(yPosFloat & 0x0010)
-        array.append(yPos)
-        
-        yPos = UInt8(yPosFloat & 0x0001)
-        array.append(yPos)
+        let yPos = convertToUInt8(Float32(yPosFloat))
+        array.append(contentsOf: yPos)
+       
         
         //x velocity
-        var xVel = UInt8(xVelocity & 0x1000)
-        array.append(xVel)
-        
-        xVel = UInt8(xVelocity & 0x0100)
-        array.append(xVel)
-        
-        xVel = UInt8(xVelocity & 0x0010)
-        array.append(xVel)
-        
-        xVel = UInt8(xVelocity & 0x0001)
-        array.append(xVel)
+        let xVel = convertToUInt8(Float32(xVelocity))
+        array.append(contentsOf: xVel)
         
         //y velocity
-        var yVel = UInt8(yVelocity & 0x1000)
-        array.append(yVel)
-        
-        yVel = UInt8(yVelocity & 0x0100)
-        array.append(yVel)
-        
-        yVel = UInt8(yVelocity & 0x0010)
-        array.append(yVel)
-        
-        yVel = UInt8(yVelocity & 0x0001)
-        array.append(yVel)
+        let yVel = convertToUInt8(Float32(yVelocity))
+        array.append(contentsOf: yVel)
         
         return array
     }

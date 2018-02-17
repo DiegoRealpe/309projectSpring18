@@ -159,10 +159,10 @@
 			isa = PBXGroup;
 			children = (
 				4CED0621203775D000B8F603 /* ClientPlayerStatePacket.swift */,
-				4C98FBB8201E658600378614 /* GameScene.sks */,
 				4C98FBBC201E658600378614 /* GameScene.swift */,
 				3AB377DD2023B5980019E73E /* Joystick.swift */,
 				3A31696F203750B200DA2DCC /* GameSceneServerResponder.swift */,
+				4C98FBB8201E658600378614 /* GameScene.sks */,
 			);
 			path = "game scene";
 			sourceTree = "<group>";
