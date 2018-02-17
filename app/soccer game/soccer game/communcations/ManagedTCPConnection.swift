@@ -12,7 +12,7 @@ import SwiftSocket
 class ManagedTCPConnection{
     
     var datahandler : ([UInt8]) -> Void = { data in
-        print("recieved: " + String(bytes: data, encoding: .utf8)!)
+        print("recieved: " + String(bytes: data, encoding: .utf8)!, "with no handler")
     }
     
     var client : TCPClient
@@ -49,8 +49,8 @@ class ManagedTCPConnection{
             return
         }
         
-        self.client.send(data: data)
-        //print("sent: \"\(data)\"")
+        self.client.send(data: data).logError()
+        print("sent: \"\(data)\"")
     }
     func stop(){
         print("stopping tcp connection")

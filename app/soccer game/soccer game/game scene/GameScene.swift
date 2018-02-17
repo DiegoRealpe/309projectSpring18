@@ -53,10 +53,11 @@ class GameScene: SKScene {
     }
     
     func configureManagedTCPConnection(){
-        if let mtcp = self.userData?.value(forKey: UserDataKeys.socketPacketResponder.rawValue) as? ManagedTCPConnection {
-            self.managedTcpConnection = mtcp
-            print(mtcp)
-        }
+        let dict = self.userData!
+        let mtcp = dict.value(forKey: UserDataKeys.managedTCPConnection.rawValue) as! ManagedTCPConnection
+        
+        self.managedTcpConnection = mtcp
+        print(mtcp)
     }
     
     //for individual touches
