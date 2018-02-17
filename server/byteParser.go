@@ -56,23 +56,23 @@ func ParseServerPacket(packet ServerPacket) []byte {
 	rawData[1] = byte(packet.playernumber)
 	xpos := Float32toBytes(packet.xPosition)
 	for i = 2; i <= 5; i++ {
-		rawData[i] = xpos[i]
+		rawData[i] = xpos[i - 2]
 	}
 	ypos := Float32toBytes(packet.yPosition)
 	for i = 6; i <= 9; i++ {
-		rawData[i] = ypos[i]
+		rawData[i] = ypos[i - 6]
 	}
 	xvel := Float32toBytes(packet.xVelocity)
 	for i = 10; i <= 13; i++ {
-		rawData[i] = xvel[i]
+		rawData[i] = xvel[i - 10]
 	}
 	yvel := Float32toBytes(packet.yVelocity)
 	for i = 14; i <= 17; i++ {
-		rawData[i] = yvel[i]
+		rawData[i] = yvel[i - 14]
 	}
 	time := Float32toBytes(packet.timestamp)
 	for i = 18; i <= 21; i++ {
-		rawData[i] = time[i]
+		rawData[i] = time[i - 18]
 	}
 
 	return rawData
