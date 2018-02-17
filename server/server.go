@@ -96,7 +96,9 @@ func main() {
 		}
 	}
 
+	
 
+	
 	go func() {
 		ListenAndSend(g, 0)
 	}()
@@ -104,5 +106,6 @@ func main() {
 	go func() {
 		ListenAndSend(g, 1)
 	}()
+	fmt.Println("we got here fam")
 }
 
