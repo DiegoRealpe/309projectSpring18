@@ -11,7 +11,6 @@ func ListenAndSend(g Game, connNumber int) {
 	go func(){
 		for {
 			fmt.Println("reading from connection", connNumber)
-			if g.reader[connNumber].Buffered() > 0 {
 				readbyte, _ := g.reader[connNumber].Peek(1)
 				id := int(readbyte[0])
 				fmt.Println("fuck")
@@ -47,7 +46,6 @@ func ListenAndSend(g Game, connNumber int) {
 				} else {
 					g.reader[connNumber].Discard(1)
 				}
-			}
 		}
 	}()
 }
