@@ -61,7 +61,12 @@ func main() {
 
 	//when a player connects, initialize their readers and writers
 	for connected := range connPasser {
-		initializeConnection(g, i, connected)
+		g.connections[i] = connection
+		g.reader[i] = bufio.NewReader(g.connections[i])
+		g.writer[i] = bufio.NewWriter(g.connections[i])
+		hellobyte := []byte{byte(122), byte(i)}
+		g.writer[i].Write(hellobyte)
+		g.writer[i].Flush()
 		fmt.Println("Player ", i ," connected")
 		i++
 		if i > 1 {
@@ -75,15 +80,16 @@ func main() {
 	for {}
 }
 
-
+/*
 func initializeConnection(g Game, playerNumber int, connection net.Conn) {
 	g.connections[playerNumber] = connection
-	w := bufio.NewReader(g.connections[playerNumber])
-	g.reader[playerNumber] = bufio.NewReaderSize(w, 17)
+	g.reader[playerNumber] = bufio.NewReader(g.connections[playerNumber])
 	g.writer[playerNumber] = bufio.NewWriter(g.connections[playerNumber])
 	hellobyte := []byte{byte(122), byte(playerNumber)}
 	g.writer[playerNumber].Write(hellobyte)
 	g.writer[playerNumber].Flush()
+	
+
 	time.Sleep(2 * time.Second)
 	testpacket := ServerPacket{//testing; to be removed later
 		serverPlayerState: 121,
@@ -97,8 +103,9 @@ func initializeConnection(g Game, playerNumber int, connection net.Conn) {
 	testbytes := ParseServerPacket(testpacket)
 	g.writer[playerNumber].Write(testbytes)
 	g.writer[playerNumber].Flush()
-}
 
+}
+*/
 func startHttpServer() {
 	http.HandleFunc("/", handler)
 	err := http.ListenAndServe(":80", nil)
