@@ -10,9 +10,11 @@ import (
 	"time"
 )
 
-var ports []int
-
-var connPasser chan net.Conn
+//ConnHandler Struct to contain all variables needed when accesing states
+type ConnHandler struct {
+	ports      []int
+	connPasser chan net.Conn
+}
 
 //Game struct with 2 connections, readers and writers to give to the players for them to communicate
 type Game struct {
@@ -21,28 +23,28 @@ type Game struct {
 	writer      [2]*bufio.Writer
 }
 
-//when an http request is sent, send the requester a port and start listening on that port
-func handler(w http.ResponseWriter, r *http.Request) {
+//InitHandle when an http request is sent, send the requester a port and start listening on that port
+func (h *ConnHandler) InitHandle(w http.ResponseWriter, r *http.Request) {
 
-	if len(ports) < 1 {
+	if len(h.ports) < 1 {
 		io.WriteString(w, "no ports avaliable, sorry fam")
 		return
 	}
 
-	usedport := ports[len(ports)-1]
+	usedport := h.ports[len(h.ports)-1]
 
-	ports = ports[:len(ports)-1]
+	h.ports = h.ports[:len(h.ports)-1]
 
 	stringport := strconv.Itoa(usedport)
 
 	io.WriteString(w, stringport)
 
-	go func() {//accept the first attempted connection on the port
+	go func() { //accept the first attempted connection on the port
 		ln, _ := net.Listen("tcp", ":"+stringport)
 
 		conn, _ := ln.Accept()
 
-		connPasser <- conn
+		h.connPasser <- conn
 	}()
 
 }
@@ -51,16 +53,18 @@ func main() {
 
 	var g Game
 
-	ports = []int{5543, 9078}
+	MainHandler := ConnHandler{
 
-	connPasser = make(chan net.Conn)
+		ports:      []int{5543, 9078},
+		connPasser: make(chan net.Conn),
+	}
 
-	go startHttpServer()
+	go startHTTPServer(MainHandler)
 
 	i := 0
 
 	//when a player connects, initialize their readers and writers
-	for connected := range connPasser {
+	for connected := range MainHandler.connPasser {
 		initializeConnection(g, i, connected)
 		i++
 	}
@@ -68,9 +72,9 @@ func main() {
 	ListenAndSend(g, 0)
 	ListenAndSend(g, 1)
 
-	for {}
+	for {
+	}
 }
-
 
 func initializeConnection(g Game, playerNumber int, connection net.Conn) {
 	g.connections[playerNumber] = connection
@@ -80,27 +84,28 @@ func initializeConnection(g Game, playerNumber int, connection net.Conn) {
 	g.writer[playerNumber].Write(hellobyte)
 	g.writer[playerNumber].Flush()
 	time.Sleep(2 * time.Second)
-	testpacket := ServerPacket{//testing; to be removed later
+
+	testpacket := ServerPacket{ //testing; to be removed later
 		serverPlayerState: 121,
-		playernumber: uint8(playerNumber),
-		xPosition: 0,
-		yPosition: 0,
-		xVelocity: 0,
-		yVelocity: 0,
-		timestamp: 0,
+		playernumber:      uint8(playerNumber),
+		xPosition:         0,
+		yPosition:         0,
+		xVelocity:         0,
+		yVelocity:         0,
+		timestamp:         0,
 	}
+
 	testbytes := ParseServerPacket(testpacket)
 	g.writer[playerNumber].Write(testbytes)
 	g.writer[playerNumber].Flush()
 }
 
-func startHttpServer() {
-	http.HandleFunc("/", handler)
+func startHTTPServer(h ConnHandler) {
+
+	http.HandleFunc("/", h.InitHandle)
 	err := http.ListenAndServe(":80", nil)
 
 	if err != nil {
 		fmt.Println(err.Error())
 	}
 }
-
-
