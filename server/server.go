@@ -7,7 +7,6 @@ import (
 	"net"
 	"net/http"
 	"strconv"
-	"time"
 )
 
 var ports []int
@@ -61,7 +60,7 @@ func main() {
 
 	//when a player connects, initialize their readers and writers
 	for connected := range connPasser {
-		g.connections[i] = connection
+		g.connections[i] = connected
 		g.reader[i] = bufio.NewReader(g.connections[i])
 		g.writer[i] = bufio.NewWriter(g.connections[i])
 		hellobyte := []byte{byte(122), byte(i)}
