@@ -49,18 +49,16 @@ class GameScene: SKScene {
     
     func configurePlayerNodes(){
         
-        guard let player0 = SKScene(fileNamed : "Players")?.childNode(withName : "Player Node") as? SKSpriteNode else{
+        guard let modelPlayer = SKScene(fileNamed : "Players")?.childNode(withName : "Player Node") as? SKSpriteNode else{
             return
         }
         
         //init players with placeholders
         self.players = [SKSpriteNode](repeating : SKSpriteNode(), count: maxPlayers)
-        players[0] = player0
-        players[0].name = nil
-        players[0].position = offScreen
-        for i in 1..<maxPlayers {
-            players[i] = player0.copy() as! SKSpriteNode
-            players[i].physicsBody = player0.physicsBody?.copy() as! SKPhysicsBody
+        
+        for i in 0..<maxPlayers {
+            players[i] = modelPlayer.copy() as! SKSpriteNode
+            players[i].physicsBody = modelPlayer.physicsBody?.copy() as! SKPhysicsBody
         }
         
         print(players[1])
