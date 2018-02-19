@@ -96,7 +96,7 @@ func initializeConnection(g Game, playerNumber int, connection net.Conn) {
 
 func startHttpServer() {
 	http.HandleFunc("/", handler)
-	err := http.ListenAndServe(":80", nil)
+	err := http.ListenAndServe(":9451", nil)
 
 	if err != nil {
 		fmt.Println(err.Error())
