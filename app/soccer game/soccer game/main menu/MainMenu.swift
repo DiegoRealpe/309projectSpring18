@@ -37,7 +37,7 @@ class MainMenu: SKScene {
             
             //see if touch contains first
             if practice.contains(point){
-                moveToGameScene()
+                moveToGameScene(dataFunction: assignUserDataForGameScene(_:))
             }else if join.contains(point){
                 moveToMatchMakingScene()
             }
@@ -57,6 +57,10 @@ class MainMenu: SKScene {
             nonOptLabel.alpha = 0.0
             nonOptLabel.run(SKAction.fadeIn(withDuration: 2.0))
         }
+    }
+    
+    func assignUserDataForGameScene(_ dict : NSMutableDictionary){
+        dict.setValue(Int(0), forKey: UserDataKeys.playerNumber.rawValue)
     }
 
     

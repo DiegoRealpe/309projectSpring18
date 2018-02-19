@@ -62,6 +62,7 @@ class GameScene: SKScene {
         
         if let playerNumber = self.userData?.value(forKey: UserDataKeys.playerNumber.rawValue) as? Int{
             players[playerNumber].position = CGPoint(x : 100, y : -100)
+            self.playerNumber = playerNumber
         }
         
     }
@@ -76,11 +77,11 @@ class GameScene: SKScene {
     }
     
     func configureManagedTCPConnection(){
-        let dict = self.userData!
-        let mtcp = dict.value(forKey: UserDataKeys.managedTCPConnection.rawValue) as! ManagedTCPConnection
         
-        self.managedTcpConnection = mtcp
-        print(mtcp)
+        if let mtcp = self.userData?.value(forKey: UserDataKeys.managedTCPConnection.rawValue) as? ManagedTCPConnection {
+            self.managedTcpConnection = mtcp
+        }
+       
     }
     
     //for individual touches
@@ -142,12 +143,15 @@ class GameScene: SKScene {
             //capture and react to joystick position
             let dx = js.xDirection * movementSpeed
             let dy = js.yDirection * movementSpeed
-            self.playerNode?.physicsBody?.velocity = CGVector(dx: dx, dy: dy)
             
-            if let tcp = self.managedTcpConnection {
-                let packet = self.makePlayerStatePacket()
+            if let playerNum = self.playerNumber {
+                self.players[playerNum].physicsBody!.velocity = CGVector(dx: dx, dy: dy)
                 
-                tcp.sendTCP(data: packet)
+                if let tcp = self.managedTcpConnection {
+                    let packet = self.makePlayerStatePacket(playerNumber : playerNum)
+                    
+                    tcp.sendTCP(data: packet)
+                }
             }
         }
         
@@ -156,18 +160,14 @@ class GameScene: SKScene {
         for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
     }
     
-    func sendStateToServer(tcp : ManagedTCPConnection){
-        let bytes = makePlayerStatePacket()
-    }
-    
-    
-    func makePlayerStatePacket()-> [UInt8]
+    func makePlayerStatePacket(playerNumber : Int)-> [UInt8]
     {
-        let posTuple = self.playerNode?.position
-        let velTuple = self.playerNode?.physicsBody?.velocity
+        let chosenPlayer = self.players[playerNumber]
+        let position = chosenPlayer.position
+        let velocity = chosenPlayer.physicsBody?.velocity
         
         
-        let playerPacket = ClientPlayerStatePacket(xPos: Int32(posTuple!.x), yPos: Int32(posTuple!.y), xV: Int32(velTuple!.dx), yV: Int32(velTuple!.dy))
+        let playerPacket = ClientPlayerStatePacket(xPos: Int32(position.x), yPos: Int32(position.y), xV: Int32(velocity!.dx), yV: Int32(velocity!.dy))
         
         return playerPacket.toByteArray()
     }
@@ -214,14 +214,9 @@ class GameScene: SKScene {
         let position = CGPoint (x : xPosFloat, y: yPosFloat)
         let velocity = CGVector(dx: xVelFloat, dy: yVelFloat)
         
-        let player:SKSpriteNode = selectPlayer(num: playerNum)
+        let player:SKSpriteNode = players[Int(playerNum)]
         
         ApplyPositionPacketToPlayer(player: player, point: position, vector: velocity)
-    }
-    
-    func selectPlayer(num : UInt8) -> SKSpriteNode{
-        //todo: add checking for valid player number
-        return self.playerNode!
     }
     
     
