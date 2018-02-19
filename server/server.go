@@ -66,13 +66,8 @@ func main() {
 	//when a player connects, initialize their readers and writers
 	for connected := range MainHandler.connPasser {
 		initializeConnection(g, i, connected)
+		ListenAndSend(g, i)
 		i++
-	}
-
-	ListenAndSend(g, 0)
-	ListenAndSend(g, 1)
-
-	for {
 	}
 }
 
@@ -103,7 +98,7 @@ func initializeConnection(g Game, playerNumber int, connection net.Conn) {
 func startHTTPServer(h ConnHandler) {
 
 	http.HandleFunc("/", h.InitHandle)
-	err := http.ListenAndServe(":80", nil)
+	err := http.ListenAndServe(":9451", nil)
 
 	if err != nil {
 		fmt.Println(err.Error())
