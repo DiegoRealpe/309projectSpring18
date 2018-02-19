@@ -63,6 +63,9 @@ func main() {
 	for connected := range connPasser {
 		initializeConnection(g, i, connected)
 		i++
+		if i > 1 {
+			break
+		}
 	}
 
 	ListenAndSend(g, 0)
@@ -96,7 +99,7 @@ func initializeConnection(g Game, playerNumber int, connection net.Conn) {
 
 func startHttpServer() {
 	http.HandleFunc("/", handler)
-	err := http.ListenAndServe(":9451", nil)
+	err := http.ListenAndServe(":80", nil)
 
 	if err != nil {
 		fmt.Println(err.Error())
