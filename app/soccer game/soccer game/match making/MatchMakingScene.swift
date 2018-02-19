@@ -57,13 +57,11 @@ class MatchMakingScene: SKScene {
                 return
             }
             
-            self.tcpConn = ManagedTCPConnection(address : CommunicationProperties.host, port : port)
-            
             let spr = SocketPacketResponder()
             spr.packetTypeDict = makePacketTypeDict(spr:spr)
             
-            //set managedTCPConnection to use spr on read
-            tcpConn?.datahandler = spr.respond(data:)
+            //set ManagedTCPConnection to use spr as responder
+            self.tcpConn = ManagedTCPConnection(address : CommunicationProperties.host, port : port, dataHandler : spr.respond(data:))
         }
     }
     

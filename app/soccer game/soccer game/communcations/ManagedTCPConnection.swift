@@ -11,9 +11,7 @@ import SwiftSocket
 
 class ManagedTCPConnection{
     
-    var datahandler : ([UInt8]) -> Void = { data in
-        print("recieved: " + String(bytes: data, encoding: .utf8)!, "with no handler")
-    }
+    var dataHandler : ([UInt8]) -> Void
     
     var client : TCPClient
     let port : Int32
@@ -21,10 +19,15 @@ class ManagedTCPConnection{
     //read by dispatcher queues to determine when to stop
     var stopRunning : Bool
     
-    init(address : String, port : Int32){
+    convenience init(address : String, port : Int32){
+        self.init(address : address, port : port, dataHandler : defaultDataHandler(_:))
+    }
+    
+    init(address : String, port : Int32, dataHandler : @escaping ([UInt8]) -> Void){
         self.client = TCPClient(address: address, port: port)
         self.stopRunning = false
         self.port = port
+        self.dataHandler = dataHandler
         
         print("connecting to \(address), port \(port)")
         
@@ -67,7 +70,7 @@ class ManagedTCPConnection{
         let data = self.client.read(25,timeout: 100)
 
         if let recieved = data{
-            datahandler(recieved)
+            dataHandler(recieved)
         }
     }
     
@@ -82,5 +85,9 @@ class ManagedTCPConnection{
         })
     }
     
+}
+
+func defaultDataHandler(_ data: [UInt8]){
+    print("recieved: " + String(bytes: data, encoding: .utf8)!, "with no handler")
 }
 
