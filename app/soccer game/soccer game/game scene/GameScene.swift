@@ -143,8 +143,8 @@ class GameScene: SKScene {
             //capture and react to joystick position
             let dx = js.xDirection * movementSpeed
             let dy = js.yDirection * movementSpeed
-            startIntervalSendLoop()
-           /* if let playerNum = self.playerNumber {
+            //startIntervalSendLoop()
+            if let playerNum = self.playerNumber {
                 self.players[playerNum].physicsBody!.velocity = CGVector(dx: dx, dy: dy)
                 
                 if let tcp = self.managedTcpConnection {
@@ -152,7 +152,7 @@ class GameScene: SKScene {
                     
                     tcp.sendTCP(data: packet)
                 }
-            }*/
+            }
         }
         
         
@@ -162,16 +162,13 @@ class GameScene: SKScene {
     
     func startIntervalSendLoop(){
         
-        DispatchQueue.global().async {
-            while true {
-                sleep(10)//sleep 10 ms
+        DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(10) , execute : {
                 
+            let packet = self.makePlayerStatePacket(playerNumber : self.playerNumber!)
                 
-                let packet = self.makePlayerStatePacket(playerNumber : playerNum)
-                //....whatever mark needs
-                managedTcpConnection?.sendTCP(data: packet)
-            }
-        }
+            self.managedTcpConnection?.sendTCP(data: packet)
+            
+        })
     }
     
     
