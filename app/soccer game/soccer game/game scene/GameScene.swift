@@ -13,16 +13,20 @@ import GameplayKit
 
 class GameScene: SKScene {
     
+    let maxPlayers = 2
+    let movementSpeed = 100.0
+    let offScreen = CGPoint(x :10000, y :10000)
+    
     //label used for debugging, not part of final project
     private var mockPacketLabel : SKLabelNode?
     
     private var backLabel : SKLabelNode?
     private var joyStick : JoyStick?
-    private var playerNode : SKSpriteNode?
     private var ballNode : SKSpriteNode?
     private var managedTcpConnection : ManagedTCPConnection?
     
-    let movementSpeed = 100.0
+    private var players : [SKSpriteNode] = []
+    private var playerNumber : Int?
     
     var packetTypeDict : [UInt8:PacketType] = [:]
     
@@ -30,8 +34,8 @@ class GameScene: SKScene {
     override func didMove(to view: SKView) {
         
         // get optional nodes from scene
+        configurePlayerNodes()
         self.backLabel = self.childNode(withName: "Back Label") as? SKLabelNode
-        self.playerNode = self.childNode(withName:"Player Node") as? SKSpriteNode
         self.ballNode = self.childNode(withName: "Ball") as? SKSpriteNode
         self.joyStick = JoyStick(parent: self, radius: 50.0, startPoint: CGPoint(x: 0, y: 0))
         self.mockPacketLabel = self.childNode(withName: "Mock Packet") as? SKLabelNode
@@ -40,6 +44,25 @@ class GameScene: SKScene {
         
         configureManagedTCPConnection()
         configurePacketResponder()
+        
+    }
+    
+    func configurePlayerNodes(){
+        guard let player0 = self.childNode(withName: "Player Node") as? SKSpriteNode else{
+            return
+        }
+        
+        //init players with placeholders
+        self.players = [SKSpriteNode](repeating : SKSpriteNode(), count: maxPlayers)
+        players[0] = player0
+        players[0].position = offScreen
+        for i in 1..<maxPlayers {
+            players[i] = player0.copy() as! SKSpriteNode
+        }
+        
+        if let playerNumber = self.userData?.value(forKey: UserDataKeys.playerNumber.rawValue) as? Int{
+            players[playerNumber].position = CGPoint(x : 100, y : -100)
+        }
         
     }
     
