@@ -62,6 +62,7 @@ func main() {
 	//when a player connects, initialize their readers and writers
 	for connected := range connPasser {
 		initializeConnection(g, i, connected)
+		fmt.Println("Player ", i ," connected")
 		i++
 		if i > 1 {
 			break
