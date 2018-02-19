@@ -58,7 +58,7 @@ class GameScene: SKScene {
         
         for i in 0..<maxPlayers {
             players[i] = modelPlayer.copy() as! SKSpriteNode
-            players[i].physicsBody = modelPlayer.physicsBody?.copy() as! SKPhysicsBody
+            players[i].physicsBody = modelPlayer.physicsBody?.copy() as? SKPhysicsBody
         }
         
         print(players[1])
@@ -95,18 +95,14 @@ class GameScene: SKScene {
             print("back to main menu")
             self.moveToMainMenu()
         }else if self.mockPacketLabel?.contains(pos) == true{
-            print("touched the mock")
-            if let spr = self.userData?.value(forKey: UserDataKeys.socketPacketResponder.rawValue) as? SocketPacketResponder {
+        
+            print("mocking command")
+            let spr = SocketPacketResponder()
+            spr.packetTypeDict = self.packetTypeDict
                 
-                print("mocking command")
-                
-                let bytes : [UInt8] = [121,0,0,0,0,0,0,0,0,0,88,78,67,33,99,23,123,45]
-                spr.respond(data: bytes)
-                
-                
-            }else{
-                print("did not find socket packet responder")
-            }
+            let bytes : [UInt8] = [121,1,0,0,0,0,0,0,0,0,152, 78, 154, 68,152, 78, 154, 68]
+            spr.respond(data: bytes)
+            
         }
     }
     
@@ -218,11 +214,18 @@ class GameScene: SKScene {
         let position = CGPoint (x : xPosFloat, y: yPosFloat)
         let velocity = CGVector(dx: xVelFloat, dy: yVelFloat)
         
-        let player:SKSpriteNode = players[Int(playerNum)]
+        let player:SKSpriteNode = selectOrAddPlayer(playerNum : Int(playerNum))
         
         ApplyPositionPacketToPlayer(player: player, point: position, vector: velocity)
     }
     
+    func selectOrAddPlayer(playerNum : Int) -> SKSpriteNode{
+        let player:SKSpriteNode = players[Int(playerNum)]
+        if player.parent != self {
+            self.addChild(player)
+        }
+        return player
+    }
     
     func ApplyPositionPacketToPlayer(player : SKSpriteNode, point : CGPoint, vector : CGVector){
         player.position = point
