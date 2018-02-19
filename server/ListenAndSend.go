@@ -22,7 +22,7 @@ func ListenAndSend(g Game, connNumber int) {
 					} else {
 						//parse the byte message
 						rcvpacket := ParseBytes(bytemessage)
-						fmt.Println(rcvpacket.clientPlayerState)
+						fmt.Println(rcvpacket.clientPlayerState, rcvpacket.xPosition, rcvpacket.yPosition)
 						//construct a message to broadcast to the clients
 						sendpacket := ServerPacket{
 							serverPlayerState: 121,
