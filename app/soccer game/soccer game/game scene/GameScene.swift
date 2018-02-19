@@ -40,6 +40,7 @@ class GameScene: SKScene {
         
         configureManagedTCPConnection()
         configurePacketResponder()
+        
     }
     
     func configurePacketResponder() {
@@ -52,10 +53,11 @@ class GameScene: SKScene {
     }
     
     func configureManagedTCPConnection(){
-        if let mtcp = self.userData?.value(forKey: UserDataKeys.socketPacketResponder.rawValue) as? ManagedTCPConnection {
-            self.managedTcpConnection = mtcp
-            print(mtcp)
-        }
+        let dict = self.userData!
+        let mtcp = dict.value(forKey: UserDataKeys.managedTCPConnection.rawValue) as! ManagedTCPConnection
+        
+        self.managedTcpConnection = mtcp
+        print(mtcp)
     }
     
     //for individual touches
@@ -118,23 +120,33 @@ class GameScene: SKScene {
             let dx = js.xDirection * movementSpeed
             let dy = js.yDirection * movementSpeed
             self.playerNode?.physicsBody?.velocity = CGVector(dx: dx, dy: dy)
-           
             
-            //let positionTuple = self.playerNode?.position
-            //let playerState = ClientPlayerStatePacket.init(xPos:Int32(positionTuple!.x) , yPos: Int32(positionTuple!.y), xV: Int32(dx), yV: Int32(dy))
-            //var playerByteArray = playerState.toByteArray()
-            
-            //var tcpConn : ManagedTCPConnection?
-            
-            //tcpConn = ManagedTCPConnection(address : "proj-309-mg-6.cs.iastate.edu", port : 5543)
-            //tcpConn?.sendTCP(message: "OK")
-        
-            
+            if let tcp = self.managedTcpConnection {
+                let packet = self.makePlayerStatePacket()
+                
+                tcp.sendTCP(data: packet)
+            }
         }
         
         
         
         for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
+    }
+    
+    func sendStateToServer(tcp : ManagedTCPConnection){
+        let bytes = makePlayerStatePacket()
+    }
+    
+    
+    func makePlayerStatePacket()-> [UInt8]
+    {
+        let posTuple = self.playerNode?.position
+        let velTuple = self.playerNode?.physicsBody?.velocity
+        
+        
+        let playerPacket = ClientPlayerStatePacket(xPos: Int32(posTuple!.x), yPos: Int32(posTuple!.y), xV: Int32(velTuple!.dx), yV: Int32(velTuple!.dy))
+        
+        return playerPacket.toByteArray()
     }
     
     
