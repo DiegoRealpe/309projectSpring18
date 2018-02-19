@@ -48,21 +48,27 @@ class GameScene: SKScene {
     }
     
     func configurePlayerNodes(){
-        guard let player0 = self.childNode(withName: "Player Node") as? SKSpriteNode else{
+        
+        guard let player0 = SKScene(fileNamed : "Players")?.childNode(withName : "Player Node") as? SKSpriteNode else{
             return
         }
         
         //init players with placeholders
         self.players = [SKSpriteNode](repeating : SKSpriteNode(), count: maxPlayers)
         players[0] = player0
+        players[0].name = nil
         players[0].position = offScreen
         for i in 1..<maxPlayers {
             players[i] = player0.copy() as! SKSpriteNode
+            players[i].physicsBody = player0.physicsBody?.copy() as! SKPhysicsBody
         }
+        
+        print(players[1])
         
         if let playerNumber = self.userData?.value(forKey: UserDataKeys.playerNumber.rawValue) as? Int{
             players[playerNumber].position = CGPoint(x : 100, y : -100)
             self.playerNumber = playerNumber
+            self.addChild(players[playerNumber])
         }
         
     }

@@ -60,7 +60,7 @@ class MainMenu: SKScene {
     }
     
     func assignUserDataForGameScene(_ dict : NSMutableDictionary){
-        dict.setValue(Int(0), forKey: UserDataKeys.playerNumber.rawValue)
+        dict.setValue(Int(1), forKey: UserDataKeys.playerNumber.rawValue)
     }
 
     
