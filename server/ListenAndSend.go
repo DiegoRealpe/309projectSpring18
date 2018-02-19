@@ -45,7 +45,7 @@ func ListenAndSend(g Game, connNumber int) {
 					}
 					g.reader[connNumber].Read(bytemessage)
 				} else {
-					g.reader[connNumber].ReadByte()
+					g.reader[connNumber].Discard(1)
 				}
 			}
 		}

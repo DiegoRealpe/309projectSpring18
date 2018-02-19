@@ -78,7 +78,8 @@ func main() {
 
 func initializeConnection(g Game, playerNumber int, connection net.Conn) {
 	g.connections[playerNumber] = connection
-	g.reader[playerNumber] = bufio.NewReader(g.connections[playerNumber])
+	w := bufio.NewReader(g.connections[playerNumber])
+	g.reader[playerNumber] = bufio.NewReaderSize(w, 17)
 	g.writer[playerNumber] = bufio.NewWriter(g.connections[playerNumber])
 	hellobyte := []byte{byte(122), byte(playerNumber)}
 	g.writer[playerNumber].Write(hellobyte)
