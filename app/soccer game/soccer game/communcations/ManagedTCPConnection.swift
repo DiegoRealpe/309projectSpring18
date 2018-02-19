@@ -55,7 +55,7 @@ class ManagedTCPConnection{
     
     fileprivate func respondToTCPDataSent() {
         
-        let data = self.client.read(25)
+        let data = self.client.read(25,timeout: 100)
 
         if let recieved = data{
             datahandler(recieved)

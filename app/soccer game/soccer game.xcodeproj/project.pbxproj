@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A0A8BD22038F1CE001E073A /* SwiftSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A0A8BD02038F1C7001E073A /* SwiftSocket.framework */; };
+		3A0A8BD32038F1CE001E073A /* SwiftSocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A0A8BD02038F1C7001E073A /* SwiftSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3A0A8BD42038F1CE001E073A /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A0A8BD12038F1CE001E073A /* Alamofire.framework */; };
+		3A0A8BD52038F1CE001E073A /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A0A8BD12038F1CE001E073A /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3A0C313E2038A4860011D18A /* UserDataKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C313D2038A4860011D18A /* UserDataKeys.swift */; };
 		3A31696E2037505900DA2DCC /* NewAccountOrLogin.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A31696D2037505900DA2DCC /* NewAccountOrLogin.sks */; };
 		3A316970203750B200DA2DCC /* GameSceneServerResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A31696F203750B200DA2DCC /* GameSceneServerResponder.swift */; };
@@ -37,10 +41,6 @@
 		4CC91DCA20360E6800FB9236 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC91DC920360E6800FB9236 /* LoginController.swift */; };
 		4CC91DCE203624DB00FB9236 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4CC91DCD203624DB00FB9236 /* Login.storyboard */; };
 		4CED0622203775D100B8F603 /* ClientPlayerStatePacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CED0621203775D000B8F603 /* ClientPlayerStatePacket.swift */; };
-		4CF92799203744F300E66DCE /* SwiftSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CF92797203744F200E66DCE /* SwiftSocket.framework */; };
-		4CF9279A203744F300E66DCE /* SwiftSocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4CF92797203744F200E66DCE /* SwiftSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		4CF9279B203744F300E66DCE /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CF92798203744F300E66DCE /* Alamofire.framework */; };
-		4CF9279C203744F300E66DCE /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4CF92798203744F300E66DCE /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,14 +54,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		4CC91DBF2034D80F00FB9236 /* Embed Frameworks */ = {
+		3A0A8BD62038F1CE001E073A /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				4CF9279A203744F300E66DCE /* SwiftSocket.framework in Embed Frameworks */,
-				4CF9279C203744F300E66DCE /* Alamofire.framework in Embed Frameworks */,
+				3A0A8BD32038F1CE001E073A /* SwiftSocket.framework in Embed Frameworks */,
+				3A0A8BD52038F1CE001E073A /* Alamofire.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -69,6 +69,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3A0A8BD02038F1C7001E073A /* SwiftSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SwiftSocket.framework; sourceTree = "<group>"; };
+		3A0A8BD12038F1CE001E073A /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Alamofire.framework; sourceTree = "<group>"; };
 		3A0C313D2038A4860011D18A /* UserDataKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataKeys.swift; sourceTree = "<group>"; };
 		3A31696D2037505900DA2DCC /* NewAccountOrLogin.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = NewAccountOrLogin.sks; sourceTree = "<group>"; };
 		3A31696F203750B200DA2DCC /* GameSceneServerResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSceneServerResponder.swift; sourceTree = "<group>"; };
@@ -103,8 +105,6 @@
 		4CC91DC920360E6800FB9236 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		4CC91DCD203624DB00FB9236 /* Login.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Login.storyboard; sourceTree = "<group>"; };
 		4CED0621203775D000B8F603 /* ClientPlayerStatePacket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientPlayerStatePacket.swift; sourceTree = "<group>"; };
-		4CF92797203744F200E66DCE /* SwiftSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SwiftSocket.framework; sourceTree = "<group>"; };
-		4CF92798203744F300E66DCE /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Alamofire.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,8 +112,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4CF92799203744F300E66DCE /* SwiftSocket.framework in Frameworks */,
-				4CF9279B203744F300E66DCE /* Alamofire.framework in Frameworks */,
+				3A0A8BD22038F1CE001E073A /* SwiftSocket.framework in Frameworks */,
+				3A0A8BD42038F1CE001E073A /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -192,8 +192,8 @@
 		4C98FBAA201E658600378614 = {
 			isa = PBXGroup;
 			children = (
-				4CF92798203744F300E66DCE /* Alamofire.framework */,
-				4CF92797203744F200E66DCE /* SwiftSocket.framework */,
+				3A0A8BD12038F1CE001E073A /* Alamofire.framework */,
+				3A0A8BD02038F1C7001E073A /* SwiftSocket.framework */,
 				4C98FBB5201E658600378614 /* soccer game */,
 				4C98FBD0201E658700378614 /* soccer gameTests */,
 				4C98FBB4201E658600378614 /* Products */,
@@ -267,7 +267,7 @@
 				4C98FBAF201E658600378614 /* Sources */,
 				4C98FBB0201E658600378614 /* Frameworks */,
 				4C98FBB1201E658600378614 /* Resources */,
-				4CC91DBF2034D80F00FB9236 /* Embed Frameworks */,
+				3A0A8BD62038F1CE001E073A /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

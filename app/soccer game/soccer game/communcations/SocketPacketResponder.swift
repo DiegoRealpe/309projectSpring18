@@ -54,8 +54,8 @@ class SocketPacketResponder{
     }
     
     private func setPacketTypeOpts(packetCode : UInt8){
-        if self.packetCode == 0 {
-            bytesForPacket = packetTypeDict[packetCode]!.dataSize
+        if self.packetCode == 0 , let packetType = packetTypeDict[packetCode]{
+            bytesForPacket = packetType.dataSize
             self.packetCode = packetCode
         }
     }
