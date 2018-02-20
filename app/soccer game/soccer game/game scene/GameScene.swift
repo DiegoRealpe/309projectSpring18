@@ -29,6 +29,8 @@ class GameScene: SKScene {
     private var players : [SKSpriteNode] = []
     private var playerNumber : Int?
     
+    private var localPlayerStateWasUpdated = true
+    
     var packetTypeDict : [UInt8:PacketType] = [:]
     
     override func didMove(to view: SKView) {
@@ -152,6 +154,8 @@ class GameScene: SKScene {
                     
                     tcp.sendTCP(data: packet)
                 }
+                
+                self.localPlayerStateWasUpdated = true
             }
         }
         
@@ -161,14 +165,21 @@ class GameScene: SKScene {
     }
     
     func makeUpdateAndSendSKAction() -> SKAction {
-        let readerAction = SKAction.run({
-            let packet = self.makePlayerStatePacket(playerNumber : self.playerNumber!)
+        let packetAction = SKAction.run({
             
-            self.managedTcpConnection?.sendTCP(data: packet)
+            if self.localPlayerStateWasUpdated {
+                let packet = self.makePlayerStatePacket(playerNumber : self.playerNumber!)
+                
+                print("sending packet, ",packet)
+                self.managedTcpConnection?.sendTCP(data: packet)
+                
+                self.localPlayerStateWasUpdated = false
+            }
+            
         })
         let waitAction = SKAction.wait(forDuration: packetUpdateIntervalSeconds)
-        let sequenceAction = SKAction.sequence([readerAction,waitAction])
         
+        let sequenceAction = SKAction.sequence([packetAction,waitAction])
         return SKAction.repeatForever(sequenceAction)
     }
     
