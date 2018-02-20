@@ -11,11 +11,12 @@ import Alamofire
 
 class MainMenu: SKScene {
     
-    var title : SKLabelNode?
-    var practiceBG : SKNode?
-    var joinBG : SKNode?
-    var comm : SKNode?
-    var account:SKNode?
+    private var title : SKLabelNode?
+    private var practiceBG : SKNode?
+    private var joinBG : SKNode?
+    private var comm : SKNode?
+    private var account:SKNode?
+    
     override func didMove(to view: SKView) {
         print("got to main menu")
         
@@ -52,14 +53,14 @@ class MainMenu: SKScene {
         
     }
     
-    func fadeInLabel(label : SKLabelNode?){
+    private func fadeInLabel(label : SKLabelNode?){
         if let nonOptLabel = label{
             nonOptLabel.alpha = 0.0
             nonOptLabel.run(SKAction.fadeIn(withDuration: 2.0))
         }
     }
     
-    func assignUserDataForGameScene(_ dict : NSMutableDictionary){
+    private func assignUserDataForGameScene(_ dict : NSMutableDictionary){
         dict.setValue(Int(0), forKey: UserDataKeys.playerNumber.rawValue)
     }
 

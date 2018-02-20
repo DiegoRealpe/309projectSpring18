@@ -25,6 +25,7 @@ class MatchMakingScene: SKScene {
         
     }
     
+    //for simplicity this scene currently only explicitly supplrts 1 touch
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let first = touches.first else{
             return
@@ -34,10 +35,10 @@ class MatchMakingScene: SKScene {
         if let label = self.connectLabel, label.contains(location) {
             askServerForTCPPort()
         }
-        
     }
     
-    fileprivate func askServerForTCPPort(){
+    //start handshake where server gives TCP port to use for sockets
+    private func askServerForTCPPort(){
         self.connectLabel?.text = "connecting ..."
         
         let requestString = "http://\(CommunicationProperties.host):\(CommunicationProperties.httpport)/tcpport"
@@ -65,7 +66,8 @@ class MatchMakingScene: SKScene {
         }
     }
     
-    func makePacketTypeDict(spr : SocketPacketResponder) -> [UInt8:PacketType]{
+    //for interfacing with the SocketPacketResponder
+    private func makePacketTypeDict(spr : SocketPacketResponder) -> [UInt8:PacketType]{
         return [
             122: PacketType(dataSize: 2, handlerFunction: { (data) in
                 self.recievePlayerNumberCode(data: data, spr: spr)
@@ -73,22 +75,26 @@ class MatchMakingScene: SKScene {
         ]
     }
     
-    func recievePlayerNumberCode(data : [UInt8],spr : SocketPacketResponder){
+    
+    private func recievePlayerNumberCode(data : [UInt8],spr : SocketPacketResponder){
         guard data.count == 2 else {
             print("did not recieve correct player code size, expected 2, was",data.count)
             return
         }
+        guard (0..<GameScene.maxPlayers).contains(Int(data[0])) else{
+            print("recieved invalid player number")
+            return
+        }
         
         transitionToGameSceneWithData(spr : spr,playerNum: data[1])
-        
     }
     
-    func transitionToGameSceneWithData(spr : SocketPacketResponder, playerNum : UInt8){
+    private func transitionToGameSceneWithData(spr : SocketPacketResponder, playerNum : UInt8){
         let transitionFunction = makeAddGameSceneDataFunction(spr : spr, playerNum : playerNum)
         self.moveToGameScene(dataFunction : transitionFunction)
     }
     
-    func makeAddGameSceneDataFunction(spr : SocketPacketResponder, playerNum : UInt8) -> (NSMutableDictionary) -> Void{
+    private func makeAddGameSceneDataFunction(spr : SocketPacketResponder, playerNum : UInt8) -> (NSMutableDictionary) -> Void{
         
         return { (dict) -> Void in
             

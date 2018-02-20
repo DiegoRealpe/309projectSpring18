@@ -13,9 +13,8 @@ import GameplayKit
 
 class GameScene: SKScene {
     
-    let maxPlayers = 2
+    static let maxPlayers = 2
     let movementSpeed = 100.0
-    let offScreen = CGPoint(x :10000, y :10000)
     
     //label used for debugging, not part of final project
     private var mockPacketLabel : SKLabelNode?
@@ -25,44 +24,43 @@ class GameScene: SKScene {
     private var ballNode : SKSpriteNode?
     private var managedTcpConnection : ManagedTCPConnection?
     
+    //after didMove is called players is initialized with the exact size of maxPlayers
     private var players : [SKSpriteNode] = []
     private var playerNumber : Int?
     
+    //for interfacting with SocketPacketResonder
     var packetTypeDict : [UInt8:PacketType] = [:]
     
-    
     override func didMove(to view: SKView) {
+        print("moved to game scene")
         
-        // get optional nodes from scene
         configurePlayerNodes()
         self.backLabel = self.childNode(withName: "Back Label") as? SKLabelNode
         self.ballNode = self.childNode(withName: "Ball") as? SKSpriteNode
         self.joyStick = JoyStick(parent: self, radius: 50.0, startPoint: CGPoint(x: 0, y: 0))
         self.mockPacketLabel = self.childNode(withName: "Mock Packet") as? SKLabelNode
         
-        print(self.mockPacketLabel!)
-        
         configureManagedTCPConnection()
         configurePacketResponder()
-        
     }
     
-    func configurePlayerNodes(){
-        
+    //sets players and player num to values according to the user data passed into the scene
+    private func configurePlayerNodes(){
+        //get player node from Players.sks
         guard let modelPlayer = SKScene(fileNamed : "Players")?.childNode(withName : "Player Node") as? SKSpriteNode else{
             return
         }
         
-        //init players with placeholders
+        //set players to correct length with placeholders
         self.players = [SKSpriteNode](repeating : SKSpriteNode(), count: maxPlayers)
         
+        //copy model player into each index of self.players
         for i in 0..<maxPlayers {
             players[i] = modelPlayer.copy() as! SKSpriteNode
             players[i].physicsBody = modelPlayer.physicsBody?.copy() as? SKPhysicsBody
         }
         
-        print(players[1])
-        
+        //move player with the number passed into the scene into view
         if let playerNumber = self.userData?.value(forKey: UserDataKeys.playerNumber.rawValue) as? Int{
             players[playerNumber].position = CGPoint(x : 100, y : -100)
             self.playerNumber = playerNumber
@@ -71,7 +69,8 @@ class GameScene: SKScene {
         
     }
     
-    func configurePacketResponder() {
+    //maps funtions to packet numbers to be used by the responder in a scene-specific configuration
+    private func configurePacketResponder() {
         buildPacketTypeDict()
         
         if let spr = self.userData?.value(forKey: UserDataKeys.socketPacketResponder.rawValue) as? SocketPacketResponder {
@@ -80,16 +79,17 @@ class GameScene: SKScene {
         }
     }
     
-    func configureManagedTCPConnection(){
+    //optionally unwrap a ManagedTcpConnection from the UserDataPassed into the scene
+    private func configureManagedTCPConnection(){
         
         if let mtcp = self.userData?.value(forKey: UserDataKeys.managedTCPConnection.rawValue) as? ManagedTCPConnection {
             self.managedTcpConnection = mtcp
         }
-       
+        
     }
     
     //for individual touches
-    func touchDown(atPoint pos : CGPoint) {
+    private func touchDown(atPoint pos : CGPoint) {
         
         if self.backLabel?.contains(pos) == true{
             print("back to main menu")
@@ -106,7 +106,7 @@ class GameScene: SKScene {
         }
     }
     
-    func setBallPositionAndVelocity(position : CGPoint, velocity : CGVector){
+    private func setBallPositionAndVelocity(position : CGPoint, velocity : CGVector){
         guard let ball = self.ballNode else{
             print("ball was not found")
             return
@@ -114,16 +114,15 @@ class GameScene: SKScene {
         
         ball.position = position
         ball.physicsBody?.velocity = velocity
+    }
+    
+    //for individual touches
+    private func touchMoved(toPoint pos : CGPoint) {
         
     }
     
     //for individual touches
-    func touchMoved(toPoint pos : CGPoint) {
-        
-    }
-    
-    //for individual touches
-    func touchUp(atPoint pos : CGPoint) {
+    private func touchUp(atPoint pos : CGPoint) {
         
     }
     
@@ -143,34 +142,15 @@ class GameScene: SKScene {
             //capture and react to joystick position
             let dx = js.xDirection * movementSpeed
             let dy = js.yDirection * movementSpeed
-            //startIntervalSendLoop()
+            
+            //set the local player to the correct velocity
             if let playerNum = self.playerNumber {
                 self.players[playerNum].physicsBody!.velocity = CGVector(dx: dx, dy: dy)
-                
-                if let tcp = self.managedTcpConnection {
-                    let packet = self.makePlayerStatePacket(playerNumber : playerNum)
-                    
-                    tcp.sendTCP(data: packet)
-                }
             }
         }
         
-        
-        
         for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
     }
-    
-    func startIntervalSendLoop(){
-        
-        DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(10) , execute : {
-                
-            let packet = self.makePlayerStatePacket(playerNumber : self.playerNumber!)
-                
-            self.managedTcpConnection?.sendTCP(data: packet)
-            
-        })
-    }
-    
     
     func makePlayerStatePacket(playerNumber : Int)-> [UInt8]
     {
@@ -183,7 +163,6 @@ class GameScene: SKScene {
         
         return playerPacket.toByteArray()
     }
-    
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches { self.touchUp(atPoint: t.location(in: self)) }
@@ -199,7 +178,7 @@ class GameScene: SKScene {
     }
     
     
-    func buildPacketTypeDict(){
+    private func buildPacketTypeDict(){
         self.packetTypeDict[121] = PacketType(dataSize: 18, handlerFunction: executePositionPacket(data:))
     }
     
@@ -209,14 +188,13 @@ class GameScene: SKScene {
             return
         }
         
-        print(data)
+        print("got position packet with data:",data)
         
         let playerNum = data[1]
         let xPosBytes = Array(data[2...5])
         let yPosBytes = Array(data[6...9])
         let xVelBytes = Array(data[10...13])
         let yVelBytes = Array(data[14...17])
-        
         
         let xPosFloat = convertToFloat(xPosBytes).toCGFloat()
         let yPosFloat = convertToFloat(yPosBytes).toCGFloat()
@@ -231,7 +209,9 @@ class GameScene: SKScene {
         ApplyPositionPacketToPlayer(player: player, point: position, vector: velocity)
     }
     
-    func selectOrAddPlayer(playerNum : Int) -> SKSpriteNode{
+    //returns player node from players whith specified index
+    //if the node is not a child of the SKScene it is added as a child
+    private func selectOrAddPlayer(playerNum : Int) -> SKSpriteNode{
         let player:SKSpriteNode = players[Int(playerNum)]
         if player.parent != self {
             self.addChild(player)
@@ -239,7 +219,7 @@ class GameScene: SKScene {
         return player
     }
     
-    func ApplyPositionPacketToPlayer(player : SKSpriteNode, point : CGPoint, vector : CGVector){
+    private func ApplyPositionPacketToPlayer(player : SKSpriteNode, point : CGPoint, vector : CGVector){
         player.position = point
         player.physicsBody?.velocity = vector
     }

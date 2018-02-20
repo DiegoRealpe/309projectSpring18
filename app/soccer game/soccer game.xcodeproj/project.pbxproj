@@ -14,7 +14,6 @@
 		3A0C313E2038A4860011D18A /* UserDataKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C313D2038A4860011D18A /* UserDataKeys.swift */; };
 		3A219ECF203B7CEE00FABE0A /* Players.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A219ECE203B7CEE00FABE0A /* Players.sks */; };
 		3A31696E2037505900DA2DCC /* NewAccountOrLogin.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A31696D2037505900DA2DCC /* NewAccountOrLogin.sks */; };
-		3A316970203750B200DA2DCC /* GameSceneServerResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A31696F203750B200DA2DCC /* GameSceneServerResponder.swift */; };
 		3A3169722037E84E00DA2DCC /* PacketByteQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3169712037E84E00DA2DCC /* PacketByteQueue.swift */; };
 		3A3169752037E94700DA2DCC /* ConversionUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3169742037E94700DA2DCC /* ConversionUtils.swift */; };
 		3A3169772037EC9500DA2DCC /* SocketPacketResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3169762037EC9500DA2DCC /* SocketPacketResponder.swift */; };
@@ -75,7 +74,6 @@
 		3A0C313D2038A4860011D18A /* UserDataKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataKeys.swift; sourceTree = "<group>"; };
 		3A219ECE203B7CEE00FABE0A /* Players.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Players.sks; sourceTree = "<group>"; };
 		3A31696D2037505900DA2DCC /* NewAccountOrLogin.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = NewAccountOrLogin.sks; sourceTree = "<group>"; };
-		3A31696F203750B200DA2DCC /* GameSceneServerResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSceneServerResponder.swift; sourceTree = "<group>"; };
 		3A3169712037E84E00DA2DCC /* PacketByteQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketByteQueue.swift; sourceTree = "<group>"; };
 		3A3169742037E94700DA2DCC /* ConversionUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversionUtils.swift; sourceTree = "<group>"; };
 		3A3169762037EC9500DA2DCC /* SocketPacketResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketPacketResponder.swift; sourceTree = "<group>"; };
@@ -163,7 +161,6 @@
 				4CED0621203775D000B8F603 /* ClientPlayerStatePacket.swift */,
 				4C98FBBC201E658600378614 /* GameScene.swift */,
 				3AB377DD2023B5980019E73E /* Joystick.swift */,
-				3A31696F203750B200DA2DCC /* GameSceneServerResponder.swift */,
 				4C98FBB8201E658600378614 /* GameScene.sks */,
 				3A219ECE203B7CEE00FABE0A /* Players.sks */,
 			);
@@ -374,7 +371,6 @@
 				3AB377DE2023B5980019E73E /* Joystick.swift in Sources */,
 				3A3169722037E84E00DA2DCC /* PacketByteQueue.swift in Sources */,
 				4C98FBBD201E658600378614 /* GameScene.swift in Sources */,
-				3A316970203750B200DA2DCC /* GameSceneServerResponder.swift in Sources */,
 				3AB377E02023B5C50019E73E /* CGPointExtension.swift in Sources */,
 				4CC91DCA20360E6800FB9236 /* LoginController.swift in Sources */,
 				4CC91D9E20339BA700FB9236 /* NewAccountOrLogin.swift in Sources */,

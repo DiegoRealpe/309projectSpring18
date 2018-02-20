@@ -48,7 +48,7 @@ class JoyStick{
         }
     }
     
-    func isInBottomLeftQuadrant(_ touch : UITouch) -> Bool{
+    private func isInBottomLeftQuadrant(_ touch : UITouch) -> Bool{
         let loc = touch.location(in: self.parent)
         return loc.x < 0 && loc.y < 0
     }
@@ -69,11 +69,11 @@ class JoyStick{
         }
     }
     
-    func moveOuterTo(point : CGPoint){
+    private func moveOuterTo(point : CGPoint){
         outerCircle.position = point
     }
     
-    func moveInnerTo(point : CGPoint){
+    private func moveInnerTo(point : CGPoint){
         innerCircle.position = point
     }
     
@@ -81,7 +81,8 @@ class JoyStick{
         return String(xDirection) + "," + String(yDirection)
     }
     
-    func translatePointToStayInOuter(scenePoint : CGPoint) -> CGPoint{
+    //returns position for inner node so that x^2 + y^2 <= radius of outer
+    private func translatePointToStayInOuter(scenePoint : CGPoint) -> CGPoint{
         
         let distance = Double(outerCircle.position.distanceTo(scenePoint))
         let xDiff = Double(scenePoint.x - outerCircle.position.x)
@@ -96,7 +97,7 @@ class JoyStick{
     }
     
     //uses the position of the inner node
-    func setXYDirection(){
+    private func setXYDirection(){
         let x = Double(self.innerCircle.position.x)
         let y = Double(self.innerCircle.position.y)
         
@@ -105,9 +106,8 @@ class JoyStick{
         self.yDirection = y/radius
     }
     
-    func closestTouchTo(touches : Set<UITouch>, node :SKNode) -> UITouch?{
-        
-        return touches.min(by: areTouchesInAscendingOrderByDistanceToCenter(first:second:))
+    private func closestTouchTo(touches : Set<UITouch>, node :SKNode) -> UITouch?{
+        return touches.min(by: self.areTouchesInAscendingOrderByDistanceToCenter(first:second:))
     }
     
     //used to filter set for min in accordance to swift's built-in set functionality

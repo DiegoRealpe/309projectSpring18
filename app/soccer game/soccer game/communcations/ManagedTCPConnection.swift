@@ -9,11 +9,13 @@
 import Foundation
 import SwiftSocket
 
+//wraps a SwiftSocket TCP client in order to expose application specific functionality
+//and allow for potentially changing libraries in the future
 class ManagedTCPConnection{
     
     var dataHandler : ([UInt8]) -> Void
     
-    var client : TCPClient
+    private var client : TCPClient
     let port : Int32
     
     //read by dispatcher queues to determine when to stop
@@ -61,7 +63,7 @@ class ManagedTCPConnection{
     }
     
     fileprivate func startTCPCycle(){
-        tcpCycle()
+        startSocketRealLoop()
     }
     
     
@@ -74,10 +76,7 @@ class ManagedTCPConnection{
         }
     }
     
-    
-    
-    //starts dispatch queue that calls itself after completion
-    func tcpCycle(){
+    private func startSocketRealLoop(){
         DispatchQueue.global().async( execute: {
             while !self.stopRunning{
                 self.respondToTCPDataSent()

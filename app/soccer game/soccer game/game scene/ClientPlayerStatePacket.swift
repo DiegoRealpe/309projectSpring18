@@ -32,6 +32,7 @@ class ClientPlayerStatePacket
         
         array.append(120)
         
+        //xPos stuff
         let xPos = convertToUInt8(Float(xPosFloat))
         array.append(contentsOf: xPos)
     
