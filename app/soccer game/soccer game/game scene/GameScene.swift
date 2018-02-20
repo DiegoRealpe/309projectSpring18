@@ -52,10 +52,10 @@ class GameScene: SKScene {
         }
         
         //set players to correct length with placeholders
-        self.players = [SKSpriteNode](repeating : SKSpriteNode(), count: maxPlayers)
+        self.players = [SKSpriteNode](repeating : SKSpriteNode(), count: GameScene.maxPlayers)
         
         //copy model player into each index of self.players
-        for i in 0..<maxPlayers {
+        for i in 0..<GameScene.maxPlayers {
             players[i] = modelPlayer.copy() as! SKSpriteNode
             players[i].physicsBody = modelPlayer.physicsBody?.copy() as? SKPhysicsBody
         }
