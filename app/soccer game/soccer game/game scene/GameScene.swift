@@ -16,6 +16,7 @@ class GameScene: SKScene {
     let maxPlayers = 2
     let movementSpeed = 100.0
     let offScreen = CGPoint(x :10000, y :10000)
+    let packetUpdateIntervalSeconds = 0.05
     
     //label used for debugging, not part of final project
     private var mockPacketLabel : SKLabelNode?
@@ -30,7 +31,6 @@ class GameScene: SKScene {
     
     var packetTypeDict : [UInt8:PacketType] = [:]
     
-    
     override func didMove(to view: SKView) {
         
         // get optional nodes from scene
@@ -44,7 +44,6 @@ class GameScene: SKScene {
         
         configureManagedTCPConnection()
         configurePacketResponder()
-        
     }
     
     func configurePlayerNodes(){
@@ -81,11 +80,12 @@ class GameScene: SKScene {
     }
     
     func configureManagedTCPConnection(){
-        
         if let mtcp = self.userData?.value(forKey: UserDataKeys.managedTCPConnection.rawValue) as? ManagedTCPConnection {
             self.managedTcpConnection = mtcp
+            
+            //run update action forever
+            self.run(makeUpdateAndSendSKAction())
         }
-       
     }
     
     //for individual touches
@@ -160,15 +160,16 @@ class GameScene: SKScene {
         for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
     }
     
-    func startIntervalSendLoop(){
-        
-        DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(10) , execute : {
-                
+    func makeUpdateAndSendSKAction() -> SKAction {
+        let readerAction = SKAction.run({
             let packet = self.makePlayerStatePacket(playerNumber : self.playerNumber!)
-                
-            self.managedTcpConnection?.sendTCP(data: packet)
             
+            self.managedTcpConnection?.sendTCP(data: packet)
         })
+        let waitAction = SKAction.wait(forDuration: packetUpdateIntervalSeconds)
+        let sequenceAction = SKAction.sequence([readerAction,waitAction])
+        
+        return SKAction.repeatForever(sequenceAction)
     }
     
     
