@@ -39,7 +39,7 @@ class Joystick{
         //add joystick nodes to their parents
         parent.addChild(self.outerCircle)
         self.outerCircle.addChild(self.innerCircle)
-        
+        fadeIn()
     }
     
     private func positionNewJoystick(touch: UITouch){
@@ -54,7 +54,13 @@ class Joystick{
     }
     
     func removeSelf() {
-        self.outerCircle.removeFromParent()
+        let fadeOut = SKAction.fadeOut(withDuration: 0.1)
+        
+        let remove = SKAction.run{
+            self.outerCircle.removeFromParent()
+        }
+        let sequence = SKAction.sequence([fadeOut,remove])
+        self.outerCircle.run(sequence)
     }
     
     func acceptTouchMoved(touches: Set<UITouch>){
@@ -121,6 +127,11 @@ class Joystick{
         let secondDistance = second.location(in: compareNode).distanceTo(.zero)
         
         return firstDistance < secondDistance
+    }
+    
+    private func fadeIn(){
+        self.outerCircle.alpha = 0.0
+        self.outerCircle.run(SKAction.fadeIn(withDuration: 0.1))
     }
 }
 
