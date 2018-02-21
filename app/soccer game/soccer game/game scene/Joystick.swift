@@ -131,7 +131,8 @@ class Joystick{
     
     private func fadeIn(){
         self.outerCircle.alpha = 0.0
-        self.outerCircle.run(SKAction.fadeIn(withDuration: 0.1))
+        
+        self.outerCircle.run(SKAction.fadeAlpha(by: 0.8, duration: 0.1))
     }
 }
 
@@ -139,6 +140,7 @@ class Joystick{
 fileprivate func makeCircle(radius : Double, fillColor : UIColor) -> SKShapeNode{
     let circ = SKShapeNode.init(circleOfRadius : CGFloat(radius))
     circ.fillColor = fillColor
+    circ.strokeColor = fillColor
     
     return circ
 }
