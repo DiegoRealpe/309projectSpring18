@@ -38,12 +38,12 @@ class MainMenu: SKScene {
             
             //see if touch contains first
             if practice.contains(point){
-                moveToGameScene(dataFunction: assignUserDataForGameScene(_:))
+                self.moveToScene(.gameScene,dataFunction: assignUserDataForGameScene(_:))
             }else if join.contains(point){
-                moveToMatchMakingScene()
+                self.moveToScene(.matchMakingScene)
             }
             else if comm.contains(point){
-                moveToCommTestScreen()
+                self.moveToScene(.commTestScreen)
             }
             else if account.contains(point)
             {

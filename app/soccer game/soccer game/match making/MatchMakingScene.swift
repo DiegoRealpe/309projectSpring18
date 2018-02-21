@@ -91,7 +91,7 @@ class MatchMakingScene: SKScene {
     
     private func transitionToGameSceneWithData(spr : SocketPacketResponder, playerNum : UInt8){
         let transitionFunction = makeAddGameSceneDataFunction(spr : spr, playerNum : playerNum)
-        self.moveToGameScene(dataFunction : transitionFunction)
+        self.moveToScene(.gameScene, dataFunction : transitionFunction)
     }
     
     private func makeAddGameSceneDataFunction(spr : SocketPacketResponder, playerNum : UInt8) -> (NSMutableDictionary) -> Void{

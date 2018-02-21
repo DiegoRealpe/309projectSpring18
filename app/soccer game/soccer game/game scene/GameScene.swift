@@ -15,6 +15,8 @@ class GameScene: SKScene {
     
     static let maxPlayers = 2
     let movementSpeed = 100.0
+    let offScreen = CGPoint(x :10000, y :10000)
+    let packetUpdateIntervalSeconds = 0.05
     
     //label used for debugging, not part of final project
     private var mockPacketLabel : SKLabelNode?
@@ -28,7 +30,8 @@ class GameScene: SKScene {
     private var players : [SKSpriteNode] = []
     private var playerNumber : Int?
     
-    //for interfacting with SocketPacketResonder
+    private var localPlayerStateWasUpdated = true
+    
     var packetTypeDict : [UInt8:PacketType] = [:]
     
     override func didMove(to view: SKView) {
@@ -96,7 +99,7 @@ class GameScene: SKScene {
         
         if self.backLabel?.contains(pos) == true{
             print("back to main menu")
-            self.moveToMainMenu()
+            self.moveToScene(.mainMenu)
         }else if self.mockPacketLabel?.contains(pos) == true{
         
             print("mocking command")
@@ -149,11 +152,39 @@ class GameScene: SKScene {
             //set the local player to the correct velocity
             if let playerNum = self.playerNumber {
                 self.players[playerNum].physicsBody!.velocity = CGVector(dx: dx, dy: dy)
+                
+                if let tcp = self.managedTcpConnection {
+                    let packet = self.makePlayerStatePacket(playerNumber : playerNum)
+                    
+                    tcp.sendTCP(data: packet)
+                }
+                
+                self.localPlayerStateWasUpdated = true
             }
         }
         
         for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
     }
+    
+    func makeUpdateAndSendSKAction() -> SKAction {
+        let packetAction = SKAction.run({
+            
+            if self.localPlayerStateWasUpdated {
+                let packet = self.makePlayerStatePacket(playerNumber : self.playerNumber!)
+                
+                print("sending packet, ",packet)
+                self.managedTcpConnection?.sendTCP(data: packet)
+                
+                self.localPlayerStateWasUpdated = false
+            }
+            
+        })
+        let waitAction = SKAction.wait(forDuration: packetUpdateIntervalSeconds)
+        
+        let sequenceAction = SKAction.sequence([packetAction,waitAction])
+        return SKAction.repeatForever(sequenceAction)
+    }
+    
     
     func makePlayerStatePacket(playerNumber : Int)-> [UInt8]
     {

@@ -36,7 +36,7 @@ class NewAccountOrLogin: SKScene{
             
             //see if touch contains first
             if back.contains(point){
-                moveToMainMenu()
+                self.moveToScene(.mainMenu)
             }
             else if login.contains(point)
             {

@@ -8,84 +8,45 @@
 
 import SpriteKit
 
+enum Scene {
+    case gameScene
+    case mainMenu
+    case matchMakingScene
+    case commTestScreen
+}
+
+let sceneToFileDict : [Scene:String] = [
+    .gameScene : "GameScene",
+    .mainMenu : "MainMenu",
+    .matchMakingScene : "MatchMakingScene",
+    .commTestScreen : "CommTestScreen"
+]
+
 extension SKScene{
     
-    func moveToGameScene(){
-        if let scene = GameScene(fileNamed: "GameScene"){
-            // Set the scale mode to scale to fit the window
-            scene.scaleMode = .aspectFill
-            
-            // Present the scene
-            if let view = self.view{
-                view.presentScene(scene)
-                
-            }
-        }
+    func moveToScene(_ scene : Scene){
+        moveToScene(scene, dataFunction : { (dict) in })
     }
     
-    func moveToGameScene(dataFunction : (NSMutableDictionary) -> Void){
-        if let scene = GameScene(fileNamed: "GameScene"){
+    func moveToScene(_ scene : Scene, dataFunction : (NSMutableDictionary) -> Void){
+        let sceneName = sceneToFileDict[scene]!
+        
+        if let skScene = GameScene(fileNamed: sceneName){
             // Set the scale mode to scale to fit the window
-            scene.scaleMode = .aspectFill
-            scene.userData = NSMutableDictionary()
-            let userData: NSMutableDictionary = scene.userData!
+            skScene.scaleMode = .aspectFill
+            skScene.userData = NSMutableDictionary()
+            let userData: NSMutableDictionary = skScene.userData!
             dataFunction(userData)
             
-            print(userData.allValues)
-            
-            
             // Present the scene
             if let view = self.view{
-                view.presentScene(scene)
+                view.presentScene(skScene)
                 
             }
         }
     }
     
-    func moveToMatchMakingScene(){
-        
-        if let scene = GameScene(fileNamed: "MatchMakingScene"){
-            // Set the scale mode to scale to fit the window
-            scene.scaleMode = .aspectFill
-            
-            
-            // Present the scene
-            if let view = self.view{
-                view.presentScene(scene)
-            }
-        }
-        
-    }
-    
-    func moveToMainMenu(){
-        
-        if let scene = GameScene(fileNamed: "MainMenu"){
-            // Set the scale mode to scale to fit the window
-            scene.scaleMode = .aspectFill
-            
-            
-            // Present the scene
-            if let view = self.view{
-                view.presentScene(scene)
-            }
-        }
-        
-    }
-    
-    func moveToCommTestScreen(){
-        
-        if let scene = GameScene(fileNamed: "CommTestScreen"){
-            // Set the scale mode to scale to fit the window
-            scene.scaleMode = .aspectFill
-            
-            
-            // Present the scene
-            if let view = self.view{
-                view.presentScene(scene)
-            }
-        }
-        
-    }
+   
     func moveToAccountScreen(){
         
         if let scene = GameScene(fileNamed: "NewAccountOrLogin"){
