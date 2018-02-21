@@ -9,19 +9,20 @@
 import Foundation
 import SpriteKit
 
-class JoyStick{
+class Joystick{
     
     private var parent : SKNode
     private var innerCircle : SKShapeNode
     private var outerCircle : SKShapeNode
     private var radius : Double
+    private var joystickTouch : UITouch
     
     //between -1 and 1 such that x^2 + y^2 <= 1
     //exposed to be read as outputs
     var xDirection : Double
     var yDirection : Double
     
-    init(parent : SKNode, radius : Double, startPoint : CGPoint){
+    init(parent : SKNode, radius : Double, touch : UITouch){
         
         self.radius = radius
         self.outerCircle = makeCircle(radius: radius, fillColor: UIColor.blue)
@@ -29,36 +30,37 @@ class JoyStick{
         self.parent = parent
         self.xDirection = 0
         self.yDirection = 0
+        self.joystickTouch = touch
         
         //move joystick to initial position
-        moveOuterTo(point: startPoint)
+        moveOuterTo(point: touch.location(in: parent))
+        positionNewJoystick(touch: touch)
         
         //add joystick nodes to their parents
         parent.addChild(self.outerCircle)
         self.outerCircle.addChild(self.innerCircle)
-    }
-    
-    func acceptNewTouch(touches: Set<UITouch>){
-        let filteredTouchSet = touches.filter(isInBottomLeftQuadrant(_:))
         
-        //right now it will make  joystick on the touch closest to the last position, this may need to change
-        if let touch = closestTouchTo(touches: filteredTouchSet, node: outerCircle){
-            moveOuterTo(point: touch.location(in: self.parent))
-            moveInnerTo(point: CGPoint.zero)
-        }
     }
     
-    private func isInBottomLeftQuadrant(_ touch : UITouch) -> Bool{
-        let loc = touch.location(in: self.parent)
-        return loc.x < 0 && loc.y < 0
+    private func positionNewJoystick(touch: UITouch){
+        
+        moveOuterTo(point: touch.location(in: self.parent))
+        moveInnerTo(point: CGPoint.zero)
     }
     
+    //uses the fact that touchesBegan and touchesMoved ..ect all use the same literal object
+    func wasJoystickTouch(_ touch : UITouch) -> Bool {
+        return touch == self.joystickTouch
+    }
+    
+    func removeSelf() {
+        self.outerCircle.removeFromParent()
+    }
     
     func acceptTouchMoved(touches: Set<UITouch>){
-        let filteredTouchSet = touches
         
         //respond to touch closest to the center of the joysick
-        if let touch = closestTouchTo(touches: filteredTouchSet, node: outerCircle){
+        if let touch = touches.first(where: wasJoystickTouch(_:)){
             
             //translate point to keep position in
             let finalPoint = translatePointToStayInOuter(scenePoint: touch.location(in: parent))

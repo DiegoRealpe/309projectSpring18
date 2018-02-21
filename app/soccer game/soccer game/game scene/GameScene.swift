@@ -17,12 +17,13 @@ class GameScene: SKScene {
     let movementSpeed = 100.0
     let offScreen = CGPoint(x :10000, y :10000)
     let packetUpdateIntervalSeconds = 0.05
+    let joystickRadius = 50.0
     
     //label used for debugging, not part of final project
     private var mockPacketLabel : SKLabelNode?
     
     private var backLabel : SKLabelNode?
-    private var joyStick : JoyStick?
+    private var joyStick : Joystick?
     private var ballNode : SKSpriteNode?
     private var managedTcpConnection : ManagedTCPConnection?
     
@@ -40,7 +41,6 @@ class GameScene: SKScene {
         configurePlayerNodes()
         self.backLabel = self.childNode(withName: "Back Label") as? SKLabelNode
         self.ballNode = self.childNode(withName: "Ball") as? SKSpriteNode
-        self.joyStick = JoyStick(parent: self, radius: 50.0, startPoint: CGPoint(x: 0, y: 0))
         self.mockPacketLabel = self.childNode(withName: "Mock Packet") as? SKLabelNode
         
         configureManagedTCPConnection()
@@ -95,12 +95,17 @@ class GameScene: SKScene {
     }
     
     //for individual touches
-    private func touchDown(atPoint pos : CGPoint) {
+    private func touchBegins(_ touch : UITouch) {
+        let position = touch.location(in: self)
         
-        if self.backLabel?.contains(pos) == true{
+        if self.joyStick == nil && isInBottomLeftQuadrant(_ : touch) {
+            self.joyStick = Joystick(parent : self, radius : self.joystickRadius, touch : touch)
+        }
+        
+        if self.backLabel?.contains(position) == true{
             print("back to main menu")
             self.moveToScene(.mainMenu)
-        }else if self.mockPacketLabel?.contains(pos) == true{
+        }else if self.mockPacketLabel?.contains(position) == true{
         
             print("mocking command")
             let spr = SocketPacketResponder()
@@ -122,21 +127,55 @@ class GameScene: SKScene {
         ball.physicsBody?.velocity = velocity
     }
     
+    func makeUpdateAndSendSKAction() -> SKAction {
+        let packetAction = SKAction.run({
+            
+            if self.localPlayerStateWasUpdated {
+                let packet = self.makePlayerStatePacket(playerNumber : self.playerNumber!)
+                
+                print("sending packet, ",packet)
+                self.managedTcpConnection?.sendTCP(data: packet)
+                
+                self.localPlayerStateWasUpdated = false
+            }
+            
+        })
+        let waitAction = SKAction.wait(forDuration: packetUpdateIntervalSeconds)
+        
+        let sequenceAction = SKAction.sequence([packetAction,waitAction])
+        return SKAction.repeatForever(sequenceAction)
+    }
+    
+    func makePlayerStatePacket(playerNumber : Int)-> [UInt8]
+    {
+        let chosenPlayer = self.players[playerNumber]
+        let position = chosenPlayer.position
+        let velocity = chosenPlayer.physicsBody?.velocity
+        
+        
+        let playerPacket = ClientPlayerStatePacket(xPos: Int32(position.x), yPos: Int32(position.y), xV: Int32(velocity!.dx), yV: Int32(velocity!.dy))
+        
+        return playerPacket.toByteArray()
+    }
+    
     //for individual touches
-    private func touchMoved(toPoint pos : CGPoint) {
+    private func touchMoved(_ touch : UITouch) {
         
     }
     
     //for individual touches
-    private func touchUp(atPoint pos : CGPoint) {
+    private func touchEnded(_ touch : UITouch) {
         
+        //remove joystick from scene if joystick touch ended
+        if let js = self.joyStick, js.wasJoystickTouch(touch) {
+            js.removeSelf()
+            self.joyStick = nil
+        }
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
-        self.joyStick?.acceptNewTouch(touches: touches)
-        
-        for t in touches { self.touchDown(atPoint: t.location(in: self)) }
+        for t in touches { self.touchBegins(t) }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -163,47 +202,17 @@ class GameScene: SKScene {
             }
         }
         
-        for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
-    }
-    
-    func makeUpdateAndSendSKAction() -> SKAction {
-        let packetAction = SKAction.run({
-            
-            if self.localPlayerStateWasUpdated {
-                let packet = self.makePlayerStatePacket(playerNumber : self.playerNumber!)
-                
-                print("sending packet, ",packet)
-                self.managedTcpConnection?.sendTCP(data: packet)
-                
-                self.localPlayerStateWasUpdated = false
-            }
-            
-        })
-        let waitAction = SKAction.wait(forDuration: packetUpdateIntervalSeconds)
-        
-        let sequenceAction = SKAction.sequence([packetAction,waitAction])
-        return SKAction.repeatForever(sequenceAction)
+        for t in touches { self.touchMoved(t) }
     }
     
     
-    func makePlayerStatePacket(playerNumber : Int)-> [UInt8]
-    {
-        let chosenPlayer = self.players[playerNumber]
-        let position = chosenPlayer.position
-        let velocity = chosenPlayer.physicsBody?.velocity
-        
-        
-        let playerPacket = ClientPlayerStatePacket(xPos: Int32(position.x), yPos: Int32(position.y), xV: Int32(velocity!.dx), yV: Int32(velocity!.dy))
-        
-        return playerPacket.toByteArray()
-    }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
+        for t in touches { self.touchEnded(t) }
     }
     
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
+        for t in touches { self.touchEnded(t) }
     }
     
     
@@ -256,6 +265,11 @@ class GameScene: SKScene {
     private func ApplyPositionPacketToPlayer(player : SKSpriteNode, point : CGPoint, vector : CGVector){
         player.position = point
         player.physicsBody?.velocity = vector
+    }
+    
+    func isInBottomLeftQuadrant(_ touch : UITouch) -> Bool{
+        let loc = touch.location(in: self)
+        return loc.x < 0 && loc.y < 0
     }
 }
 
