@@ -84,6 +84,9 @@ class GameScene: SKScene {
         
         if let mtcp = self.userData?.value(forKey: UserDataKeys.managedTCPConnection.rawValue) as? ManagedTCPConnection {
             self.managedTcpConnection = mtcp
+            
+            //run update action forever
+            self.run(makeUpdateAndSendSKAction())
         }
         
     }
