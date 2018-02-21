@@ -114,21 +114,6 @@ class Joystick{
         self.yDirection = y/radius
     }
     
-    private func closestTouchTo(touches : Set<UITouch>, node :SKNode) -> UITouch?{
-        return touches.min(by: self.areTouchesInAscendingOrderByDistanceToCenter(first:second:))
-    }
-    
-    //used to filter set for min in accordance to swift's built-in set functionality
-    private func areTouchesInAscendingOrderByDistanceToCenter(first : UITouch, second : UITouch) -> Bool{
-        let compareNode = self.outerCircle
-        
-        //compare to (0,0) since locations are centered relative to the compareNode
-        let firstDistance = first.location(in: compareNode).distanceTo(.zero)
-        let secondDistance = second.location(in: compareNode).distanceTo(.zero)
-        
-        return firstDistance < secondDistance
-    }
-    
     private func fadeIn(){
         self.outerCircle.alpha = 0.0
         

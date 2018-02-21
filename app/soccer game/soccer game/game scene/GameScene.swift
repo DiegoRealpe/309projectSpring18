@@ -166,7 +166,7 @@ class GameScene: SKScene {
     //for individual touches
     private func touchEnded(_ touch : UITouch) {
         
-        //remove joystick from scene if joystick touch ended
+        //remove joystick from scene if joystick touch
         if let js = self.joyStick, js.wasJoystickTouch(touch) {
             js.removeSelf()
             self.joyStick = nil
@@ -226,8 +226,8 @@ class GameScene: SKScene {
     }
     
     func executePositionPacket(data : [UInt8]){
-        guard data.count == 18 else{
-            print("executePositionPackets did not have correct data size. expected 17, was",data.count)
+        guard data.count == 22 else{
+            print("executePositionPackets did not have correct data size. expected 22, was",data.count)
             return
         }
         

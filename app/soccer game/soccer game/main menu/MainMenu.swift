@@ -47,7 +47,7 @@ class MainMenu: SKScene {
             }
             else if account.contains(point)
             {
-                moveToAccountScreen()
+                self.moveToScene(.newAccountOrLogin)
             }
         }
         
