@@ -4,7 +4,7 @@ import(
   "fmt"
 )
 
-func init(*[]client c){
+func init(*[NUMPLAYERS]client c){
   var packetIN chan PacketIn
 	var packetOUT chan PacketOut
 
