@@ -1,10 +1,10 @@
 package main
 
 import(
-  "fmt"
+  //"fmt"
 )
 
-func init(*[NUMPLAYERS]client c){
+func initgame(c *[NUMPLAYERS]client){
   var packetIN chan PacketIn
 	var packetOUT chan PacketOut
 

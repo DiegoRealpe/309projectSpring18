@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	"net"
@@ -8,10 +9,10 @@ import (
 	"strconv"
 )
 
-struct client{
-	net.Conn connection
-	bufio.Reader reader
-	bufio.Writer writer
+type client struct{
+	connection net.Conn
+	reader bufio.Reader
+	writer bufio.Writer
 	clientno int
 }
 
@@ -48,22 +49,20 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main(){
-	ports = {5543, 9078}
+	ports = []int{5543, 9078}
 	connPasser = make(chan net.Conn)
 	startHttpServer()
 	group := new([NUMPLAYERS]client)
 	i := 0
 	for _, conn := range connPasser {
-		*group[i] = client{
-			connection: conn
-			reader: bufio.NewReader(conn)
-			writer: bufio.NewWriter(conn)
-			clientno: i
-		}
+		group[i].connection = conn
+		group[i].reader = bufio.NewReader(conn)
+		group[i].writer = bufio.NewWriter(conn)
+		group[i].clientno = i
 		i++
 		if i == NUMPLAYERS - 1{
 			go func(group interface{}){
-				init(group)
+				initgame(group)
 			}(group)
 			i = 0
 		}
