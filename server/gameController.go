@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 //should be a gorouting, but not start new goroutines
-func packetInRouter(gameOptions GameOptions, in <-chan PacketIn, out chan<- PacketOut){
+func packetInRouter(gameOptions GameOptions, in <-chan Packet, out chan<- Packet){
 	fmt.Println("game controller   :::  ","starting router")
 	g := gameOptions.buildGame()
 
@@ -12,8 +12,8 @@ func packetInRouter(gameOptions GameOptions, in <-chan PacketIn, out chan<- Pack
 	}
 }
 
-func respondToSinglePacket(in *PacketIn,out chan<- PacketOut, g *Game){
-	packetType := parsePacketType(in)
+func respondToSinglePacket(in *Packet,out chan<- Packet, g *Game){
+	packetType := in.parseType()
 	switch packetType{
 	case 0 :
 		g.respondTo0(in,out)
@@ -24,6 +24,8 @@ func respondToSinglePacket(in *PacketIn,out chan<- PacketOut, g *Game){
 	}
 }
 
-func parsePacketType(in *PacketIn) byte{
-	return in.data[0]
+func buildPacketMap(g *Game){
+	//packetMap := map[byte](func(*PacketIn,chan PacketOut))
+
+
 }
