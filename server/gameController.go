@@ -2,30 +2,50 @@ package main
 
 import "fmt"
 
+type gameController struct{
+	in <-chan Packet
+	out chan<- Packet
+	g Game
+	packetRouterMap map[byte]func(*Packet,chan<- Packet)
+}
+
 //should be a gorouting, but not start new goroutines
-func packetInRouter(gameOptions GameOptions, in <-chan Packet, out chan<- Packet){
+func runGameController(gameOptions GameOptions, in <-chan Packet, out chan<- Packet){
 	fmt.Println("game controller   :::  ","starting router")
-	g := gameOptions.buildGame()
+
+	controller := gameController{}
+	controller.g = gameOptions.buildGame()
+	controller.buildPacketMap()
 
 	for p := range in{
-		respondToSinglePacket(&p,out,&g)
+		controller.respondToSinglePacket(&p)
 	}
 }
 
-func respondToSinglePacket(in *Packet,out chan<- Packet, g *Game){
+func (controller *gameController) respondToSinglePacket(in *Packet){
 	packetType := in.parseType()
-	switch packetType{
-	case 0 :
-		g.respondTo0(in,out)
-	case 1 :
-		g.respondTo1(in,out)
-	default:
-		fmt.Println("Error: packet with type",packetType,"DNE")
-	}
+
+	controller.callHandlerFor(packetType,in)
 }
 
-func buildPacketMap(g *Game){
-	//packetMap := map[byte](func(*PacketIn,chan PacketOut))
+//builds a map of packet types to handler functions
+func (controller *gameController) buildPacketMap() {
+	packetMap := map[byte](func(*Packet,chan<- Packet)){}
 
+	packetMap[0] = controller.g.respondTo0
+	packetMap[1] = controller.g.respondTo1
 
+	controller.packetRouterMap = packetMap
+}
+
+//route packet correctly
+func (controller *gameController) callHandlerFor(packetType byte,in *Packet) {
+
+	handlerFunc := controller.packetRouterMap[packetType]
+
+	if handlerFunc == nil{
+		fmt.Println("ERROR : Packet did not have recognized type. type was",packetType)
+	}else{
+		handlerFunc(in,controller.out)
+	}
 }
