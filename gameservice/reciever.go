@@ -6,8 +6,8 @@ import(
 
 func reciever(c client, packetIN chan<- PacketIn){
   for {
-    fmt.Println("reading from connection", connNumber)
-    readbyte, err := c.reader.Peek(1)
+    fmt.Println("reading from connection", c.clientno)
+    readbyte, _ := c.reader.Peek(1)
     id := int(readbyte[0])
     fmt.Println("got it fam")
     var bytemessage []byte

@@ -11,8 +11,8 @@ import (
 
 type client struct{
 	connection net.Conn
-	reader bufio.Reader
-	writer bufio.Writer
+	reader *bufio.Reader
+	writer *bufio.Writer
 	clientno int
 }
 
@@ -20,7 +20,7 @@ var ports []int
 
 const NUMPLAYERS int = 2
 
-var connPasser net.Conn
+var connPasser chan net.Conn
 
 //when an http request is sent, send the requester a port and start listening on that port
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -54,14 +54,14 @@ func main(){
 	startHttpServer()
 	group := new([NUMPLAYERS]client)
 	i := 0
-	for _, conn := range connPasser {
+	for conn := range connPasser {
 		group[i].connection = conn
 		group[i].reader = bufio.NewReader(conn)
 		group[i].writer = bufio.NewWriter(conn)
 		group[i].clientno = i
 		i++
 		if i == NUMPLAYERS - 1{
-			go func(group interface{}){
+			go func(group *[NUMPLAYERS]client){
 				initgame(group)
 			}(group)
 			i = 0

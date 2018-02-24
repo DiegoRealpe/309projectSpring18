@@ -5,7 +5,7 @@ import(
 )
 
 func initgame(c *[NUMPLAYERS]client){
-  var packetIN chan PacketIn
-	var packetOUT chan PacketOut
+  //var packetIN chan PacketIn
+	//var packetOUT chan PacketOut
 
 }
