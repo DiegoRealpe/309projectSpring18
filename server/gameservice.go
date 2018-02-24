@@ -13,9 +13,12 @@ struct client{
 	net.Conn conn
 	bufio.Reader reader
 	bufio.Writer writer
+	clientno int
 }
 
 var ports []int
+
+var connPasser net.Conn
 
 //when an http request is sent, send the requester a port and start listening on that port
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -44,70 +47,15 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main(){
-	var packetIN chan Packet
-	var packetOUT
-}
-
-/*
-func main() {
-
-	var g Game
-
-	ports = []int{5543, 9078}
-
+	ports = {5543, 9078}
 	connPasser = make(chan net.Conn)
+	startHttpServer()
+	group := new(*[]client)
+	for _, conn := range connPasser {
 
-	go startHttpServer()
-
-	i := 0
-
-	//when a player connects, initialize their readers and writers
-	for connected := range connPasser {
-		g.connections[i] = connected
-		g.reader[i] = bufio.NewReader(g.connections[i])
-		g.writer[i] = bufio.NewWriter(g.connections[i])
-		hellobyte := []byte{byte(122), byte(i)}
-		g.writer[i].Write(hellobyte)
-		g.writer[i].Flush()
-		fmt.Println("Player ", i ," connected")
-		i++
-		if i > 1 {
-			break
-		}
 	}
-
-	ListenAndSend(g, 0)
-	ListenAndSend(g, 1)
-
-	for {}
 }
-*/
-/*
-func initializeConnection(g Game, playerNumber int, connection net.Conn) {
-	g.connections[playerNumber] = connection
-	g.reader[playerNumber] = bufio.NewReader(g.connections[playerNumber])
-	g.writer[playerNumber] = bufio.NewWriter(g.connections[playerNumber])
-	hellobyte := []byte{byte(122), byte(playerNumber)}
-	g.writer[playerNumber].Write(hellobyte)
-	g.writer[playerNumber].Flush()
 
-
-	time.Sleep(2 * time.Second)
-	testpacket := ServerPacket{//testing; to be removed later
-		serverPlayerState: 121,
-		playernumber: uint8(playerNumber),
-		xPosition: 0,
-		yPosition: 0,
-		xVelocity: 0,
-		yVelocity: 0,
-		timestamp: 0,
-	}
-	testbytes := ParseServerPacket(testpacket)
-	g.writer[playerNumber].Write(testbytes)
-	g.writer[playerNumber].Flush()
-
-}
-*/
 func startHttpServer() {
 	http.HandleFunc("/", handler)
 	err := http.ListenAndServe(":80", nil)
