@@ -15,7 +15,7 @@ func ListenAndSend(g Game, connNumber int) {
 			id := int(readbyte[0])
 			fmt.Println("got it fam")
 			if id == 120 {
-				bytemessage, err := g.reader[connNumber].Peek(17)
+				bytemessage, _ := g.reader[connNumber].Peek(17)
 				if err != nil {
 					fmt.Println("packet error: " + err.Error())
 					g.reader[connNumber].ReadByte()
