@@ -26,8 +26,8 @@ type packet121 struct {
 	timestamp         float32
 }
 
-//Parse121 Takes array of bytes and parses to a clientpacket struct
-func Parse121(rawData []byte) packet120 {
+//ParseBytesTo120 Takes array of bytes and parses to a clientpacket struct
+func ParseBytesTo120(rawData []byte) packet120 {
 	if len(rawData) != 17 {
 		panic(rawData)
 	}
@@ -46,8 +46,8 @@ func Parse121(rawData []byte) packet120 {
 	return resultPacket
 }
 
-//Parse122 takes a server packet and readies it to be sent as a byte slice
-func Parse122(packet packet121) []byte {
+//Parse121 takes a server packet and readies it to be sent as a byte slice
+func Parse121ToBytes(packet packet121) []byte {
 	rawData := make([]byte, 22)
 
 	rawData[0] = byte(121)

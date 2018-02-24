@@ -3,14 +3,14 @@ package main
 import "fmt"
 
 type gameController struct{
-	in <-chan Packet
-	out chan<- Packet
+	in <-chan PacketIn
+	out chan<- PacketOut
 	g Game
-	packetRouterMap map[byte]func(*Packet,chan<- Packet)
+	packetRouterMap map[byte]func(*PacketIn,chan<- PacketOut)
 }
 
 //should be a gorouting, but not start new goroutines
-func runGameController(gameOptions GameOptions, in <-chan Packet, out chan<- Packet){
+func runGameController(gameOptions GameOptions, in <-chan PacketIn, out chan<- PacketOut){
 	fmt.Println("game controller   :::  ","starting router")
 
 	controller := gameController{}
@@ -22,7 +22,7 @@ func runGameController(gameOptions GameOptions, in <-chan Packet, out chan<- Pac
 	}
 }
 
-func (controller *gameController) respondToSinglePacket(in *Packet){
+func (controller *gameController) respondToSinglePacket(in *PacketIn){
 	packetType := in.parseType()
 
 	controller.callHandlerFor(packetType,in)
@@ -30,7 +30,7 @@ func (controller *gameController) respondToSinglePacket(in *Packet){
 
 //builds a map of packet types to handler functions
 func (controller *gameController) buildPacketMap() {
-	packetMap := map[byte](func(*Packet,chan<- Packet)){}
+	packetMap := map[byte](func(*PacketIn,chan<- PacketOut)){}
 
 	packetMap[0] = controller.g.respondTo0
 	packetMap[1] = controller.g.respondTo1
@@ -39,7 +39,7 @@ func (controller *gameController) buildPacketMap() {
 }
 
 //route packet correctly
-func (controller *gameController) callHandlerFor(packetType byte,in *Packet) {
+func (controller *gameController) callHandlerFor(packetType byte,in *PacketIn) {
 
 	handlerFunc := controller.packetRouterMap[packetType]
 
