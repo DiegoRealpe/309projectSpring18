@@ -9,16 +9,13 @@ import (
 	"strconv"
 )
 
-var ports []int
-
-var connPasser chan net.Conn
-
-//Game struct with 2 connections, readers and writers to give to the players for them to communicate
-type Game struct {
-	connections [2]net.Conn
-	reader      [2]*bufio.Reader
-	writer      [2]*bufio.Writer
+struct client{
+	net.Conn conn
+	bufio.Reader reader
+	bufio.Writer writer
 }
+
+var ports []int
 
 //when an http request is sent, send the requester a port and start listening on that port
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -46,6 +43,12 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func main(){
+	var packetIN chan Packet
+	var packetOUT
+}
+
+/*
 func main() {
 
 	var g Game
@@ -78,7 +81,7 @@ func main() {
 
 	for {}
 }
-
+*/
 /*
 func initializeConnection(g Game, playerNumber int, connection net.Conn) {
 	g.connections[playerNumber] = connection
@@ -87,7 +90,7 @@ func initializeConnection(g Game, playerNumber int, connection net.Conn) {
 	hellobyte := []byte{byte(122), byte(playerNumber)}
 	g.writer[playerNumber].Write(hellobyte)
 	g.writer[playerNumber].Flush()
-	
+
 
 	time.Sleep(2 * time.Second)
 	testpacket := ServerPacket{//testing; to be removed later
@@ -113,5 +116,3 @@ func startHttpServer() {
 		fmt.Println(err.Error())
 	}
 }
-
-
