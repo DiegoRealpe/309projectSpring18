@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"/packets"
+	"fmt"
+)
 
 type GameOptions struct {
 	numPlayers int
@@ -31,3 +34,11 @@ func (g *Game) respondTo1(in *Packet, out chan<- Packet){
 	fmt.Println("game model   :::  ","doing whatever packet 1 would do")
 }
 
+
+func (g *Game) respondTo120(in *Packet, out chan<- Packet){
+	fmt.Println("recieved 120 with data", *in)
+
+
+
+
+}

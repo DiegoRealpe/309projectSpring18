@@ -6,8 +6,8 @@ import (
 	"math"
 )
 
-//ClientPacket with game state to be read by the server
-type ClientPacket struct {
+//packet120 with game state to be read by the server
+type packet120 struct {
 	clientPlayerState uint8 //Packet number 1
 	xPosition         float32
 	yPosition         float32
@@ -16,7 +16,7 @@ type ClientPacket struct {
 }
 
 //ServerPacket with game states to be sent to clients
-type ServerPacket struct {
+type packet121 struct {
 	serverPlayerState uint8 //Packet number 2
 	playernumber      uint8
 	xPosition         float32
@@ -26,8 +26,8 @@ type ServerPacket struct {
 	timestamp         float32
 }
 
-//ParseBytes Takes array of bytes and parses to a clientpacket struct
-func ParseBytes(rawData []byte) ClientPacket {
+//Parse121 Takes array of bytes and parses to a clientpacket struct
+func Parse121(rawData []byte) packet120 {
 	if len(rawData) != 17 {
 		panic(rawData)
 	}
@@ -36,7 +36,7 @@ func ParseBytes(rawData []byte) ClientPacket {
 	yPosByte := rawData[5:9]
 	xVelByte := rawData[9:13]
 	yVelByte := rawData[13:17]
-	resultPacket := ClientPacket{
+	resultPacket := packet120{
 		clientPlayerState: uint8(Statebyte[0]),
 		xPosition:         BytestoFloat32(xPosByte),
 		yPosition:         BytestoFloat32(yPosByte),
@@ -46,34 +46,27 @@ func ParseBytes(rawData []byte) ClientPacket {
 	return resultPacket
 }
 
-//ParseServerPacket takes a server packet and readies it to be sent as a byte slice
-func ParseServerPacket(packet ServerPacket) []byte {
+//Parse122 takes a server packet and readies it to be sent as a byte slice
+func Parse122(packet packet121) []byte {
 	rawData := make([]byte, 22)
-
-	i := 0
 
 	rawData[0] = byte(121)
 	rawData[1] = byte(packet.playernumber)
+
 	xpos := Float32toBytes(packet.xPosition)
-	for i = 2; i <= 5; i++ {
-		rawData[i] = xpos[i - 2]
-	}
+	rawData[2:5] = xpos
+
 	ypos := Float32toBytes(packet.yPosition)
-	for i = 6; i <= 9; i++ {
-		rawData[i] = ypos[i - 6]
-	}
+	rawData[6:9] = ypos
+
 	xvel := Float32toBytes(packet.xVelocity)
-	for i = 10; i <= 13; i++ {
-		rawData[i] = xvel[i - 10]
-	}
+	rawData[10:13] = xvel
+
 	yvel := Float32toBytes(packet.yVelocity)
-	for i = 14; i <= 17; i++ {
-		rawData[i] = yvel[i - 14]
-	}
+	rawData[14:17] = yvel
+
 	time := Float32toBytes(packet.timestamp)
-	for i = 18; i <= 21; i++ {
-		rawData[i] = time[i - 18]
-	}
+	rawData[18:21] = time
 
 	return rawData
 }
