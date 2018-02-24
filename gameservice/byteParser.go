@@ -54,19 +54,19 @@ func Parse121ToBytes(packet packet121) []byte {
 	rawData[1] = byte(packet.playernumber)
 
 	xpos := Float32toBytes(packet.xPosition)
-	rawData[2:5] = xpos
+	copy(rawData[2:5],xpos)
 
 	ypos := Float32toBytes(packet.yPosition)
-	rawData[6:9] = ypos
+	copy(rawData[6:9],ypos)
 
 	xvel := Float32toBytes(packet.xVelocity)
-	rawData[10:13] = xvel
+	copy(rawData[10:13],xvel)
 
 	yvel := Float32toBytes(packet.yVelocity)
-	rawData[14:17] = yvel
+	copy(rawData[14:17],yvel)
 
 	time := Float32toBytes(packet.timestamp)
-	rawData[18:21] = time
+	copy(rawData[18:21], time)
 
 	return rawData
 }
