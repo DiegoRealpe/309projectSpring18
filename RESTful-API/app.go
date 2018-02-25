@@ -32,10 +32,10 @@ func (a *App) Initialize() {
 		fmt.Println(err)
 	}
 	a.router = mux.NewRouter()
+	fmt.Println("Initialized")
 }
 
 //Run listen and serve
-func (a *App) Run() (addr string) {
+func (a *App) Run() {
 	log.Fatal(http.ListenAndServe(":8000", a.router))
-	return "RAN"
 }

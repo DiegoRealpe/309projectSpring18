@@ -13,8 +13,6 @@ func main() {
 	a.Initialize()
 	defer a.db.Close()
 
-	QuerySearchUser(a.db, "Nickname", "Nolan")
-
 	return
 	/*fmt.Println("Server")
 

@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -15,11 +16,11 @@ type Player struct {
 	GoalsScored string `json:"goalsscored,omitempty"`
 }
 
-//QueryDeleteUser Clears user in database
-func QueryDeleteUser(db *sql.DB, IDConstrain string) error {
+//QueryDeletePlayer Clears Player in database
+func (p *Player) QueryDeletePlayer(db *sql.DB) error {
 	return errors.New("Not ready")
 	/*var request string
-	request = fmt.Sprintf(`DELETE FROM Clients WHERE ID = '%s'`, IDConstrain)
+	request = fmt.Sprintf(`DELETE FROM Clients WHERE ID = '%s'`, p.ID)
 	var result, err = db.Exec(request)
 	if err != nil {
 		fmt.Println(err)
@@ -29,17 +30,17 @@ func QueryDeleteUser(db *sql.DB, IDConstrain string) error {
 		fmt.Println(err2)
 	}
 	if affected == int64(1) {
-		fmt.Println("Deleted User:", IDConstrain)
+		fmt.Println("Deleted Player:", p.ID)
 	} else {
 		fmt.Println("None Found")
 	}*/
 }
 
-//QueryCreateUser inserts new user in database
-func QueryCreateUser(db *sql.DB, NewID string) error {
-	return errors.New("Not ready")
-	/*var request string
-	request = fmt.Sprintf(`INSERT INTO Clients (Nickname, GamesPlayed, GamesWon, GoalsScored, Active) VALUES ('%s', '0', '0', '0', '0')`, NewID)
+//QueryCreatePlayer inserts new Player in database
+func (p *Player) QueryCreatePlayer(db *sql.DB) error {
+	var request string
+	request = fmt.Sprintf(`INSERT INTO Clients (Nickname, GamesPlayed, GamesWon, GoalsScored, Active)
+	VALUES ('%s', '%s', '0', '%s', '0')`, p.Nickname, p.GamesPlayed, p.GoalsScored)
 	var result, err = db.Exec(request)
 	if err != nil {
 		fmt.Println(err)
@@ -49,15 +50,15 @@ func QueryCreateUser(db *sql.DB, NewID string) error {
 		fmt.Println(err2)
 	}
 	if affected == int64(1) {
-		fmt.Println("Created New User:", NewID)
+		fmt.Println("Created New Player:", p.ID)
 	} else {
 		fmt.Println("Create Failed")
-	}*/
-
+	}
+	return nil
 }
 
-//QueryAllUsers Returns all the users stored in the Clients table
-func QueryAllUsers(db *sql.DB) error {
+//QueryAllPlayers Returns all the Players stored in the Clients table
+func (p *Player) QueryAllPlayers(db *sql.DB) error {
 	return errors.New("Not ready")
 	/*var rows, err = db.Query("SELECT * FROM Clients")
 	if err != nil {
@@ -76,14 +77,14 @@ func QueryAllUsers(db *sql.DB) error {
 		results++
 		fmt.Println("ID = ", ID, "Nickname = ", Nickname)
 	}
-	fmt.Println("Users in total:", results)*/
+	fmt.Println("Players in total:", results)*/
 }
 
-//QuerySearchUser Looks for user in database
-func QuerySearchUser(db *sql.DB, Column string, Constrain string) error {
+//QuerySearchPlayer Looks for Player in database
+func (p *Player) QuerySearchPlayer(db *sql.DB) error {
 	return errors.New("Not ready")
 	/*var request string
-	request = fmt.Sprintf("SELECT * FROM Clients WHERE %s = '%s'", Column, Constrain)
+	request = fmt.Sprintf("SELECT * FROM Clients WHERE ID = '%s'", p.ID)
 	var rows, err = db.Query(request)
 	if err != nil {
 		fmt.Println(err)
@@ -98,7 +99,9 @@ func QuerySearchUser(db *sql.DB, Column string, Constrain string) error {
 			fmt.Println(err)
 		}
 		results++
-		fmt.Println("ID = ", ID, "Nickname = ", Nickname)
+		p.Nickname = Nickname
+		p.GamesPlayed = a
+		p.GoalsScored = c
 	}
 	if results == 0 {
 		fmt.Println("No Results Found!")
@@ -126,18 +129,18 @@ func GetPlayer(w http.ResponseWriter, r *http.Request) {
 //CreatePlayer ...
 func CreatePlayer(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	var user Player
-	_ = json.NewDecoder(r.Body).Decode(&user)
-	user.ID = params["id"]
-	AllPlayers = append(AllPlayers, user)
+	var Player Player
+	_ = json.NewDecoder(r.Body).Decode(&Player)
+	Player.ID = params["id"]
+	AllPlayers = append(AllPlayers, Player)
 	json.NewEncoder(w).Encode(AllPlayers)
 }
 
 //DeletePlayer ...
 func DeletePlayer(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	for i, user := range AllPlayers {
-		if user.ID == params["id"] {
+	for i, Player := range AllPlayers {
+		if Player.ID == params["id"] {
 			AllPlayers = append(AllPlayers[:i], AllPlayers[i+1:]...)
 			break
 		}
