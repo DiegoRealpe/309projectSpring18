@@ -6,6 +6,7 @@ import (
 	"fmt"
 )
 
+
 func TestSum(t *testing.T) {
 
 	packetOut := make(chan PacketOut,100)

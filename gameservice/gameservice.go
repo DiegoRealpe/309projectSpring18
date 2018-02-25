@@ -71,7 +71,7 @@ func main(){
 
 func startHttpServer() {
 	http.HandleFunc("/", handler)
-	err := http.ListenAndServe(":80", nil)
+	err := http.ListenAndServe(":6000", nil)
 
 	if err != nil {
 		fmt.Println(err.Error())
