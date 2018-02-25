@@ -35,6 +35,7 @@ func (a *App) Initialize() {
 }
 
 //Run listen and serve
-func (a *App) Run() {
+func (a *App) Run() (addr string) {
 	log.Fatal(http.ListenAndServe(":8000", a.router))
+	return "RAN"
 }
