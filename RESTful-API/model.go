@@ -17,7 +17,7 @@ type Player struct {
 }
 
 //QueryDeletePlayer Clears Player in database
-func (p *Player) QueryDeletePlayer(db *sql.DB) error {
+func QueryDeletePlayer(db *sql.DB, p *Player) error {
 	request := fmt.Sprintf(`DELETE FROM Players WHERE ID = '%s'`, p.ID)
 	var result, err = db.Exec(request)
 	if err != nil {
@@ -34,7 +34,7 @@ func (p *Player) QueryDeletePlayer(db *sql.DB) error {
 }
 
 //QueryCreatePlayer inserts new Player in database
-func (p *Player) QueryCreatePlayer(db *sql.DB) error {
+func QueryCreatePlayer(db *sql.DB, p *Player) error {
 	request := fmt.Sprintf(`INSERT INTO Players (Nickname, GamesPlayed, GamesWon, GoalsScored, Active)
 	VALUES ('%s', '0', '0', '0', '0')`, p.Nickname)
 	var result, err = db.Exec(request)
@@ -55,7 +55,7 @@ func (p *Player) QueryCreatePlayer(db *sql.DB) error {
 }
 
 //QueryAllPlayers Returns all the Players stored in the Players table
-func (p *Player) QueryAllPlayers(db *sql.DB) error {
+func QueryAllPlayers(db *sql.DB) error {
 	return errors.New("Not ready")
 	/*var rows, err = db.Query("SELECT * FROM Players")
 	if err != nil {
@@ -78,7 +78,7 @@ func (p *Player) QueryAllPlayers(db *sql.DB) error {
 }
 
 //QuerySearchPlayer Looks for Player in database
-func (p *Player) QuerySearchPlayer(db *sql.DB) error {
+func QuerySearchPlayer(db *sql.DB, p *Player) error {
 	if p.ID == "" {
 		return errors.New("Empty")
 	}

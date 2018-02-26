@@ -171,7 +171,6 @@ func clearTable() {
 
 func executeRequest(req *http.Request) *httptest.ResponseRecorder {
 	rr := httptest.NewRecorder()
-	fmt.Println("Executing")
 	testApp.router.ServeHTTP(rr, req)
 
 	return rr

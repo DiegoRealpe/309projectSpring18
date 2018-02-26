@@ -63,7 +63,7 @@ func (a *App) getPlayer(w http.ResponseWriter, r *http.Request) {
 	}
 
 	p := Player{ID: strconv.Itoa(id)}
-	if err := p.QuerySearchPlayer(a.db); err != nil {
+	if err := QuerySearchPlayer(a.db, &p); err != nil {
 		switch err {
 		case errors.New("Empty"):
 			respondWithError(w, http.StatusBadRequest, "Empty")
@@ -89,7 +89,7 @@ func (a *App) createPlayer(w http.ResponseWriter, r *http.Request) {
 	}
 
 	defer r.Body.Close()
-	err := p.QueryCreatePlayer(a.db)
+	err := QueryCreatePlayer(a.db, &p)
 	if err != nil {
 		switch err {
 		case errors.New("Create Failed fam"):
@@ -115,7 +115,7 @@ func (a *App) deletePlayer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	p := Player{ID: strconv.Itoa(id)}
-	if err := p.QueryDeletePlayer(a.db); err != nil {
+	if err := QueryDeletePlayer(a.db, &p); err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
