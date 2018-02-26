@@ -41,7 +41,6 @@ func (p *Player) QueryCreatePlayer(db *sql.DB) error {
 	var request string
 	request = fmt.Sprintf(`INSERT INTO Clients (Nickname, GamesPlayed, GamesWon, GoalsScored, Active)
 	VALUES ('%s', '0', '0', '0', '0')`, p.Nickname)
-	fmt.Println(request)
 	var result, err = db.Exec(request)
 	if err != nil {
 		return errors.New("Query Error")
@@ -50,10 +49,13 @@ func (p *Player) QueryCreatePlayer(db *sql.DB) error {
 	if err2 != nil {
 		return errors.New("Create Failed fam")
 	}
-	if affected != int64(1) {
-		return errors.New("Abnormal number of creates")
+	if affected == int64(1) {
+		db.QueryRow("SELECT ID FROM Clients WHERE Nickname = ?", p.Nickname).Scan(&p.ID)
+		p.GamesPlayed = "0"
+		p.GoalsScored = "0"
+		return nil
 	}
-	return nil
+	return errors.New("Abnormal number of creates")
 }
 
 //QueryAllPlayers Returns all the Players stored in the Clients table

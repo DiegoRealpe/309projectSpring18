@@ -88,9 +88,6 @@ func (a *App) createPlayer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	p = Player{Nickname: "Knuckles"}
-	fmt.Println("Name recieved is:", p.Nickname)
-
 	defer r.Body.Close()
 	err := p.QueryCreatePlayer(a.db)
 	if err != nil {
