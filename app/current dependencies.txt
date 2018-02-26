@@ -1,0 +1,6 @@
+
+#in Cartfile format
+
+github "Alamofire/Alamofire" ~> 4.5
+
+github "swiftsocket/SwiftSocket"
