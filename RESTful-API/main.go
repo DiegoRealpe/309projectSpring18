@@ -13,13 +13,6 @@ func main() {
 	a.Initialize()
 	defer a.db.Close()
 
+	a.Run()
 	return
-	/*fmt.Println("Server")
-
-	a.router.HandleFunc("/player", GetAllPlayers).Methods("GET")
-	a.router.HandleFunc("/player/{id}", GetPlayer).Methods("GET")
-	a.router.HandleFunc("/player/{id}", CreatePlayer).Methods("POST")
-	a.router.HandleFunc("/player/{id}", DeletePlayer).Methods("DELETE")
-
-	a.Run()*/
 }

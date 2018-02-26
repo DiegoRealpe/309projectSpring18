@@ -18,27 +18,24 @@ type Player struct {
 
 //QueryDeletePlayer Clears Player in database
 func (p *Player) QueryDeletePlayer(db *sql.DB) error {
-	var request string
-	request = fmt.Sprintf(`DELETE FROM Clients WHERE ID = '%s'`, p.ID)
+	request := fmt.Sprintf(`DELETE FROM Clients WHERE ID = '%s'`, p.ID)
 	var result, err = db.Exec(request)
 	if err != nil {
-		fmt.Println(err)
+		return errors.New("Query Error")
 	}
 	affected, err2 := result.RowsAffected()
 	if err2 != nil {
-		fmt.Println(err2)
+		return errors.New("Resulting Rows Error")
 	}
-	if affected == int64(1) {
-		fmt.Println("Deleted Player:", p.ID)
-	} else {
-		fmt.Println("None Found")
+	if affected != int64(1) {
+		return errors.New("None Found")
 	}
+	return nil
 }
 
 //QueryCreatePlayer inserts new Player in database
 func (p *Player) QueryCreatePlayer(db *sql.DB) error {
-	var request string
-	request = fmt.Sprintf(`INSERT INTO Clients (Nickname, GamesPlayed, GamesWon, GoalsScored, Active)
+	request := fmt.Sprintf(`INSERT INTO Clients (Nickname, GamesPlayed, GamesWon, GoalsScored, Active)
 	VALUES ('%s', '0', '0', '0', '0')`, p.Nickname)
 	var result, err = db.Exec(request)
 	if err != nil {
@@ -85,8 +82,7 @@ func (p *Player) QuerySearchPlayer(db *sql.DB) error {
 	if p.ID == "" {
 		return errors.New("Empty")
 	}
-	var request string
-	request = fmt.Sprintf("SELECT * FROM Clients WHERE ID = '%s'", p.ID)
+	request := fmt.Sprintf("SELECT * FROM Clients WHERE ID = '%s'", p.ID)
 	var rows, err = db.Query(request)
 	if err != nil {
 		return errors.New("Query Error")

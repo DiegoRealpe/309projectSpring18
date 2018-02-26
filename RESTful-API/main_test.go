@@ -138,12 +138,12 @@ func TestDeleteUser(t *testing.T) {
 	req, _ := http.NewRequest("GET", "/client/1", nil)
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusOK, response.Code)
-	/*req, _ = http.NewRequest("DELETE", "/client/1", nil)
+	req, _ = http.NewRequest("DELETE", "/client/1", nil)
 	response = executeRequest(req)
 	checkResponseCode(t, http.StatusOK, response.Code)
 	req, _ = http.NewRequest("GET", "/client/1", nil)
 	response = executeRequest(req)
-	checkResponseCode(t, http.StatusNotFound, response.Code)*/
+	checkResponseCode(t, http.StatusNotFound, response.Code)
 }
 
 /*********Helpers*********/

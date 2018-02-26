@@ -109,13 +109,13 @@ func (a *App) createPlayer(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) deletePlayer(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["id"])
-	if err != nil {
+	id, err := strconv.Atoi(vars["ID"])
+	if err != nil || id == 0 {
 		respondWithError(w, http.StatusBadRequest, "Invalid User ID")
 		return
 	}
-	u := user{ID: id}
-	if err := u.deleteUser(a.DB); err != nil {
+	p := Player{ID: strconv.Itoa(id)}
+	if err := p.QueryDeletePlayer(a.db); err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
