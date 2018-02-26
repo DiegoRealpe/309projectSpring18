@@ -45,14 +45,14 @@ func (a *App) Run() {
 }
 
 func (a *App) initializeRoutes() {
-	a.router.HandleFunc("/client/{ID:[0-9]+}", a.getPlayer).Methods("GET")
-	/*a.router.HandleFunc("/user", a.createUser).Methods("POST")
-	a.router.HandleFunc("/user/{id:[0-9]+}", a.getUser).Methods("GET")
+	a.router.HandleFunc("/client/{ID}", a.getPlayer).Methods("GET")
+	a.router.HandleFunc("/user", a.createPlayer).Methods("POST") //No mux params, credentials in request body
+	/*a.router.HandleFunc("/user/{id:[0-9]+}", a.getUser).Methods("GET")
 	a.router.HandleFunc("/user/{id:[0-9]+}", a.updateUser).Methods("PUT")
 	a.router.HandleFunc("/user/{id:[0-9]+}", a.deleteUser).Methods("DELETE")*/
 }
 
-/*********Initialized Routes*********/
+/*********Routes*********/
 
 func (a *App) getPlayer(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
@@ -77,6 +77,22 @@ func (a *App) getPlayer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	respondWithJSON(w, http.StatusOK, p)
+}
+
+func (a *App) createUser(w http.ResponseWriter, r *http.Request) {
+	var p Player
+	decoder := json.NewDecoder(r.Body) //Passing credentials through http request body
+	if err := decoder.Decode(&p); err != nil {
+		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	defer r.Body.Close()
+	err := p.QueryCreatePlayer(a.db)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	respondWithJSON(w, http.StatusCreated, p)
 }
 
 /*********Helpers*********/
