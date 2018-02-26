@@ -46,7 +46,7 @@ func (a *App) Run() {
 
 func (a *App) initializeRoutes() {
 	a.router.HandleFunc("/client/{ID}", a.getPlayer).Methods("GET")
-	a.router.HandleFunc("/user", a.createPlayer).Methods("POST") //No mux params, credentials in request body
+	a.router.HandleFunc("/client", a.createPlayer).Methods("POST") //No mux params, credentials in request body
 	/*a.router.HandleFunc("/user/{id:[0-9]+}", a.getUser).Methods("GET")
 	a.router.HandleFunc("/user/{id:[0-9]+}", a.updateUser).Methods("PUT")
 	a.router.HandleFunc("/user/{id:[0-9]+}", a.deleteUser).Methods("DELETE")*/
@@ -80,12 +80,17 @@ func (a *App) getPlayer(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) createPlayer(w http.ResponseWriter, r *http.Request) {
+
 	var p Player
 	decoder := json.NewDecoder(r.Body) //Passing credentials through http request body
 	if err := decoder.Decode(&p); err != nil {
 		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
+
+	p = Player{Nickname: "Knuckles"}
+	fmt.Println("Name recieved is:", p.Nickname)
+
 	defer r.Body.Close()
 	err := p.QueryCreatePlayer(a.db)
 	if err != nil {

@@ -41,6 +41,7 @@ func (p *Player) QueryCreatePlayer(db *sql.DB) error {
 	var request string
 	request = fmt.Sprintf(`INSERT INTO Clients (Nickname, GamesPlayed, GamesWon, GoalsScored, Active)
 	VALUES ('%s', '0', '0', '0', '0')`, p.Nickname)
+	fmt.Println(request)
 	var result, err = db.Exec(request)
 	if err != nil {
 		return errors.New("Query Error")
