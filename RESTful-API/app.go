@@ -44,7 +44,7 @@ func (a *App) Run() {
 }
 
 func (a *App) initializeRoutes() {
-	a.router.HandleFunc("/users", a.getPlayer).Methods("GET")
+	a.router.HandleFunc("/client/{ID:[0-9]+}", a.getPlayer).Methods("GET")
 	/*a.router.HandleFunc("/user", a.createUser).Methods("POST")
 	a.router.HandleFunc("/user/{id:[0-9]+}", a.getUser).Methods("GET")
 	a.router.HandleFunc("/user/{id:[0-9]+}", a.updateUser).Methods("PUT")
@@ -55,12 +55,13 @@ func (a *App) initializeRoutes() {
 
 func (a *App) getPlayer(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["id"])
+	id, err := strconv.Atoi(vars["ID"])
 	if err != nil {
 		respondWithError(w, http.StatusBadRequest, "Invalid user ID")
 		return
 	}
 	p := Player{ID: string(id)}
+	fmt.Printf("%d\n", id)
 	if err := p.QuerySearchPlayer(a.db); err != nil {
 		switch err {
 		case sql.ErrNoRows:

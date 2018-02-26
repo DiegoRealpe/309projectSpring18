@@ -82,6 +82,7 @@ func (p *Player) QueryAllPlayers(db *sql.DB) error {
 
 //QuerySearchPlayer Looks for Player in database
 func (p *Player) QuerySearchPlayer(db *sql.DB) error {
+	fmt.Println("Searching")
 	var request string
 	request = fmt.Sprintf("SELECT * FROM Clients WHERE ID = '%s'", p.ID)
 	var rows, err = db.Query(request)
@@ -92,6 +93,9 @@ func (p *Player) QuerySearchPlayer(db *sql.DB) error {
 
 	var ID, Nickname string
 	var results, a, b, c, d int
+	if results == 0 {
+		return errors.New("Empty Search")
+	}
 	for rows.Next() {
 		err := rows.Scan(&ID, &Nickname, &a, &b, &c, &d)
 		if err != nil {
@@ -102,9 +106,7 @@ func (p *Player) QuerySearchPlayer(db *sql.DB) error {
 		p.GamesPlayed = string(a)
 		p.GoalsScored = string(c)
 	}
-	if results == 0 {
-		return errors.New("U fked up")
-	}
+
 	return nil
 }
 

@@ -95,9 +95,10 @@ func TestGetUser(t *testing.T) {
 
 	clearTable()
 	addUsers(1)
-	req, _ := http.NewRequest("GET", "/ID/1", nil)
+	req, _ := http.NewRequest("GET", "/client/1", nil)
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusOK, response.Code)
+
 }
 
 func TestUpdateUser(t *testing.T) {
@@ -169,6 +170,7 @@ func clearTable() {
 
 func executeRequest(req *http.Request) *httptest.ResponseRecorder {
 	rr := httptest.NewRecorder()
+	fmt.Println("Executing")
 	testApp.router.ServeHTTP(rr, req)
 
 	return rr
