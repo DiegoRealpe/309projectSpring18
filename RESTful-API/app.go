@@ -79,7 +79,7 @@ func (a *App) getPlayer(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, p)
 }
 
-func (a *App) createUser(w http.ResponseWriter, r *http.Request) {
+func (a *App) createPlayer(w http.ResponseWriter, r *http.Request) {
 	var p Player
 	decoder := json.NewDecoder(r.Body) //Passing credentials through http request body
 	if err := decoder.Decode(&p); err != nil {
@@ -89,7 +89,16 @@ func (a *App) createUser(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	err := p.QueryCreatePlayer(a.db)
 	if err != nil {
-		respondWithError(w, http.StatusInternalServerError, err.Error())
+		switch err {
+		case errors.New("Create Failed fam"):
+			respondWithError(w, http.StatusBadRequest, "Query Return Error")
+		case errors.New("Query Error"):
+			respondWithError(w, http.StatusBadRequest, "Bad Query")
+		case errors.New("Abnormal number of creates"):
+			respondWithError(w, http.StatusNotImplemented, "Abnormal number of creates")
+		default:
+			respondWithError(w, http.StatusInternalServerError, err.Error())
+		}
 		return
 	}
 	respondWithJSON(w, http.StatusCreated, p)

@@ -70,22 +70,22 @@ func TestCreateUser(t *testing.T) {
 	testApp.Initialize()
 
 	clearTable()
-	payload := []byte(`{"name":"test user","age":30}`)
-	req, _ := http.NewRequest("POST", "/user", bytes.NewBuffer(payload))
+	payload := []byte(`{"Nickname":"Knuckles"}`)
+	req, _ := http.NewRequest("POST", "/client", bytes.NewBuffer(payload))
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusCreated, response.Code)
 	var m map[string]interface{}
 	json.Unmarshal(response.Body.Bytes(), &m)
-	if m["name"] != "test user" {
-		t.Errorf("Expected user name to be 'test user'. Got '%v'", m["name"])
+	if m["Nickname"] != "Knuckles" {
+		t.Errorf("Expected user name to be 'Knuckles'. Got '%v', this user doesn't know de wey", m["name"])
 	}
-	if m["age"] != 30.0 {
-		t.Errorf("Expected user age to be '30'. Got '%v'", m["age"])
+	if m["GamesWon"] != 0.0 {
+		t.Errorf("Expected games won in new user to be to be '0'. Got '%v'", m["GamesWon"])
 	}
-	// the id is compared to 1.0 because JSON unmarshaling converts numbers to
+	// This is compared to 0.0 because JSON unmarshaling converts numbers to
 	// floats, when the target is a map[string]interface{}
-	if m["id"] != 1.0 {
-		t.Errorf("Expected user ID to be '1'. Got '%v'", m["id"])
+	if m["GoalsScored"] != 0.0 {
+		t.Errorf("Expected goals scored to be '0'. Got '%v'", m["id"])
 	}
 }
 

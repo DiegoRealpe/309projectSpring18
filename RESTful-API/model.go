@@ -40,19 +40,17 @@ func (p *Player) QueryDeletePlayer(db *sql.DB) error {
 func (p *Player) QueryCreatePlayer(db *sql.DB) error {
 	var request string
 	request = fmt.Sprintf(`INSERT INTO Clients (Nickname, GamesPlayed, GamesWon, GoalsScored, Active)
-	VALUES ('%s', '%s', '0', '%s', '0')`, p.Nickname, p.GamesPlayed, p.GoalsScored)
+	VALUES ('%s', '0', '0', '0', '0')`, p.Nickname)
 	var result, err = db.Exec(request)
 	if err != nil {
-		fmt.Println(err)
+		return errors.New("Query Error")
 	}
 	affected, err2 := result.RowsAffected()
 	if err2 != nil {
-		fmt.Println(err2)
-	}
-	if affected == int64(1) {
-		fmt.Println("Created New Player:", p.ID)
-	} else {
 		return errors.New("Create Failed fam")
+	}
+	if affected != int64(1) {
+		return errors.New("Abnormal number of creates")
 	}
 	return nil
 }
