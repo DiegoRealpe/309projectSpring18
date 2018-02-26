@@ -74,16 +74,18 @@ func TestCreateUser(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/client", bytes.NewBuffer(payload))
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusCreated, response.Code)
-	var m map[string]interface{}
-	json.Unmarshal(response.Body.Bytes(), &m)
-	if m["Nickname"] != "Knuckles" {
-		t.Errorf("Expected user name to be 'Knuckles'. Got '%v', this user doesn't know de wey", m["Nickname"])
+	//var m map[string]interface{}
+	var jsonPlayer Player
+	json.Unmarshal(response.Body.Bytes(), &jsonPlayer)
+
+	if jsonPlayer.Nickname != "Knuckles" {
+		t.Errorf("Expected user name to be 'Knuckles'. Got '%v', this user doesn't know de wey", jsonPlayer.Nickname)
 	}
-	if m["GamesWon"] != "0" {
-		t.Errorf("Expected games won in new user to be to be '0'. Got '%v'", m["GamesWon"])
+	if jsonPlayer.GamesPlayed != "0" {
+		t.Errorf("Expected games won in new user to be to be '0'. Got '%v'", jsonPlayer.GamesPlayed)
 	}
-	if m["GoalsScored"] != "0" {
-		t.Errorf("Expected goals scored to be '0'. Got '%v'", m["GoalsScored"])
+	if jsonPlayer.GoalsScored != "0" {
+		t.Errorf("Expected goals scored to be '0'. Got '%v'", jsonPlayer.GoalsScored)
 	}
 }
 

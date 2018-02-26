@@ -103,6 +103,7 @@ func (a *App) createPlayer(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
+
 	respondWithJSON(w, http.StatusCreated, p)
 }
 
