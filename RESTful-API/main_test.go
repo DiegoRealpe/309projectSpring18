@@ -95,7 +95,7 @@ func TestGetUser(t *testing.T) {
 
 	clearTable()
 	addUsers(1)
-	req, _ := http.NewRequest("GET", "/user/1", nil)
+	req, _ := http.NewRequest("GET", "/ID/1", nil)
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusOK, response.Code)
 }
@@ -144,14 +144,14 @@ func TestDeleteUser(t *testing.T) {
 	checkResponseCode(t, http.StatusNotFound, response.Code)
 }
 
-///////////////////Functions for Testing
+/*********Helpers*********/
 
 func addUsers(count int) {
 	if count < 1 {
 		count = 1
 	}
 	for i := 0; i < count; i++ {
-		statement := fmt.Sprintf("INSERT INTO users(name, age) VALUES('%s', %d)", ("User " + strconv.Itoa(i+1)), ((i + 1) * 10))
+		statement := fmt.Sprintf("INSERT INTO Clients(Nickname, GamesPlayed, GamesWon, GoalsScored, Active) VALUES('%s', %d, 0,0,0)", ("User " + strconv.Itoa(i+1)), ((i + 1) * 10))
 		testApp.db.Exec(statement)
 	}
 }
@@ -163,8 +163,8 @@ func ensureTableExists() {
 }
 
 func clearTable() {
-	testApp.db.Exec("DELETE FROM users")
-	testApp.db.Exec("ALTER TABLE users AUTO_INCREMENT = 1")
+	testApp.db.Exec("DELETE FROM Clients")
+	testApp.db.Exec("ALTER TABLE Clients AUTO_INCREMENT = 1")
 }
 
 func executeRequest(req *http.Request) *httptest.ResponseRecorder {

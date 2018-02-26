@@ -34,6 +34,7 @@ func (a *App) Initialize() {
 		fmt.Println(err)
 	}
 	a.router = mux.NewRouter()
+	a.initializeRoutes()
 	fmt.Println("Initialized")
 }
 
@@ -41,6 +42,16 @@ func (a *App) Initialize() {
 func (a *App) Run() {
 	log.Fatal(http.ListenAndServe(":8000", a.router))
 }
+
+func (a *App) initializeRoutes() {
+	a.router.HandleFunc("/users", a.getPlayer).Methods("GET")
+	/*a.router.HandleFunc("/user", a.createUser).Methods("POST")
+	a.router.HandleFunc("/user/{id:[0-9]+}", a.getUser).Methods("GET")
+	a.router.HandleFunc("/user/{id:[0-9]+}", a.updateUser).Methods("PUT")
+	a.router.HandleFunc("/user/{id:[0-9]+}", a.deleteUser).Methods("DELETE")*/
+}
+
+/*********Initialized Routes*********/
 
 func (a *App) getPlayer(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
@@ -50,7 +61,7 @@ func (a *App) getPlayer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	p := Player{ID: string(id)}
-	if err := p.getUser(a.db); err != nil {
+	if err := p.QuerySearchPlayer(a.db); err != nil {
 		switch err {
 		case sql.ErrNoRows:
 			respondWithError(w, http.StatusNotFound, "User not found")
@@ -61,6 +72,9 @@ func (a *App) getPlayer(w http.ResponseWriter, r *http.Request) {
 	}
 	respondWithJSON(w, http.StatusOK, p)
 }
+
+/*********Helpers*********/
+
 func respondWithError(w http.ResponseWriter, code int, message string) {
 	respondWithJSON(w, code, map[string]string{"error": message})
 }
