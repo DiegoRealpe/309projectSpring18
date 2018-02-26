@@ -47,9 +47,9 @@ func (a *App) Run() {
 func (a *App) initializeRoutes() {
 	a.router.HandleFunc("/client/{ID}", a.getPlayer).Methods("GET")
 	a.router.HandleFunc("/client", a.createPlayer).Methods("POST") //No mux params, credentials in request body
+	a.router.HandleFunc("/client/{ID}", a.deletePlayer).Methods("DELETE")
 	/*a.router.HandleFunc("/user/{id:[0-9]+}", a.getUser).Methods("GET")
-	a.router.HandleFunc("/user/{id:[0-9]+}", a.updateUser).Methods("PUT")
-	a.router.HandleFunc("/user/{id:[0-9]+}", a.deleteUser).Methods("DELETE")*/
+	a.router.HandleFunc("/user/{id:[0-9]+}", a.updateUser).Methods("PUT")*/
 }
 
 /*********Routes*********/
@@ -105,6 +105,21 @@ func (a *App) createPlayer(w http.ResponseWriter, r *http.Request) {
 	}
 
 	respondWithJSON(w, http.StatusCreated, p)
+}
+
+func (a *App) deletePlayer(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, "Invalid User ID")
+		return
+	}
+	u := user{ID: id}
+	if err := u.deleteUser(a.DB); err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	respondWithJSON(w, http.StatusOK, map[string]string{"result": "success"})
 }
 
 /*********Helpers*********/

@@ -18,8 +18,7 @@ type Player struct {
 
 //QueryDeletePlayer Clears Player in database
 func (p *Player) QueryDeletePlayer(db *sql.DB) error {
-	return errors.New("Not ready")
-	/*var request string
+	var request string
 	request = fmt.Sprintf(`DELETE FROM Clients WHERE ID = '%s'`, p.ID)
 	var result, err = db.Exec(request)
 	if err != nil {
@@ -33,7 +32,7 @@ func (p *Player) QueryDeletePlayer(db *sql.DB) error {
 		fmt.Println("Deleted Player:", p.ID)
 	} else {
 		fmt.Println("None Found")
-	}*/
+	}
 }
 
 //QueryCreatePlayer inserts new Player in database
