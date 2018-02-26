@@ -5,6 +5,7 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"strconv"
 
 	"fmt"
@@ -60,10 +61,14 @@ func (a *App) getPlayer(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusBadRequest, "Invalid user ID")
 		return
 	}
-	p := Player{ID: string(id)}
-	fmt.Printf("%d\n", id)
+
+	p := Player{ID: strconv.Itoa(id)}
 	if err := p.QuerySearchPlayer(a.db); err != nil {
 		switch err {
+		case errors.New("Empty"):
+			respondWithError(w, http.StatusBadRequest, "Empty")
+		case errors.New("Query Error"):
+			respondWithError(w, http.StatusBadRequest, "Bad Query")
 		case sql.ErrNoRows:
 			respondWithError(w, http.StatusNotFound, "User not found")
 		default:
