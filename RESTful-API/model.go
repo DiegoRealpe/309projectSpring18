@@ -18,7 +18,7 @@ type Player struct {
 
 //QueryDeletePlayer Clears Player in database
 func (p *Player) QueryDeletePlayer(db *sql.DB) error {
-	request := fmt.Sprintf(`DELETE FROM Clients WHERE ID = '%s'`, p.ID)
+	request := fmt.Sprintf(`DELETE FROM Players WHERE ID = '%s'`, p.ID)
 	var result, err = db.Exec(request)
 	if err != nil {
 		return errors.New("Query Error")
@@ -35,7 +35,7 @@ func (p *Player) QueryDeletePlayer(db *sql.DB) error {
 
 //QueryCreatePlayer inserts new Player in database
 func (p *Player) QueryCreatePlayer(db *sql.DB) error {
-	request := fmt.Sprintf(`INSERT INTO Clients (Nickname, GamesPlayed, GamesWon, GoalsScored, Active)
+	request := fmt.Sprintf(`INSERT INTO Players (Nickname, GamesPlayed, GamesWon, GoalsScored, Active)
 	VALUES ('%s', '0', '0', '0', '0')`, p.Nickname)
 	var result, err = db.Exec(request)
 	if err != nil {
@@ -46,7 +46,7 @@ func (p *Player) QueryCreatePlayer(db *sql.DB) error {
 		return errors.New("Create Failed fam")
 	}
 	if affected == int64(1) {
-		db.QueryRow("SELECT ID FROM Clients WHERE Nickname = ?", p.Nickname).Scan(&p.ID)
+		db.QueryRow("SELECT ID FROM Players WHERE Nickname = ?", p.Nickname).Scan(&p.ID)
 		p.GamesPlayed = "0"
 		p.GoalsScored = "0"
 		return nil
@@ -54,10 +54,10 @@ func (p *Player) QueryCreatePlayer(db *sql.DB) error {
 	return errors.New("Abnormal number of creates")
 }
 
-//QueryAllPlayers Returns all the Players stored in the Clients table
+//QueryAllPlayers Returns all the Players stored in the Players table
 func (p *Player) QueryAllPlayers(db *sql.DB) error {
 	return errors.New("Not ready")
-	/*var rows, err = db.Query("SELECT * FROM Clients")
+	/*var rows, err = db.Query("SELECT * FROM Players")
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -82,7 +82,7 @@ func (p *Player) QuerySearchPlayer(db *sql.DB) error {
 	if p.ID == "" {
 		return errors.New("Empty")
 	}
-	request := fmt.Sprintf("SELECT * FROM Clients WHERE ID = '%s'", p.ID)
+	request := fmt.Sprintf("SELECT * FROM Players WHERE ID = '%s'", p.ID)
 	var rows, err = db.Query(request)
 	if err != nil {
 		return errors.New("Query Error")

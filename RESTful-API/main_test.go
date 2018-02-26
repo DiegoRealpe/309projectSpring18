@@ -17,13 +17,13 @@ import (
 var testApp App
 
 var tableCreationQuery = `
-CREATE TABLE Clients (
+CREATE TABLE Players (
 ID INT PRIMARY KEY,
 Nickname VARCHAR(50) NOT NULL,
 GamesPlayed INT NOT NULL,
 GamesWon INT NOT NULL,
 GoalsScored INT NOT NULL,
-Online INT NOT NULL)`
+Active INT NOT NULL)`
 
 //Main Testing
 func Testmain(t *testing.M) {
@@ -43,7 +43,7 @@ func TestEmptyTable(t *testing.T) {
 	testApp.Initialize()
 
 	clearTable()
-	req, _ := http.NewRequest("GET", "/users", nil)
+	req, _ := http.NewRequest("GET", "/players", nil)
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusOK, response.Code)
 	if body := response.Body.String(); body != "[]" {
@@ -56,7 +56,7 @@ func TestGetNonExistentUser(t *testing.T) {
 	testApp.Initialize()
 
 	clearTable()
-	req, _ := http.NewRequest("GET", "/user/45", nil)
+	req, _ := http.NewRequest("GET", "/player/45", nil)
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusNotFound, response.Code)
 	var m map[string]string
@@ -72,7 +72,7 @@ func TestCreateUser(t *testing.T) {
 
 	clearTable()
 	payload := []byte(`{"Nickname":"Knuckles"}`)
-	req, _ := http.NewRequest("POST", "/client", bytes.NewBuffer(payload))
+	req, _ := http.NewRequest("POST", "/player", bytes.NewBuffer(payload))
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusCreated, response.Code)
 	//var m map[string]interface{}
@@ -96,7 +96,7 @@ func TestGetUser(t *testing.T) {
 
 	clearTable()
 	addUsers(1)
-	req, _ := http.NewRequest("GET", "/client/1", nil)
+	req, _ := http.NewRequest("GET", "/player/1", nil)
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusOK, response.Code)
 
@@ -108,7 +108,7 @@ func TestUpdateUser(t *testing.T) {
 
 	clearTable()
 	addUsers(1)
-	req, _ := http.NewRequest("GET", "/user/1", nil)
+	req, _ := http.NewRequest("GET", "/player/1", nil)
 	response := executeRequest(req)
 	var originalUser map[string]interface{}
 	json.Unmarshal(response.Body.Bytes(), &originalUser)
@@ -135,13 +135,13 @@ func TestDeleteUser(t *testing.T) {
 
 	clearTable()
 	addUsers(1)
-	req, _ := http.NewRequest("GET", "/client/1", nil)
+	req, _ := http.NewRequest("GET", "/player/1", nil)
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusOK, response.Code)
-	req, _ = http.NewRequest("DELETE", "/client/1", nil)
+	req, _ = http.NewRequest("DELETE", "/player/1", nil)
 	response = executeRequest(req)
 	checkResponseCode(t, http.StatusOK, response.Code)
-	req, _ = http.NewRequest("GET", "/client/1", nil)
+	req, _ = http.NewRequest("GET", "/player/1", nil)
 	response = executeRequest(req)
 	checkResponseCode(t, http.StatusNotFound, response.Code)
 }
@@ -153,7 +153,7 @@ func addUsers(count int) {
 		count = 1
 	}
 	for i := 0; i < count; i++ {
-		statement := fmt.Sprintf("INSERT INTO Clients(Nickname, GamesPlayed, GamesWon, GoalsScored, Active) VALUES('%s', %d, 0,0,0)", ("User " + strconv.Itoa(i+1)), ((i + 1) * 10))
+		statement := fmt.Sprintf("INSERT INTO Players(Nickname, GamesPlayed, GamesWon, GoalsScored, Active) VALUES('%s', %d, 0,0,0)", ("User " + strconv.Itoa(i+1)), ((i + 1) * 10))
 		testApp.db.Exec(statement)
 	}
 }
@@ -165,8 +165,8 @@ func ensureTableExists() {
 }
 
 func clearTable() {
-	testApp.db.Exec("DELETE FROM Clients")
-	testApp.db.Exec("ALTER TABLE Clients AUTO_INCREMENT = 1")
+	testApp.db.Exec("DELETE FROM Players")
+	testApp.db.Exec("ALTER TABLE Players AUTO_INCREMENT = 1")
 }
 
 func executeRequest(req *http.Request) *httptest.ResponseRecorder {
