@@ -52,7 +52,7 @@ func (p *Player) QueryCreatePlayer(db *sql.DB) error {
 	if affected == int64(1) {
 		fmt.Println("Created New Player:", p.ID)
 	} else {
-		fmt.Println("Create Failed")
+		return errors.New("Create Failed fam")
 	}
 	return nil
 }
@@ -82,8 +82,7 @@ func (p *Player) QueryAllPlayers(db *sql.DB) error {
 
 //QuerySearchPlayer Looks for Player in database
 func (p *Player) QuerySearchPlayer(db *sql.DB) error {
-	return errors.New("Not ready")
-	/*var request string
+	var request string
 	request = fmt.Sprintf("SELECT * FROM Clients WHERE ID = '%s'", p.ID)
 	var rows, err = db.Query(request)
 	if err != nil {
@@ -100,12 +99,13 @@ func (p *Player) QuerySearchPlayer(db *sql.DB) error {
 		}
 		results++
 		p.Nickname = Nickname
-		p.GamesPlayed = a
-		p.GoalsScored = c
+		p.GamesPlayed = string(a)
+		p.GoalsScored = string(c)
 	}
 	if results == 0 {
-		fmt.Println("No Results Found!")
-	}*/
+		return errors.New("U fked up")
+	}
+	return nil
 }
 
 /*
