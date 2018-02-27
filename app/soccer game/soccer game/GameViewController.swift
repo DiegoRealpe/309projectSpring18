@@ -10,6 +10,8 @@ import UIKit
 import SpriteKit
 import GameplayKit
 import FBSDKLoginKit
+import FacebookCore
+import FacebookLogin
 
 class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!)
@@ -45,6 +47,10 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
         loginButton.center = view.center
         loginButton.delegate = self // Remember to set the delegate of the loginButton
         view.addSubview(loginButton)
+        
+        if let accessToken = AccessToken.current {
+            print("token was",accessToken)
+        }
         
         /*  super.viewDidLoad()
         
