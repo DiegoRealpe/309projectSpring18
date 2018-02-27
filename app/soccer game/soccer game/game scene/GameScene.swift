@@ -111,7 +111,7 @@ class GameScene: SKScene {
             let spr = SocketPacketResponder()
             spr.packetTypeDict = self.packetTypeDict
                 
-            let bytes : [UInt8] = [121,1,0,0,0,0,0,0,0,0,152, 78, 154, 68,152, 78, 154, 68]
+            let bytes : [UInt8] = [121,1,0,0,0,0,0,0,0,0,152, 78, 154, 68, 152, 78, 154, 68, 0, 0, 0, 0]
             spr.respond(data: bytes)
             
         }
@@ -222,7 +222,7 @@ class GameScene: SKScene {
     
     
     private func buildPacketTypeDict(){
-        self.packetTypeDict[121] = PacketType(dataSize: 18, handlerFunction: executePositionPacket(data:))
+        self.packetTypeDict[121] = PacketType(dataSize: 22, handlerFunction: executePositionPacket(data:))
     }
     
     func executePositionPacket(data : [UInt8]){
