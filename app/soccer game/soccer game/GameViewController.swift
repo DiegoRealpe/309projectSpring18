@@ -43,14 +43,35 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        if let accessToken = AccessToken.current
+        {
+            if let view = self.view as! SKView? {
+                // Load the SKScene from 'GameScene.sks'
+                if let scene = MainMenu(fileNamed: "MainMenu") {
+                    // Set the scale mode to scale to fit the window
+                    scene.scaleMode = .aspectFill
+                    
+                    // Present the scene
+                    view.presentScene(scene)
+                }
+                
+                view.ignoresSiblingOrder = true
+                
+                view.showsFPS = true
+                view.showsNodeCount = true
+            }
+            
+            print("token was",accessToken)
+        }
+        
+        else
+        {
         let loginButton = FBSDKLoginButton()
         loginButton.center = view.center
         loginButton.delegate = self // Remember to set the delegate of the loginButton
         view.addSubview(loginButton)
-        
-        if let accessToken = AccessToken.current {
-            print("token was",accessToken)
         }
+        
         
         /*  super.viewDidLoad()
         
