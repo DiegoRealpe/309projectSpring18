@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"strconv"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -116,15 +115,6 @@ func QuerySearchPlayer(db *sql.DB, p *Player) error {
 
 //QueryUpdatePlayer Searchs for a matching ID and updates based on player values given
 func QueryUpdatePlayer(db *sql.DB, p *Player) error {
-	if p.ID == "" {
-		return errors.New("Empty ID")
-	}
-	request := fmt.Sprintf("SELECT * FROM Players WHERE ID = '%s'", p.ID)
-	rows, errReq := db.Exec(request) //Initially look if the user exists in the db
-	found, errRow := rows.RowsAffected()
-	if errReq != nil || errRow != nil || found != 1 {
-		return sql.ErrNoRows
-	}
 
 	//Prepare an update statement based on the information we have
 	updateMask, prepErr := db.Prepare("UPDATE Players SET ? = ? WHERE ID = ?")
@@ -132,35 +122,40 @@ func QueryUpdatePlayer(db *sql.DB, p *Player) error {
 		return errors.New("Statement Error")
 	}
 
-	var fieldsUpdated int64
-	var rowaff int64
 	var aff sql.Result
 	var execErr error
+
 	if p.Nickname != "" {
 		aff, execErr = updateMask.Exec("Nickname", p.Nickname, p.ID)
-		rowaff, execErr = aff.RowsAffected()
-		fieldsUpdated += rowaff
-		rowaff = 0
+		rowaffA, execErrA := aff.RowsAffected()
+		if rowaffA == 1 || execErrA == nil {
+			p.Nickname = "SUCCESS"
+		} else {
+			p.Nickname = "FAIL"
+		}
 	}
 
 	if p.GamesPlayed != "" {
 		aff, execErr = updateMask.Exec("GamesPlayed", p.GamesPlayed, p.ID)
-		rowaff, execErr = aff.RowsAffected()
-		fieldsUpdated += rowaff
-		rowaff = 0
+		rowaffB, execErrB := aff.RowsAffected()
+		if rowaffB == 1 || execErrB == nil {
+			p.GamesPlayed = "SUCCESS"
+		} else {
+			p.GamesPlayed = "FAIL"
+		}
 	}
 
 	if p.GoalsScored != "" {
 		aff, execErr = updateMask.Exec("Nickname", p.GoalsScored, p.ID)
-		rowaff, execErr = aff.RowsAffected()
-		fieldsUpdated += rowaff
-		rowaff = 0
+		rowaffC, execErrC := aff.RowsAffected()
+		if rowaffC == 1 || execErrC == nil {
+			p.GoalsScored = "SUCCESS"
+		} else {
+			p.GoalsScored = "FAIL"
+		}
 	}
-
 	if execErr != nil {
 		return execErr
 	}
-	p.ID = strconv.Itoa(int(fieldsUpdated)) //Returning in ID number of fields affected
-
 	return nil
 }
