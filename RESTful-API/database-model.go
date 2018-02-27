@@ -84,6 +84,10 @@ func QuerySearchPlayer(db *sql.DB, p *Player) error {
 		return errors.New("Empty")
 	}
 	request := fmt.Sprintf("SELECT * FROM Players WHERE ID = '%s'", p.ID)
+	/*updateMask, prepErr := db.Prepare("UPDATE Players SET ? = ? WHERE ID = ?")
+	if prepErr != nil {
+		return errors.New("Statement Error")
+	}*/
 	rows, err := db.Query(request)
 	if err != nil {
 		return errors.New("Query Error")

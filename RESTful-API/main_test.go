@@ -73,7 +73,6 @@ func TestCreateUser(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/player", bytes.NewBuffer(payload))
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusCreated, response.Code)
-	//var m map[string]interface{}
 	var jsonPlayer Player
 	json.Unmarshal(response.Body.Bytes(), &jsonPlayer)
 
@@ -108,22 +107,22 @@ func TestUpdateUser(t *testing.T) {
 	addUsers(1)
 	req, _ := http.NewRequest("GET", "/player/1", nil)
 	response := executeRequest(req)
-	var originalUser map[string]interface{}
-	json.Unmarshal(response.Body.Bytes(), &originalUser)
-	payload := []byte(`{"name":"test user - updated name","age":21}`)
-	req, _ = http.NewRequest("PUT", "/user/1", bytes.NewBuffer(payload))
+	var jsonPlayer Player
+	json.Unmarshal(response.Body.Bytes(), &jsonPlayer)
+	payload := []byte(`{"Nickname":"newname","GamesPlayed":"21"}`)
+	req, _ = http.NewRequest("PUT", "/player/1", bytes.NewBuffer(payload))
 	response = executeRequest(req)
 	checkResponseCode(t, http.StatusOK, response.Code)
-	var m map[string]interface{}
-	json.Unmarshal(response.Body.Bytes(), &m)
-	if m["id"] != originalUser["id"] {
-		t.Errorf("Expected the id to remain the same (%v). Got %v", originalUser["id"], m["id"])
+	var jsonPlayerR Player
+	json.Unmarshal(response.Body.Bytes(), &jsonPlayerR)
+	if jsonPlayer.ID != jsonPlayerR.ID {
+		t.Errorf("Expected the id to remain the same (%v). Got %v", jsonPlayer.ID, jsonPlayerR.ID)
 	}
-	if m["name"] == originalUser["name"] {
-		t.Errorf("Expected the name to change from '%v' to '%v'. Got '%v'", originalUser["name"], m["name"], m["name"])
+	if jsonPlayer.GamesPlayed != jsonPlayerR.GamesPlayed {
+		t.Errorf("Expected the name to change from '%v' to '%v'. Got '%v'", jsonPlayer.GamesPlayed, "21", jsonPlayerR.GamesPlayed)
 	}
-	if m["age"] == originalUser["age"] {
-		t.Errorf("Expected the age to change from '%v' to '%v'. Got '%v'", originalUser["age"], m["age"], m["age"])
+	if jsonPlayer.Nickname != jsonPlayerR.Nickname {
+		t.Errorf("Expected the age to change from '%v' to '%v'. Got '%v'", jsonPlayer.Nickname, "newname", jsonPlayerR.Nickname)
 	}
 }
 
