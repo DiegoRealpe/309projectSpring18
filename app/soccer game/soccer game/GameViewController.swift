@@ -9,11 +9,27 @@
 import UIKit
 import SpriteKit
 import GameplayKit
+import FBSDKLoginKit
 
-class GameViewController: UIViewController {
+class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
+    func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
+        
+    }
+    
+    func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
+        
+    }
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Do any additional setup after loading the view, typically from a nib.
+        let loginButton = FBSDKLoginButton()
+        loginButton.center = view.center
+        loginButton.delegate = self // Remember to set the delegate of the loginButton
+        view.addSubview(loginButton)
+        
+        /*  super.viewDidLoad()
         
         if let view = self.view as! SKView? {
             // Load the SKScene from 'GameScene.sks'
@@ -29,7 +45,7 @@ class GameViewController: UIViewController {
             
             view.showsFPS = true
             view.showsNodeCount = true
-        }
+        }*/
     }
 
     override var shouldAutorotate: Bool {
