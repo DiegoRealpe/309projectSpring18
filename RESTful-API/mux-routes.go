@@ -81,3 +81,7 @@ func (a *App) deletePlayer(w http.ResponseWriter, r *http.Request) {
 	}
 	respondWithJSON(w, http.StatusOK, map[string]string{"result": "success"})
 }
+
+func (a *App) updatePlayer(w http.ResponseWriter, r *http.Request) {
+
+}

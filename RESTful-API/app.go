@@ -1,5 +1,3 @@
-// app.go
-
 package main
 
 import (
@@ -46,8 +44,9 @@ func (a *App) initializeRoutes() {
 	a.router.HandleFunc("/player/{ID}", a.getPlayer).Methods("GET")
 	a.router.HandleFunc("/player", a.createPlayer).Methods("POST") //No mux params, credentials in request body
 	a.router.HandleFunc("/player/{ID}", a.deletePlayer).Methods("DELETE")
+	a.router.HandleFunc("/player/{ID}", a.updatePlayer).Methods("PUT")
 	/*a.router.HandleFunc("/user/{id:[0-9]+}", a.getUser).Methods("GET")
-	a.router.HandleFunc("/user/{id:[0-9]+}", a.updateUser).Methods("PUT")*/
+	 */
 }
 
 /*********Helpers*********/

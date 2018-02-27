@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"strconv"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -19,7 +20,7 @@ type Player struct {
 //QueryDeletePlayer Clears Player in database
 func QueryDeletePlayer(db *sql.DB, p *Player) error {
 	request := fmt.Sprintf(`DELETE FROM Players WHERE ID = '%s'`, p.ID)
-	var result, err = db.Exec(request)
+	result, err := db.Exec(request)
 	if err != nil {
 		return errors.New("Query Error")
 	}
@@ -37,7 +38,7 @@ func QueryDeletePlayer(db *sql.DB, p *Player) error {
 func QueryCreatePlayer(db *sql.DB, p *Player) error {
 	request := fmt.Sprintf(`INSERT INTO Players (Nickname, GamesPlayed, GamesWon, GoalsScored, Active)
 	VALUES ('%s', '0', '0', '0', '0')`, p.Nickname)
-	var result, err = db.Exec(request)
+	result, err := db.Exec(request)
 	if err != nil {
 		return errors.New("Query Error")
 	}
@@ -83,7 +84,7 @@ func QuerySearchPlayer(db *sql.DB, p *Player) error {
 		return errors.New("Empty")
 	}
 	request := fmt.Sprintf("SELECT * FROM Players WHERE ID = '%s'", p.ID)
-	var rows, err = db.Query(request)
+	rows, err := db.Query(request)
 	if err != nil {
 		return errors.New("Query Error")
 	}
@@ -109,42 +110,53 @@ func QuerySearchPlayer(db *sql.DB, p *Player) error {
 	return nil
 }
 
-/*
-//GetAllPlayers ...
-func GetAllPlayers(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode(AllPlayers)
-}
-
-//GetPlayer ...
-func GetPlayer(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	for _, item := range AllPlayers {
-		if item.ID == params["id"] {
-			json.NewEncoder(w).Encode(item)
-			return
-		}
+//QueryUpdatePlayer Searchs for a matching ID and updates based on player values given
+func QueryUpdatePlayer(db *sql.DB, p *Player) error {
+	if p.ID == "" {
+		return errors.New("Empty ID")
 	}
-	json.NewEncoder(w).Encode(&Player{})
-}
-
-//CreatePlayer ...
-func CreatePlayer(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	var Player Player
-	_ = json.NewDecoder(r.Body).Decode(&Player)
-	Player.ID = params["id"]
-	AllPlayers = append(AllPlayers, Player)
-	json.NewEncoder(w).Encode(AllPlayers)
-}
-
-//DeletePlayer ...
-func DeletePlayer(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	for i, Player := range AllPlayers {
-		if Player.ID == params["id"] {
-			AllPlayers = append(AllPlayers[:i], AllPlayers[i+1:]...)
-			break
-		}
-		json.NewEncoder(w).Encode(AllPlayers)
+	request := fmt.Sprintf("SELECT * FROM Players WHERE ID = '%s'", p.ID)
+	rows, errReq := db.Exec(request) //Initially look if the user exists in the db
+	found, errRow := rows.RowsAffected()
+	if errReq != nil || errRow != nil || found != 1 {
+		return sql.ErrNoRows
 	}
-}*/
+
+	//Prepare an update statement based on the information we have
+	updateMask, prepErr := db.Prepare("UPDATE Players SET ? = ? WHERE ID = ?")
+	if prepErr != nil {
+		return errors.New("Statement Error")
+	}
+
+	var fieldsUpdated int64
+	var rowaff int64
+	var aff sql.Result
+	var execErr error
+	if p.Nickname != "" {
+		aff, execErr = updateMask.Exec("Nickname", p.Nickname, p.ID)
+		rowaff, execErr = aff.RowsAffected()
+		fieldsUpdated += rowaff
+		rowaff = 0
+	}
+
+	if p.GamesPlayed != "" {
+		aff, execErr = updateMask.Exec("GamesPlayed", p.GamesPlayed, p.ID)
+		rowaff, execErr = aff.RowsAffected()
+		fieldsUpdated += rowaff
+		rowaff = 0
+	}
+
+	if p.GoalsScored != "" {
+		aff, execErr = updateMask.Exec("Nickname", p.GoalsScored, p.ID)
+		rowaff, execErr = aff.RowsAffected()
+		fieldsUpdated += rowaff
+		rowaff = 0
+	}
+
+	if execErr != nil {
+		return execErr
+	}
+	p.ID = strconv.Itoa(int(fieldsUpdated)) //Returning in ID number of fields affected
+
+	return nil
+}
