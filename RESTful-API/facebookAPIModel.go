@@ -1,15 +1,15 @@
 package main
 
 import (
-	"net/http"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 )
 
-type fbUser struct{
-	valid bool
+type fbUser struct {
+	valid     bool
 	firstName string
-	lastNAme string
+	lastNAme  string
 	//any other information available through facebooks graph api
 }
 
@@ -22,20 +22,20 @@ func getFBUser(accesstoken string) fbUser {
 	fmt.Println(fbApiUrl)
 
 	response, error := http.Get(fbApiUrl)
-	if error != nil{
+	if error != nil {
 		fmt.Println(error)
-		return fbUser{valid:false}
+		return fbUser{valid: false}
 	}
 	defer response.Body.Close()
 
 	return parsefbApiResponse(response)
 }
 
-func makeFBApiGetUrl(accessToken string) string{
-	return fbApiRequestBase + "?" +fbApifields + "&access_token=" +accessToken
+func makeFBApiGetUrl(accessToken string) string {
+	return fbApiRequestBase + "?" + fbApifields + "&access_token=" + accessToken
 }
 
-func parsefbApiResponse(response *http.Response) fbUser{
+func parsefbApiResponse(response *http.Response) fbUser {
 	user := fbUser{}
 
 	body, _ := ioutil.ReadAll(response.Body)
