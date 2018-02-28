@@ -118,7 +118,7 @@ func TestUpdateUser(t *testing.T) {
 	req, _ = http.NewRequest("PUT", "/player/1", bytes.NewBuffer(payload))
 	response = executeRequest(req)
 	checkResponseCode(t, http.StatusOK, response.Code)
-	/*//Modifying updated object
+	//Modifying updated object
 	jsonPlayer.Nickname = "newname"
 	jsonPlayer.GamesPlayed = "21"
 
@@ -134,7 +134,7 @@ func TestUpdateUser(t *testing.T) {
 	}
 	if jsonPlayer.Nickname != jsonPlayerR.Nickname {
 		t.Errorf("Expected the age to change from '%v' to '%v'. Got '%v'", jsonPlayer.Nickname, "newname", jsonPlayerR.Nickname)
-	}*/
+	}
 }
 
 func TestDeleteUser(t *testing.T) {
