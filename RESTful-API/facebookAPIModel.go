@@ -11,7 +11,7 @@ type fbUser struct{
 	firstName string
 	lastNAme string
 	//any other information available through facebooks graph api
-} 
+}
 
 const fbApiRequestBase = "https://graph.facebook.com/v2.3/me"
 const fbApifields = "fields=first_name,gender,age_range"
