@@ -114,48 +114,36 @@ func QuerySearchPlayer(db *sql.DB, p *Player) error {
 }
 
 //QueryUpdatePlayer Searchs for a matching ID and updates based on player values given
+//Returns errors in case of not finding the correct ID or getting a wrong value
+//MODIFIES Player object to overrw
 func QueryUpdatePlayer(db *sql.DB, p *Player) error {
 
 	//Prepare an update statement based on the information we have
-	updateMask, prepErr := db.Prepare("UPDATE Players SET ? = ? WHERE ID = ?")
+	updateMask, prepErr := db.Prepare("UPDATE Players SET \"?\" = \"?\" WHERE ID = \"?\" ")
 	if prepErr != nil {
 		return errors.New("Statement Error")
 	}
 
-	var aff sql.Result
 	var execErr error
-
 	if p.Nickname != "" {
-		aff, execErr = updateMask.Exec("Nickname", p.Nickname, p.ID)
-		rowaffA, execErrA := aff.RowsAffected()
-		if rowaffA == 1 || execErrA == nil {
-			p.Nickname = "SUCCESS"
-		} else {
-			p.Nickname = "FAIL"
+		_, execErr = updateMask.Exec("Nickname", p.Nickname, p.ID)
+		if execErr != nil {
+			return execErr
 		}
 	}
 
 	if p.GamesPlayed != "" {
-		aff, execErr = updateMask.Exec("GamesPlayed", p.GamesPlayed, p.ID)
-		rowaffB, execErrB := aff.RowsAffected()
-		if rowaffB == 1 || execErrB == nil {
-			p.GamesPlayed = "SUCCESS"
-		} else {
-			p.GamesPlayed = "FAIL"
+		_, execErr = updateMask.Exec("GamesPlayed", p.GamesPlayed, p.ID)
+		if execErr != nil {
+			return execErr
 		}
 	}
 
 	if p.GoalsScored != "" {
-		aff, execErr = updateMask.Exec("Nickname", p.GoalsScored, p.ID)
-		rowaffC, execErrC := aff.RowsAffected()
-		if rowaffC == 1 || execErrC == nil {
-			p.GoalsScored = "SUCCESS"
-		} else {
-			p.GoalsScored = "FAIL"
+		_, execErr = updateMask.Exec("Nickname", p.GoalsScored, p.ID)
+		if execErr != nil {
+			return execErr
 		}
-	}
-	if execErr != nil {
-		return execErr
 	}
 	return nil
 }

@@ -49,17 +49,17 @@ func (a *App) createPlayer(w http.ResponseWriter, r *http.Request) {
 	}
 
 	defer r.Body.Close()
-	err := QueryCreatePlayer(a.db, &p)
-	if err != nil {
-		switch err {
+	dberr := QueryCreatePlayer(a.db, &p)
+	if dberr != nil {
+		switch dberr {
 		case errors.New("Create Failed fam"):
-			respondWithError(w, http.StatusBadRequest, "Query Return Error")
+			respondWithError(w, http.StatusBadRequest, dberr.Error())
 		case errors.New("Query Error"):
-			respondWithError(w, http.StatusBadRequest, "Bad Query")
+			respondWithError(w, http.StatusBadRequest, dberr.Error())
 		case errors.New("Abnormal number of creates"):
-			respondWithError(w, http.StatusNotImplemented, "Abnormal number of creates")
+			respondWithError(w, http.StatusNotImplemented, dberr.Error())
 		default:
-			respondWithError(w, http.StatusInternalServerError, err.Error())
+			respondWithError(w, http.StatusInternalServerError, dberr.Error())
 		}
 		return
 	}
@@ -84,4 +84,34 @@ func (a *App) deletePlayer(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) updatePlayer(w http.ResponseWriter, r *http.Request) {
 
+	//Getting ID from mux parameter
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["ID"])
+	if err != nil || id == 0 {
+		respondWithError(w, http.StatusBadRequest, "Invalid User ID")
+		return
+	}
+
+	//Getting variables to change from http.request.body
+	var p Player
+	decoder := json.NewDecoder(r.Body)
+	if err := decoder.Decode(&p); err != nil {
+		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	p.ID = strconv.Itoa(id)
+
+	//Executing Query model
+	dberr := QueryUpdatePlayer(a.db, &p)
+	if dberr != nil {
+		respondWithError(w, http.StatusNotModified, dberr.Error())
+		println(dberr.Error())
+		return
+	}
+
+	//Returning modified object
+	respondWithJSON(w, http.StatusOK, p)
+
 }
+
+//func getJsonPlayer(*p Player, r *http.Request.Body)

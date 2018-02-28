@@ -32,7 +32,6 @@ func (a *App) Initialize() {
 	}
 	a.router = mux.NewRouter()
 	a.initializeRoutes()
-	fmt.Println("Initialized")
 }
 
 //Run listen and serve
