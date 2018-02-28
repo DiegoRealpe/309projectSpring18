@@ -52,14 +52,14 @@ func getFBUser(accesstoken string) AppUser {
 	}
 	defer response.Body.Close()
 
-	return *parsefbApiResponse(response)
+	return *parseFbApiResponse(response)
 }
 
 func makeFBApiGetUrl(accessToken string) string{
 	return fbApiRequestBase + "?" +fbApifields + "&access_token=" +accessToken
 }
 
-func parsefbApiResponse(response *http.Response) *AppUser{
+func parseFbApiResponse(response *http.Response) *AppUser{
 
 	//read full body
 	body, _ := ioutil.ReadAll(response.Body)
@@ -68,10 +68,13 @@ func parsefbApiResponse(response *http.Response) *AppUser{
 	if  wasError {
 		//log error and return appUser s.t. Valid = false
 		fmt.Println(fbError)
+
 		return &AppUser{Valid:false}
 	}else{
+
 		fbApiObject := parseJsonToFbApiObject(body)
 		appUser := fbApiObject.toAppUser()
+
 		return appUser
 	}
 }
@@ -79,6 +82,7 @@ func parsefbApiResponse(response *http.Response) *AppUser{
 func parseJsonToFbApiObject(data []byte) (fbObject *fbApiObject){
 	fbObject = &fbApiObject{}
 	json.Unmarshal(data,&fbObject)
+
 	return
 }
 
