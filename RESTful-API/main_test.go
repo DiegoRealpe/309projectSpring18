@@ -35,20 +35,6 @@ func Testmain(t *testing.M) {
 	os.Exit(code)
 }
 
-//TestEmptyTable test 1
-func TestEmptyTable(t *testing.T) {
-	testApp = App{}
-	testApp.Initialize()
-
-	clearTable()
-	req, _ := http.NewRequest("GET", "/players", nil)
-	response := executeRequest(req)
-	checkResponseCode(t, http.StatusOK, response.Code)
-	if body := response.Body.String(); body != "[]" {
-		t.Errorf("Expected an empty array. Got %s", body)
-	}
-}
-
 func TestGetNonExistentUser(t *testing.T) {
 	testApp = App{}
 	testApp.Initialize()
