@@ -140,7 +140,8 @@ func TestDeleteUser(t *testing.T) {
 	checkResponseCode(t, http.StatusNotFound, response.Code)
 }
 
-const testUserToken = "EAACqvTZC1964BAClMoP9UEYlC7ISrye55kdC208MHp9ih4NCbHXOWKZBh6G7GbjSRORejK1fZB8Go5N1Dfz6PnVSEru7z3Wqym6lrAW0R6ZBvENQGf3g9x8mh5aHbmEjA098O6qSFXh0Qh8uRjhNZCrwC86yDUFUcNHKjulueXrL9n2WwlMftHy28IZBNWZBAZA4hlZC8FuGqwz3XkLzsxXA3HLNQs8KPOiorJ7PFEmBvt9AWQ8Y3pII4"
+//to get a new token login to facebook and get one from one of our test user
+const testUserToken = "EAACqvTZC1964BALkenPGnImpppWZBIh7xpLNWFdCxvsE5AdO1ZC3mkS6ZCUjmEZAKsgwptz9k6eYCCincNpv8ajv0hR7rnwVG4bpWi4CZBFsCT7KrQR9Q2vpx49JC2BK4O9hXTU4dZCC8a4icLI0c8YLfoZCIcjMEESa5PzW3FEicHaht2qxnAZCPMBkpdkqvavPHjI5lLMfgbEyxcggzxdf8Tzn3r1mB4gx3hTbWMhC5qgZDZD"
 
 func TestFBApiAccess(t *testing.T) {
 	getFBUser(testUserToken)
