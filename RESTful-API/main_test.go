@@ -143,6 +143,12 @@ func TestDeleteUser(t *testing.T) {
 	checkResponseCode(t, http.StatusNotFound, response.Code)
 }
 
+const testUserToken = "EAACqvTZC1964BAClMoP9UEYlC7ISrye55kdC208MHp9ih4NCbHXOWKZBh6G7GbjSRORejK1fZB8Go5N1Dfz6PnVSEru7z3Wqym6lrAW0R6ZBvENQGf3g9x8mh5aHbmEjA098O6qSFXh0Qh8uRjhNZCrwC86yDUFUcNHKjulueXrL9n2WwlMftHy28IZBNWZBAZA4hlZC8FuGqwz3XkLzsxXA3HLNQs8KPOiorJ7PFEmBvt9AWQ8Y3pII4"
+
+func TestFBApiAccess(t *testing.T) {
+	getFBUser(testUserToken)
+}
+
 /*********Helpers*********/
 
 func addUsers(count int) {
@@ -178,3 +184,4 @@ func checkResponseCode(t *testing.T, expected, actual int) {
 		t.Errorf("Expected response code %d. Got %d\n", expected, actual)
 	}
 }
+
