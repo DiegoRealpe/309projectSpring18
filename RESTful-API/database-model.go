@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"strconv"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -114,48 +115,55 @@ func QuerySearchPlayer(db *sql.DB, p *Player) error {
 }
 
 //QueryUpdatePlayer Searchs for a matching ID and updates based on player values given
+//Returns errors in case of not finding the correct ID or getting a wrong value
+//MODIFIES Player object to overrw
 func QueryUpdatePlayer(db *sql.DB, p *Player) error {
-
-	//Prepare an update statement based on the information we have
-	updateMask, prepErr := db.Prepare("UPDATE Players SET ? = ? WHERE ID = ?")
-	if prepErr != nil {
-		return errors.New("Statement Error")
+	if p.ID == "" {
+		return errors.New("Empty ID")
 	}
+	var mods []string //Declaring slie of values to change
 
-	var aff sql.Result
-	var execErr error
-
+	//any value of the struct that is non nil is updated
 	if p.Nickname != "" {
-		aff, execErr = updateMask.Exec("Nickname", p.Nickname, p.ID)
-		rowaffA, execErrA := aff.RowsAffected()
-		if rowaffA == 1 || execErrA == nil {
-			p.Nickname = "SUCCESS"
-		} else {
-			p.Nickname = "FAIL"
-		}
+		mods = append(mods, "Nickname", p.Nickname)
 	}
 
 	if p.GamesPlayed != "" {
-		aff, execErr = updateMask.Exec("GamesPlayed", p.GamesPlayed, p.ID)
-		rowaffB, execErrB := aff.RowsAffected()
-		if rowaffB == 1 || execErrB == nil {
-			p.GamesPlayed = "SUCCESS"
-		} else {
-			p.GamesPlayed = "FAIL"
-		}
+		mods = append(mods, "GamesPlayed", p.GamesPlayed)
 	}
 
 	if p.GoalsScored != "" {
-		aff, execErr = updateMask.Exec("Nickname", p.GoalsScored, p.ID)
-		rowaffC, execErrC := aff.RowsAffected()
-		if rowaffC == 1 || execErrC == nil {
-			p.GoalsScored = "SUCCESS"
-		} else {
-			p.GoalsScored = "FAIL"
-		}
-	}
+		mods = append(mods, "GoalsScored", p.GoalsScored)
+	} //Easily can add more
+
+	mods = append(mods, p.ID) //Appending ID which is gonna be modified
+
+	effect, execErr := db.Exec(prepUpdate(mods))
 	if execErr != nil {
 		return execErr
 	}
+	i, _ := effect.RowsAffected()
+	if int(i) == 0 {
+		return errors.New("Not Modified")
+	}
+
 	return nil
+}
+
+//Helper function that uses a slice of string parameters to prepare an update function for a user
+//Parameters are on the form of col1, val1, col2, val2 ... ID of user
+//Any less than 3 strings will return an empty string instead
+func prepUpdate(parameters []string) string {
+	i := len(parameters)
+	var j int
+	if (i%2) != 1 || i < 2 {
+		return "Not enough parameters: " + strconv.Itoa(i)
+	}
+	stmt := "UPDATE Players SET"
+	for j < i-3 {
+		stmt += fmt.Sprintf("`%s` = '%s',", parameters[j], parameters[j+1])
+		j += 2
+	}
+
+	return stmt + fmt.Sprintf("`%s` = '%s' WHERE ID = '%s'", parameters[j], parameters[j+1], parameters[j+2])
 }

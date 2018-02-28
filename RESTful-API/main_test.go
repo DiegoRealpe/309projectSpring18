@@ -35,20 +35,6 @@ func Testmain(t *testing.M) {
 	os.Exit(code)
 }
 
-//TestEmptyTable test 1
-func TestEmptyTable(t *testing.T) {
-	testApp = App{}
-	testApp.Initialize()
-
-	clearTable()
-	req, _ := http.NewRequest("GET", "/players", nil)
-	response := executeRequest(req)
-	checkResponseCode(t, http.StatusOK, response.Code)
-	if body := response.Body.String(); body != "[]" {
-		t.Errorf("Expected an empty array. Got %s", body)
-	}
-}
-
 func TestGetNonExistentUser(t *testing.T) {
 	testApp = App{}
 	testApp.Initialize()
@@ -100,21 +86,32 @@ func TestGetUser(t *testing.T) {
 }
 
 func TestUpdateUser(t *testing.T) {
+	//Initialize routes and db
 	testApp = App{}
 	testApp.Initialize()
-
 	clearTable()
 	addUsers(1)
+
+	//Get player that was just added
 	req, _ := http.NewRequest("GET", "/player/1", nil)
 	response := executeRequest(req)
+	//Unmarshal the result
 	var jsonPlayer Player
 	json.Unmarshal(response.Body.Bytes(), &jsonPlayer)
+
+	//Update Player
 	payload := []byte(`{"Nickname":"newname","GamesPlayed":"21"}`)
 	req, _ = http.NewRequest("PUT", "/player/1", bytes.NewBuffer(payload))
 	response = executeRequest(req)
 	checkResponseCode(t, http.StatusOK, response.Code)
+	//Modifying updated object
+	jsonPlayer.Nickname = "newname"
+	jsonPlayer.GamesPlayed = "21"
+
+	//Get Resulting modified object
 	var jsonPlayerR Player
 	json.Unmarshal(response.Body.Bytes(), &jsonPlayerR)
+
 	if jsonPlayer.ID != jsonPlayerR.ID {
 		t.Errorf("Expected the id to remain the same (%v). Got %v", jsonPlayer.ID, jsonPlayerR.ID)
 	}
