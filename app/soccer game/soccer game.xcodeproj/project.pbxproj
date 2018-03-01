@@ -12,6 +12,7 @@
 		3A0A8BD42038F1CE001E073A /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A0A8BD12038F1CE001E073A /* Alamofire.framework */; };
 		3A0A8BD52038F1CE001E073A /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A0A8BD12038F1CE001E073A /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3A0C313E2038A4860011D18A /* UserDataKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C313D2038A4860011D18A /* UserDataKeys.swift */; };
+		3A119F112048A9E400063D51 /* GamePlayerInformationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A119F102048A9E400063D51 /* GamePlayerInformationModel.swift */; };
 		3A219ECF203B7CEE00FABE0A /* Players.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A219ECE203B7CEE00FABE0A /* Players.sks */; };
 		3A31696E2037505900DA2DCC /* NewAccountOrLogin.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A31696D2037505900DA2DCC /* NewAccountOrLogin.sks */; };
 		3A3169722037E84E00DA2DCC /* PacketByteQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3169712037E84E00DA2DCC /* PacketByteQueue.swift */; };
@@ -72,6 +73,7 @@
 		3A0A8BD02038F1C7001E073A /* SwiftSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SwiftSocket.framework; sourceTree = "<group>"; };
 		3A0A8BD12038F1CE001E073A /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Alamofire.framework; sourceTree = "<group>"; };
 		3A0C313D2038A4860011D18A /* UserDataKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataKeys.swift; sourceTree = "<group>"; };
+		3A119F102048A9E400063D51 /* GamePlayerInformationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamePlayerInformationModel.swift; sourceTree = "<group>"; };
 		3A219ECE203B7CEE00FABE0A /* Players.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Players.sks; sourceTree = "<group>"; };
 		3A31696D2037505900DA2DCC /* NewAccountOrLogin.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = NewAccountOrLogin.sks; sourceTree = "<group>"; };
 		3A3169712037E84E00DA2DCC /* PacketByteQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketByteQueue.swift; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 				3AB377DD2023B5980019E73E /* Joystick.swift */,
 				4C98FBB8201E658600378614 /* GameScene.sks */,
 				3A219ECE203B7CEE00FABE0A /* Players.sks */,
+				3A119F102048A9E400063D51 /* GamePlayerInformationModel.swift */,
 			);
 			path = "game scene";
 			sourceTree = "<group>";
@@ -386,6 +389,7 @@
 				4CED0622203775D100B8F603 /* ClientPlayerStatePacket.swift in Sources */,
 				3A74A5FE201E6FDB00A1583F /* MainMenu.swift in Sources */,
 				3A74A602201F7F6D00A1583F /* MatchMakingScene.swift in Sources */,
+				3A119F112048A9E400063D51 /* GamePlayerInformationModel.swift in Sources */,
 				3A3169752037E94700DA2DCC /* ConversionUtils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
