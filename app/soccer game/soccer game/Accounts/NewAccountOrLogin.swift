@@ -7,7 +7,8 @@
 //
 import SpriteKit
 import UIKit
-
+import FacebookCore
+import FacebookLogin
 import FBSDKLoginKit
 //import Alamofire
 
@@ -17,7 +18,7 @@ class NewAccountOrLogin: SKScene{
     
     
     var back : SKNode?
-    var login: SKNode?
+    var logout: SKNode?
     var viewController: UIViewController?
     
     override func didMove(to view: SKView) {
@@ -25,7 +26,7 @@ class NewAccountOrLogin: SKScene{
         
         //get scene subnodes
         self.back = self.childNode(withName: "Back Button")
-        self.login = self.childNode(withName: "Login")
+        self.logout = self.childNode(withName: "Logout")
         
         
        
@@ -38,15 +39,18 @@ class NewAccountOrLogin: SKScene{
         
         
         //if necesarry nodes and one touch exist
-        if let t = touches.first ,let back = self.back, let login = self.login{
+        if let t = touches.first ,let back = self.back, let logout = self.logout{
             let point = t.location(in: self)
             
             //see if touch contains first
-            if back.contains(point){
+            if (back.contains(point)){
                 self.moveToScene(.mainMenu)
             }
-            else if login.contains(point)
+            else if (logout.contains(point))
             {
+                let loginManager = LoginManager()
+                loginManager.logOut()
+                print("Logged out")
                 
             }
         }
