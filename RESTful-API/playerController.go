@@ -20,7 +20,7 @@ func (a *App) createPlayer(w http.ResponseWriter, r *http.Request) {
 	var p Player
 	decoder := json.NewDecoder(r.Body) //Passing credentials through http request body
 	if err := decoder.Decode(&p); err != nil {
-		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
+		respondWithError(w, http.StatusNotAcceptable, "Invalid request payload")
 		return
 	}
 	defer r.Body.Close()
@@ -36,7 +36,7 @@ func (a *App) createPlayer(w http.ResponseWriter, r *http.Request) {
 		case errors.New("Abnormal number of creates"):
 			respondWithError(w, http.StatusNotImplemented, dberr.Error())
 		default:
-			respondWithError(w, http.StatusInternalServerError, dberr.Error())
+			respondWithError(w, http.StatusBadRequest, dberr.Error())
 		}
 		return
 	}
@@ -62,7 +62,7 @@ func (a *App) getPlayer(w http.ResponseWriter, r *http.Request) {
 		case errors.New("Query Error"):
 			respondWithError(w, http.StatusBadRequest, "Bad Query")
 		case sql.ErrNoRows:
-			respondWithError(w, http.StatusNotFound, "User not found")
+			respondWithError(w, http.StatusNotFound, "Player not found")
 		default:
 			respondWithError(w, http.StatusInternalServerError, err.Error())
 		}
@@ -125,3 +125,18 @@ func (a *App) updatePlayer(w http.ResponseWriter, r *http.Request) {
 }
 
 /*********OAuth Routes*********/
+
+//TODO
+
+/*********Helpers*********/
+
+func respondWithError(w http.ResponseWriter, code int, message string) {
+	respondWithJSON(w, code, map[string]string{"error": message})
+}
+
+func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
+	response, _ := json.Marshal(payload)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(code)
+	w.Write(response)
+}

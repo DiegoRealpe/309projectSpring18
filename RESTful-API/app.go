@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"encoding/json"
 
 	"fmt"
 	"log"
@@ -41,22 +40,7 @@ func (a *App) Run() {
 
 func (a *App) initializeRoutes() {
 	a.router.HandleFunc("/player/{ID}", a.getPlayer).Methods("GET")
-	a.router.HandleFunc("/player", a.createPlayer).Methods("POST") //No mux params, credentials in request body
+	a.router.HandleFunc("/player", a.createPlayer).Methods("POST")
 	a.router.HandleFunc("/player/{ID}", a.deletePlayer).Methods("DELETE")
 	a.router.HandleFunc("/player/{ID}", a.updatePlayer).Methods("PUT")
-	/*a.router.HandleFunc("/user/{id:[0-9]+}", a.getUser).Methods("GET")
-	 */
-}
-
-/*********Helpers*********/
-
-func respondWithError(w http.ResponseWriter, code int, message string) {
-	respondWithJSON(w, code, map[string]string{"error": message})
-}
-
-func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
-	response, _ := json.Marshal(payload)
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(code)
-	w.Write(response)
 }
