@@ -2,8 +2,7 @@ package main
 
 import (
 	"testing"
-	"fmt"
-	"time"
+	"reflect"
 )
 
 func TestSum(t *testing.T) {
@@ -37,22 +36,15 @@ func Test120Response(t *testing.T){//used globally for tests
 
 	go runGameController(GameOptions{}, packetIn, packetOut)
 
-	time.Sleep(100 * time.Millisecond)
-
 	res := <- packetOut
-	fmt.Println("got result",res)
 
-	
+	expected := PacketOut{22, []byte{121,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}}
+	if !reflect.DeepEqual(res,expected) {
+		t.Fail()
+	}
 
 	close(packetIn)
 	close(packetOut)
 }
 
-
-func mockSocketTransmitter(packetOut <-chan PacketOut){
-	for p := range packetOut{
-		fmt.Println("sending out packet:",p)
-	}
-
-}
 

@@ -35,7 +35,7 @@ func (g *Game) respondTo1(in *PacketIn, out chan<- PacketOut){
 
 
 func (g *Game) respondTo120(in *PacketIn, out chan<- PacketOut){
-	fmt.Println("recieved 120 with data", *in)
+	fmt.Println("recieved 120 packet")
 
 	packet120 := ParseBytesTo120(in.data)
 
@@ -53,8 +53,6 @@ func (g *Game) respondTo120(in *PacketIn, out chan<- PacketOut){
 		size: 22,
 		data: Parse121ToBytes(packet121),
 	}
-
-	fmt.Println("model is sending packet like",packetOut)
 
 	out <- packetOut
 }
