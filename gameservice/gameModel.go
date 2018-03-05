@@ -38,9 +38,7 @@ func (g *Game) respondTo120(in *PacketIn, out chan<- PacketOut){
 	fmt.Println("recieved 120 packet")
 
 	packet120 := ParseBytesTo120(in.data)
-
-	fmt.Println(packet120)
-
+	
 	packet121 := packet121{
 		serverPlayerState: 121,
 		playernumber: in.playerNum,
@@ -50,8 +48,6 @@ func (g *Game) respondTo120(in *PacketIn, out chan<- PacketOut){
 		yVelocity: packet120.yVelocity,
 		timestamp: 0,
 	}
-
-	fmt.Println(packet121)
 
 	packetOut :=  PacketOut{
 		size: 22,
