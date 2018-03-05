@@ -14,10 +14,12 @@ import FacebookCore
 import FacebookLogin
 
 class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
+    
+    
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!)
     {
         print("User Logged In")
-        setGameScene()
+        setGameScene(loginButton)
         
         
         if ((error) != nil)
@@ -41,7 +43,7 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
         
     }
     
-    func setGameScene()
+    func setGameScene(_ loginButton: FBSDKLoginButton!)
     {
         if let view = self.view as! SKView? {
             // Load the SKScene from 'GameScene.sks'
@@ -52,7 +54,7 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
                 // Present the scene
                 view.presentScene(scene)
             }
-            
+            loginButton.removeFromSuperview()
             view.ignoresSiblingOrder = true
             
             view.showsFPS = true
@@ -66,10 +68,11 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        let loginButton = FBSDKLoginButton()
         // Do any additional setup after loading the view, typically from a nib.
         if let accessToken = AccessToken.current
         {
-           setGameScene()
+           setGameScene(loginButton)
         }
         
         else
