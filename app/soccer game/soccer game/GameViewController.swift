@@ -17,6 +17,8 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!)
     {
         print("User Logged In")
+        setGameScene()
+        
         
         if ((error) != nil)
         {
@@ -39,29 +41,35 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
         
     }
     
+    func setGameScene()
+    {
+        if let view = self.view as! SKView? {
+            // Load the SKScene from 'GameScene.sks'
+            if let scene = MainMenu(fileNamed: "MainMenu") {
+                // Set the scale mode to scale to fit the window
+                scene.scaleMode = .aspectFill
+                
+                // Present the scene
+                view.presentScene(scene)
+            }
+            
+            view.ignoresSiblingOrder = true
+            
+            view.showsFPS = true
+            view.showsNodeCount = true
+        }
+        
+        print("token was",AccessToken.current)
+    }
+    
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         if let accessToken = AccessToken.current
         {
-            if let view = self.view as! SKView? {
-                // Load the SKScene from 'GameScene.sks'
-                if let scene = MainMenu(fileNamed: "MainMenu") {
-                    // Set the scale mode to scale to fit the window
-                    scene.scaleMode = .aspectFill
-                    
-                    // Present the scene
-                    view.presentScene(scene)
-                }
-                
-                view.ignoresSiblingOrder = true
-                
-                view.showsFPS = true
-                view.showsNodeCount = true
-            }
-            
-            print("token was",accessToken)
+           setGameScene()
         }
         
         else
