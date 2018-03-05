@@ -18,10 +18,9 @@ import Foundation
 
 import Foundation
 
-
 struct RawPlayerInformation{
     var playerNumber:Int
-    var Name:String = "no-name"
+    var name:String = "no-name"
 }
 
 
@@ -44,5 +43,9 @@ class GamePlayerInformationModel {
             print("game player information model overwriting player number \(playerNumber)")
         }
         players[playerNumber] = player
+    }
+    
+    func getName(forPlayer num : Int) -> String? {
+        return players[num]?.name
     }
 }
