@@ -3,7 +3,6 @@ package main
 import "fmt"
 
 type gameController struct{
-	in <-chan PacketIn
 	out chan<- PacketOut
 	g Game
 	packetRouterMap map[byte]func(*PacketIn,chan<- PacketOut)
@@ -16,6 +15,7 @@ func runGameController(gameOptions GameOptions, in <-chan PacketIn, out chan<- P
 	controller := gameController{}
 	controller.g = gameOptions.buildGame()
 	controller.buildPacketMap()
+	controller.out = out
 
 	for p := range in{
 		controller.respondToSinglePacket(&p)
@@ -34,6 +34,7 @@ func (controller *gameController) buildPacketMap() {
 
 	packetMap[0] = controller.g.respondTo0
 	packetMap[1] = controller.g.respondTo1
+	packetMap[120] = controller.g.respondTo120
 
 	controller.packetRouterMap = packetMap
 }

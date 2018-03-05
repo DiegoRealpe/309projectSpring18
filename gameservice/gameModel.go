@@ -54,5 +54,7 @@ func (g *Game) respondTo120(in *PacketIn, out chan<- PacketOut){
 		data: Parse121ToBytes(packet121),
 	}
 
+	fmt.Println("model is sending packet like",packetOut)
+
 	out <- packetOut
 }

@@ -28,7 +28,7 @@ type packet121 struct {
 
 //ParseBytesTo120 Takes array of bytes and parses to a clientpacket struct
 func ParseBytesTo120(rawData []byte) packet120 {
-	if len(rawData) != 17 {
+	if len(rawData) != 18 {
 		panic(rawData)
 	}
 	Statebyte := rawData[:1] //Slicing the byte array into its subcomponents
