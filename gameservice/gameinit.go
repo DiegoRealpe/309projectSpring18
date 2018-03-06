@@ -6,7 +6,7 @@ import(
 
 func initgame(c *[NUMPLAYERS]client){
   packetIN := make(chan PacketIn)
-	packetOUT := make(chan PacketOut)
+  packetOUT := make(chan PacketOut)
   options := GameOptions{ numPlayers: 2, }
   go reciever(c[0], packetIN)
   go reciever(c[1], packetIN)
