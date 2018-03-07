@@ -1,17 +1,14 @@
 package main
 
-
-type matchMakingController struct{
-
+type matchMakingController struct {
 }
 
-func startMatchMaker() matchMakingController{
+func startMatchMaker() matchMakingController {
 	mmc := matchMakingController{}
-
 
 	return mmc
 }
 
-func (mmc *matchMakingController) enterPool(){
+func (mmc *matchMakingController) enterPool() {
 
 }

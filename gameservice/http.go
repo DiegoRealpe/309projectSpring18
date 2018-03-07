@@ -1,13 +1,13 @@
 package main
 
 import (
-	"net/http"
 	"io"
-	"strconv"
 	"net"
+	"net/http"
+	"strconv"
 )
 
-type portHttpController struct{
+type portHttpController struct {
 	connPasser chan net.Conn
 }
 
@@ -27,7 +27,7 @@ func (portHttpController *portHttpController) handlePortRequested(w http.Respons
 
 	io.WriteString(w, stringport)
 
-	go func() {//accept the first attempted connection on the port
+	go func() { //accept the first attempted connection on the port
 		ln, _ := net.Listen("tcp", ":"+stringport)
 
 		conn, _ := ln.Accept()

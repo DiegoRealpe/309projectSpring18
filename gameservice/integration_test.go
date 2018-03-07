@@ -1,15 +1,15 @@
 package main
 
 import (
-	"testing"
-	"fmt"
-	"time"
 	"bufio"
-	"net/http"
+	"fmt"
 	"net"
+	"net/http"
+	"testing"
+	"time"
 )
 
-func TestConnectClients(t *testing.T){//used globally for tests
+func TestConnectClients(t *testing.T) { //used globally for tests
 
 	t.Skip()
 
@@ -25,11 +25,7 @@ func TestConnectClients(t *testing.T){//used globally for tests
 	rw1.Read(slice)
 	fmt.Println(slice)
 
-
-
 	time.Sleep(100 * time.Millisecond)
-
-
 
 	rw0.Write([]uint8{120, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1})
 	rw0.Flush()
@@ -38,12 +34,11 @@ func TestConnectClients(t *testing.T){//used globally for tests
 
 	slice = make([]uint8, 50)
 	rw0.Read(slice)
-	fmt.Println("read from player 0:",slice)
+	fmt.Println("read from player 0:", slice)
 
 	slice = make([]uint8, 50)
 	rw1.Read(slice)
-	fmt.Println("read from player 1:",slice)
-
+	fmt.Println("read from player 1:", slice)
 
 }
 

@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-type client struct{
+type client struct {
 	connection net.Conn
 	reader     *bufio.Reader
 	writer     *bufio.Writer
@@ -20,8 +20,7 @@ var ports []int
 
 const NUMPLAYERS = 2
 
-
-func main(){
+func main() {
 	ports = []int{5543, 9078}
 
 	portHttpController := generatePortHttpController()
@@ -50,10 +49,9 @@ func listenForConnections(connPasser chan<- net.Conn) {
 	}
 }
 
-
 func generatePortHttpController() portHttpController {
 	connPasser := make(chan net.Conn)
-	return portHttpController{connPasser:connPasser}
+	return portHttpController{connPasser: connPasser}
 }
 
 func startHttpServer(portHttpController portHttpController) {
@@ -64,4 +62,3 @@ func startHttpServer(portHttpController portHttpController) {
 		fmt.Println(err.Error())
 	}
 }
-
