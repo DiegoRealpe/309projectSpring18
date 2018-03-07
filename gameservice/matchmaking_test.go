@@ -6,6 +6,8 @@ import (
 )
 
 func TestMatchmakingSimplePairing(t *testing.T) {
+	t.Skip()
+
 	mmc := makeMatchmakingController()
 
 	client0 := client{clientNum:0}

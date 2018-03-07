@@ -11,6 +11,13 @@ type portHttpController struct {
 	connPasser chan net.Conn
 }
 
+
+func makePortHttpController() portHttpController {
+	connPasser := make(chan net.Conn)
+	return portHttpController{connPasser: connPasser}
+}
+
+
 //when an http request is sent, send the requester a port and start listening on that port
 func (portHttpController *portHttpController) handlePortRequested(w http.ResponseWriter, r *http.Request) {
 

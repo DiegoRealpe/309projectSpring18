@@ -6,13 +6,23 @@ import (
 	"net"
 	"net/http"
 	"testing"
+	"os"
 )
 
-func TestConnectClients(t *testing.T) { //used globally for tests
 
-	t.Skip()
+func TestMain(m *testing.M) {
 
 	go main()
+
+	m.Run()
+
+	os.Exit(0)
+}
+
+func TestConnectClients(t *testing.T) { //used globally for test
+
+	connectUser()
+	connectUser()
 
 
 }

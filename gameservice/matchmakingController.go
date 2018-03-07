@@ -7,6 +7,8 @@ type matchMakingController struct {
 }
 
 func makeMatchmakingController() matchMakingController {
+	fmt.Println("starting matchmaking controller")
+
 	mmc := matchMakingController{}
 
 	mmm := startMatchmakingModel()

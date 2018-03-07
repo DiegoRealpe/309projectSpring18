@@ -2,6 +2,7 @@ package main
 
 import (
 	"sync"
+	"fmt"
 )
 
 type playerConnection struct {
@@ -15,12 +16,10 @@ type packetInMutex struct {
 	mut      sync.Mutex
 }
 
-type packetOutMutex struct {
-	packetOut chan<- PacketOut
-	mut       sync.Mutex
-}
-
 func MakePlayerConnection(client client, packetIn chan<- PacketIn) *playerConnection {
+
+	fmt.Println("making PlayerConnection for client number",client.clientNum)
+
 	playerConnection := playerConnection{}
 
 	playerConnection.client = client

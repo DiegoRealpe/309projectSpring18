@@ -12,6 +12,8 @@ type waitingPlayer struct {
 }
 
 func startMatchmakingModel() matchMakingModel{
+	fmt.Println("starting match making model")
+
 	mmm := matchMakingModel{}
 
 	mmm.waitingPlayers = getWaitingPlayerSLice()
@@ -45,7 +47,7 @@ func (mmm *matchMakingModel) startPairingRoutine() {
 	for player := range mmm.waitingPlayerChan {
 
 		mmm.waitingPlayers = append(mmm.waitingPlayers,player)
-		
+
 		mmm.tryToPair()
 	}
 }

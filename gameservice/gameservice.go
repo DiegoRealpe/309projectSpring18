@@ -19,23 +19,29 @@ var ports []int
 const NUMPLAYERS = 2
 
 func main() {
-	ports = []int{5543, 9078}
 
-	portHttpController := generatePortHttpController()
+	fmt.Println("starting game service!")
 
-	//start listening for http
-	startHttpServer(portHttpController)
+	ports = []int{6001, 6002, 6003, 6004, 6005, 6006} //todo: make a staic function with static variables for this
+
+	portHttpController := makePortHttpController()
 
 	matchMakingController := makeMatchmakingController()
 
-	listenForConnections(portHttpController.connPasser,matchMakingController)
+	go listenForConnections(portHttpController.connPasser,matchMakingController)
+
+	//start listening for http
+	startHttpServer(portHttpController)
 }
 
 func listenForConnections(connPasser <-chan net.Conn, matchMakingController matchMakingController) {
+	fmt.Println("listening for connections")
 
 	currentClientNumber := 1
 
 	for conn := range connPasser {
+		fmt.Println("starting handling for a connection")
+
 		client := client{}
 		client.connection = conn
 		client.reader = bufio.NewReader(conn)
@@ -48,11 +54,6 @@ func listenForConnections(connPasser <-chan net.Conn, matchMakingController matc
 
 		matchMakingController.addConnectionToPool(playerConnection)
 	}
-}
-
-func generatePortHttpController() portHttpController {
-	connPasser := make(chan net.Conn)
-	return portHttpController{connPasser: connPasser}
 }
 
 func startHttpServer(portHttpController portHttpController) {
