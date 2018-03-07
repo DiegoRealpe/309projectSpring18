@@ -20,9 +20,10 @@ type packetOutMutex struct {
 	mut       sync.Mutex
 }
 
-func MakePlayerConnection(client client, packetIn chan<- PacketIn, packetOut chan<- PacketOut) *playerConnection {
+func MakePlayerConnection(client client, packetIn chan<- PacketIn) *playerConnection {
 	playerConnection := playerConnection{}
 
+	playerConnection.client = client
 	playerConnection.packetInMutex = packetInMutex{packetIn: packetIn}
 	playerConnection.packetOut = make(chan PacketOut, 100)
 

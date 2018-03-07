@@ -28,24 +28,27 @@ func main() {
 	//start listening for http
 	startHttpServer(portHttpController)
 
-	listenForConnections(portHttpController.connPasser)
+	matchMakingController := makeMatchmakingController()
+
+	listenForConnections(portHttpController.connPasser,matchMakingController)
 }
 
-func listenForConnections(connPasser chan<- net.Conn) {
-	clients := new([NUMPLAYERS]client)
-	i := 0
+func listenForConnections(connPasser chan<- net.Conn, matchMakingController matchMakingController) {
+
+	currentClientNumber := 1
+
 	for conn := range connPasser {
-		clients[i].connection = conn
-		clients[i].reader = bufio.NewReader(conn)
-		clients[i].writer = bufio.NewWriter(conn)
-		clients[i].clientNum = i
-		i++
-		if i == NUMPLAYERS-1 {
-			go func(group *[NUMPLAYERS]client) {
-				initgame(group)
-			}(clients)
-			i = 0
-		}
+		client := client{}
+		client.connection = conn
+		client.reader = bufio.NewReader(conn)
+		client.writer = bufio.NewWriter(conn)
+		client.clientNum = currentClientNumber
+
+		currentClientNumber++
+
+		playerConnection := MakePlayerConnection(client,nil)
+
+		matchMakingController.addConnectionToPool(playerConnection)
 	}
 }
 
