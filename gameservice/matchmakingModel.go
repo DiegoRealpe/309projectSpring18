@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type matchMakingModel struct {
 	waitingPlayers []waitingPlayer //should only be modified by pairing routine
@@ -36,6 +38,8 @@ func (mmm *matchMakingModel) tryToPair(){
 
 	fmt.Println("trying to pair")
 	for len(mmm.waitingPlayers) >= NUMPLAYERS {
+
+		//split waiting players into a slice of players joining the game and a slice of those not
 		gamePlayers := mmm.waitingPlayers[0:NUMPLAYERS]
 		mmm.waitingPlayers = mmm.waitingPlayers[2:]
 
@@ -58,5 +62,48 @@ func (mmm *matchMakingModel) startGame(players []waitingPlayer){
 		fmt.Println("***",val.connection.client.clientNum)
 	}
 
+	gameOpts := GameOptions{numPlayers:NUMPLAYERS}
+	packetOutChannel := startPacketOutDispersionWithPlayers(players)
+	packetInChannel := makePacketInChannelForAllPlayers(players)
 
+	go runGameController(gameOpts,packetInChannel,packetOutChannel)
+	send122PacketsToPlayers(players)
+}
+
+
+//builds a single channel which sends to all clients
+func startPacketOutDispersionWithPlayers(players []waitingPlayer) chan<- PacketOut{
+	chanSlice := make([]chan<- PacketOut,NUMPLAYERS)
+	for i, player := range players{
+		chanSlice[i] = player.connection.packetOut
+	}
+
+	toDisperse := make(chan PacketOut,50)
+	go listenAndDispersePackets(chanSlice,toDisperse)
+
+	return toDisperse
+}
+
+func makePacketInChannelForAllPlayers(players []waitingPlayer) <-chan PacketIn{
+	packetInChannel := make(chan PacketIn, 50)
+
+	for _, player :=  range players{
+		player.connection.SetNewPacketInChannel(packetInChannel)
+	}
+
+	return packetInChannel
+}
+
+func send122PacketsToPlayers(players []waitingPlayer){
+	for num, player := range players{
+		send122PacketToPlayer(player,num)
+	}
+}
+
+func send122PacketToPlayer(player waitingPlayer,playerNum int){
+	packet := PacketOut{}
+	packet.size = 2
+	packet.data = []byte{122,byte(playerNum)}
+
+	player.connection.packetOut <- packet
 }

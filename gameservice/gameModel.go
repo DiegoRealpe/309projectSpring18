@@ -9,15 +9,17 @@ type GameOptions struct {
 	//ext...
 }
 
+type Game struct {
+	numPlayers int
+}
+
+
 func (gOpts GameOptions) buildGame() (g Game) {
 	g.numPlayers = gOpts.numPlayers
 	//ext...
 	return
 }
 
-type Game struct {
-	numPlayers int
-}
 
 func (g *Game) respondTo0(in *PacketIn, out chan<- PacketOut) {
 	fmt.Println("game model   :::  ", "logic for packet:", in)
@@ -54,3 +56,4 @@ func (g *Game) respondTo120(in *PacketIn, out chan<- PacketOut) {
 
 	out <- packetOut
 }
+

@@ -8,7 +8,7 @@ import (
 type playerConnection struct {
 	client        client
 	packetInMutex packetInMutex
-	packetOut     <-chan PacketOut
+	packetOut     chan PacketOut
 }
 
 type packetInMutex struct {
@@ -26,6 +26,9 @@ func MakePlayerConnection(client client, packetIn chan<- PacketIn) *playerConnec
 	playerConnection.packetInMutex = packetInMutex{packetIn: packetIn}
 	playerConnection.packetOut = make(chan PacketOut, 100)
 
+	go playerConnection.startReading()
+	go playerConnection.startTransmitting()
+
 	return &playerConnection
 }
 
@@ -34,7 +37,10 @@ func (pconn *playerConnection) startReading() {
 }
 
 func (pconn *playerConnection) startTransmitting() {
-
+	for packet := range pconn.packetOut{
+		fmt.Println("sending packet",packet)
+		pconn.transmitPacket(packet)
+	}
 }
 
 func (pconn *playerConnection) send(packetIn PacketIn) {
@@ -54,15 +60,12 @@ func (pconn *playerConnection) SetNewPacketInChannel(packetIn chan<- PacketIn) {
 	pconn.packetInMutex.mut.Unlock()
 }
 
-//dispersion stops once the returned channel is closed
-func startSendToAllRoutine(connectionOutChannels []chan<- PacketOut) chan<- PacketOut {
-	returnChannel := make(chan PacketOut, 100)
-
-	go listenAndDispersePackets(connectionOutChannels, returnChannel)
-
-	return returnChannel
+func (pconn *playerConnection) transmitPacket(out PacketOut) {
+	pconn.client.writer.Write(out.data)
+	pconn.client.writer.Flush()
 }
 
+//to be started as a goroutine
 func listenAndDispersePackets(connectionChannels []chan<- PacketOut, toDisperse <-chan PacketOut) {
 	for packet := range toDisperse {
 		for _, connectionChannel := range connectionChannels {
@@ -70,3 +73,4 @@ func listenAndDispersePackets(connectionChannels []chan<- PacketOut, toDisperse 
 		}
 	}
 }
+

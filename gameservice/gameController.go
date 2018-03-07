@@ -10,7 +10,7 @@ type gameController struct {
 
 //should be a gorouting, but not start new goroutines
 func runGameController(gameOptions GameOptions, in <-chan PacketIn, out chan<- PacketOut) {
-	fmt.Println("game controller   :::  ", "starting router")
+	fmt.Println("starting game controller")
 
 	controller := gameController{}
 	controller.g = gameOptions.buildGame()
