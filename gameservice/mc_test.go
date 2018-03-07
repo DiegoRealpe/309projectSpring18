@@ -6,6 +6,9 @@ import (
 )
 
 func Test120Response(t *testing.T) {
+
+	t.Skip()
+
 	var packetIn = make(chan PacketIn, 10)
 	var packetOut = make(chan PacketOut, 10)
 

@@ -3,27 +3,23 @@ package main
 import "fmt"
 
 type matchMakingController struct {
-	waitingPlayers []waitingPlayer
-}
-
-type waitingPlayer struct {
-	connection *playerConnection
+	matchMakingModel matchMakingModel
 }
 
 func makeMatchmakingController() matchMakingController {
 	mmc := matchMakingController{}
-	mmc.waitingPlayers = []waitingPlayer{}
 
-	go mmc.startPairingRoutine()
+	mmm := startMatchmakingModel()
 
+	mmc.matchMakingModel = mmm
 	return mmc
 }
 
 func (mmc *matchMakingController) addConnectionToPool(connection *playerConnection) {
 	waitingPlayer := connectionToWaitingPlayer(connection)
-	mmc.waitingPlayers = append(mmc.waitingPlayers,waitingPlayer)
 
 	fmt.Println("added player to matchmaking pool with connection number",connection.client.clientNum)
+	mmc.matchMakingModel.waitingPlayerChan <- waitingPlayer
 }
 
 func connectionToWaitingPlayer(connection *playerConnection) waitingPlayer{
@@ -32,14 +28,6 @@ func connectionToWaitingPlayer(connection *playerConnection) waitingPlayer{
 	rtn.connection = connection
 
 	return rtn
-}
-
-//currently called whenever a player enters the lobby
-func (mmc *matchMakingController) tryToPair(){
-}
-
-func (mmc *matchMakingController) startPairingRoutine() {
-
 }
 
 
