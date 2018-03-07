@@ -56,7 +56,7 @@ func (pconn *playerConnection) SetNewPacketInChannel(packetIn chan<- PacketIn) {
 }
 
 //dispersion stops once the returned channel is closed
-func startSendToAllRoutine(connectionOutChannels []<-chan PacketOut) chan<- PacketOut {
+func startSendToAllRoutine(connectionOutChannels []chan<- PacketOut) chan<- PacketOut {
 	returnChannel := make(chan PacketOut, 100)
 
 	go listenAndDispersePackets(connectionOutChannels, returnChannel)
@@ -64,7 +64,7 @@ func startSendToAllRoutine(connectionOutChannels []<-chan PacketOut) chan<- Pack
 	return returnChannel
 }
 
-func listenAndDispersePackets(connectionChannels []<-chan PacketOut, toDisperse <-chan PacketOut) {
+func listenAndDispersePackets(connectionChannels []chan<- PacketOut, toDisperse <-chan PacketOut) {
 	for packet := range toDisperse {
 		for _, connectionChannel := range connectionChannels {
 			connectionChannel <- packet

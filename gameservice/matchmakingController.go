@@ -14,6 +14,8 @@ func makeMatchmakingController() matchMakingController {
 	mmc := matchMakingController{}
 	mmc.waitingPlayers = []waitingPlayer{}
 
+	go mmc.startPairingRoutine()
+
 	return mmc
 }
 
@@ -30,6 +32,14 @@ func connectionToWaitingPlayer(connection *playerConnection) waitingPlayer{
 	rtn.connection = connection
 
 	return rtn
+}
+
+//currently called whenever a player enters the lobby
+func (mmc *matchMakingController) tryToPair(){
+}
+
+func (mmc *matchMakingController) startPairingRoutine() {
+
 }
 
 

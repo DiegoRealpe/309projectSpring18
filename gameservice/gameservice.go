@@ -3,10 +3,8 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"io"
 	"net"
 	"net/http"
-	"strconv"
 )
 
 type client struct {
@@ -33,7 +31,7 @@ func main() {
 	listenForConnections(portHttpController.connPasser,matchMakingController)
 }
 
-func listenForConnections(connPasser chan<- net.Conn, matchMakingController matchMakingController) {
+func listenForConnections(connPasser <-chan net.Conn, matchMakingController matchMakingController) {
 
 	currentClientNumber := 1
 
