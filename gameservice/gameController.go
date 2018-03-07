@@ -30,7 +30,7 @@ func (controller *gameController) respondToSinglePacket(in *PacketIn){
 
 //builds a map of packet types to handler functions
 func (controller *gameController) buildPacketMap() {
-	packetMap := map[byte](func(*PacketIn,chan<- PacketOut)){}
+	packetMap := map[byte]func(*PacketIn,chan<- PacketOut){}
 
 	packetMap[0] = controller.g.respondTo0
 	packetMap[1] = controller.g.respondTo1

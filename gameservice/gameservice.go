@@ -18,7 +18,7 @@ type client struct{
 
 var ports []int
 
-const NUMPLAYERS int = 2
+const NUMPLAYERS = 2
 
 
 func main(){

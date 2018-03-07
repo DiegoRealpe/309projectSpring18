@@ -6,7 +6,7 @@ import (
 )
 
 
-func Test120Response(t *testing.T){//used globally for tests
+func Test120Response(t *testing.T){
 	var packetIn = make(chan PacketIn,10)
 	var packetOut = make(chan PacketOut,10)
 
@@ -19,7 +19,6 @@ func Test120Response(t *testing.T){//used globally for tests
 	expected := PacketOut{22, []byte{121,0,0,1,2,3,4,5,6,7,8,9,10,0,0,0,0,0,0,0,0,0}}
 
 	assertEquals(expected,res,t,"121 did not match 120")
-
 
 	close(packetIn)
 	close(packetOut)
