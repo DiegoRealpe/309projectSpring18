@@ -20,6 +20,9 @@ class NewAccountOrLogin: SKScene{
     var back : SKNode?
     var logout: SKNode?
     var viewController: UIViewController?
+    var logOutLabel: SKLabelNode?
+    var isLoggedIn = AccessToken.current != nil
+    
     
     override func didMove(to view: SKView) {
         print("got to accounts")
@@ -27,9 +30,21 @@ class NewAccountOrLogin: SKScene{
         //get scene subnodes
         self.back = self.childNode(withName: "Back Button")
         self.logout = self.childNode(withName: "Logout")
+        self.logOutLabel = logout?.childNode(withName: "LogoutLabel") as! SKLabelNode
         
+         isLoggedIn = AccessToken.current != nil
         
-       
+        if(isLoggedIn)
+        {
+            logOutLabel?.text = "Logout"
+        }
+        else
+        {
+            logOutLabel?.text = "Login"
+        }
+        
+       print(isLoggedIn)
+    
         
         
         
@@ -48,9 +63,35 @@ class NewAccountOrLogin: SKScene{
             }
             else if (logout.contains(point))
             {
-                let loginManager = LoginManager()
-                loginManager.logOut()
-                print("Logged out")
+                if(isLoggedIn)//if we're logged in and want to logout
+                {
+                    let loginManager = LoginManager()
+                    loginManager.logOut()
+                    print("Logged out")
+                    
+                    logOutLabel?.text = "Login"
+                    
+                    print(AccessToken.current)
+                }
+                else
+                {
+                 /*   let fbLoginManager : FBSDKLoginManager = FBSDKLoginManager()
+                    fbLoginManager.logIn(withReadPermissions: ["email"], from: self.viewController) { (result, error) -> Void in
+                        if (error == nil){
+                            let fbloginresult : FBSDKLoginManagerLoginResult = result!
+                            if(fbloginresult.grantedPermissions.contains("email"))
+                            {
+                                
+                            }
+                        }
+                    }
+                    */
+                    
+                }
+                
+                
+                
+                
                 
             }
         }
