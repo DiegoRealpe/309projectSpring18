@@ -3,7 +3,8 @@ package main
 import (
 	"sync"
 	"fmt"
-	"time"
+	"log"
+	"io"
 )
 
 const maxReadBufferSize = 100
@@ -13,9 +14,7 @@ type playerConnection struct {
 	packetInMutex packetInMutex
 	packetOut     chan PacketOut
 
-	readBuffer [maxReadBufferSize]byte
-	readBufferSize int
-	packetSize int
+	packetLength int //if no packet is being read, packetLength should be 0
 }
 
 type packetInMutex struct {
@@ -43,20 +42,9 @@ func (pConn *playerConnection) startReading() {
 
 	fmt.Println("player reading")
 	for {
-		time.Sleep(time.Second)
-		//todo: respond correctly to read error
 
-		//allData, err := ioutil.ReadAll(pConn.client.reader)
-		//fmt.Println(err)
-		allData := []byte{}
-
-		fmt.Println("allData is",allData)
-
-		if len(allData) > 0 {
-			fmt.Println(allData)
-			pConn.dataWasSent(allData)
-		}
-
+		pConn.tryToPeekAndSetNewPacketLength()
+		pConn.tryToReadPacket()
 	}
 }
 
@@ -100,59 +88,45 @@ func listenAndDispersePackets(connectionChannels []chan<- PacketOut, toDisperse 
 	}
 }
 
-func (pConn *playerConnection) dataWasSent(bytes []byte) {
-	for pConn.readBufferSize + len(bytes) > maxReadBufferSize{
-		bytes = pConn.partialUnload(bytes);
-	}
-
-	copy(pConn.readBuffer[pConn.readBufferSize:], bytes)
-	pConn.readBufferSize += len(bytes)
-
-	fmt.Println("read is", pConn.readBuffer)
-	pConn.unloadReadBuffer()
-}
-
-func (pConn *playerConnection) unloadReadBuffer() {
-	for pConn.readBufferSize >= pConn.packetSize {
-		pConn.packetSize = pConn.getPacketSize()
-		fmt.Println("got full command", pConn.readBuffer[0:pConn.readBufferSize])
-
-		pConn.readBufferSize -= pConn.packetSize
-		copy(
-			pConn.readBuffer[0:],
-			pConn.readBuffer[pConn.packetSize:])
+func (pConn *playerConnection) peekLengthIfNoCommand(){
+	if(pConn.packetLength != 0) {
+		pConn.tryToPeekAndSetNewPacketLength()
 	}
 }
-func (pConn *playerConnection) partialUnload(bytes []byte) []byte {
-	unloadAmmount := (maxReadBufferSize - pConn.readBufferSize)
 
-	dst := pConn.readBuffer[pConn.readBufferSize:]
-	src := bytes[0:unloadAmmount]
+func (pConn *playerConnection) tryToPeekAndSetNewPacketLength(){
+	peeked, _ := pConn.client.reader.Peek(1)
 
-	copy(dst,src)
-	pConn.readBufferSize += unloadAmmount
+	if len(peeked) == 1{
 
-	fmt.Println("read buffer is", pConn.readBuffer)
+		packetLength := packetLengths[peeked[0]]
 
-	pConn.unloadReadBuffer()
-
-	return bytes[unloadAmmount+1:]
+		if packetLength != 0{
+			pConn.packetLength = packetLength
+		}else{
+			log.Fatal("Invalid Packet sent, got byte",peeked[0])
+		}
+	}
 }
 
-func (pConn *playerConnection) getPacketSize() int{
-	if pConn.readBufferSize == 0 {
-		return -1
+func (pConn *playerConnection) tryToReadPacket(){
+	peeked, error := pConn.client.reader.Peek(pConn.packetLength)
+
+	if len(peeked) != pConn.packetLength || pConn.packetLength == 0{
+		//if connection did not have full packet
+		if error == io.EOF || error == nil{
+			return
+		}
+		fmt.Println("tried to peek bytes and got non EOF error",error)
 	}
 
-	packetSize := packetSizeMap[pConn.readBuffer[0]]
-
-	if packetSize == 0{
-		fmt.Println("packet", pConn.readBuffer[0],"does not exist, handling is not complete yet")
-	}
-
-	return packetSize
+	fmt.Println("full packet is",peeked)
+	pConn.client.reader.Discard(pConn.packetLength)
+	pConn.packetLength = 0
 }
 
-var packetSizeMap = map[byte]int{
+
+var packetLengths = map[byte]int{
+	8 : 2,
 	120 : 18,
 }
