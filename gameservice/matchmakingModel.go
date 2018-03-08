@@ -107,3 +107,9 @@ func send122PacketToPlayer(player waitingPlayer,playerNum int){
 
 	player.connection.packetOut <- packet
 }
+
+func startPlayersReading(players []waitingPlayer){
+	for _, val := range players{
+		go val.connection.startReading()
+	}
+}

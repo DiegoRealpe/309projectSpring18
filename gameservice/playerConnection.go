@@ -3,12 +3,19 @@ package main
 import (
 	"sync"
 	"fmt"
+	"time"
 )
+
+const maxReadBufferSize = 100
 
 type playerConnection struct {
 	client        client
 	packetInMutex packetInMutex
 	packetOut     chan PacketOut
+
+	readBuffer [maxReadBufferSize]byte
+	readBufferSize int
+	packetSize int
 }
 
 type packetInMutex struct {
@@ -32,37 +39,56 @@ func MakePlayerConnection(client client, packetIn chan<- PacketIn) *playerConnec
 	return &playerConnection
 }
 
-func (pconn *playerConnection) startReading() {
+func (pConn *playerConnection) startReading() {
 
-}
+	fmt.Println("player reading")
+	for {
+		time.Sleep(time.Second)
+		//todo: respond correctly to read error
 
-func (pconn *playerConnection) startTransmitting() {
-	for packet := range pconn.packetOut{
-		fmt.Println("sending packet",packet)
-		pconn.transmitPacket(packet)
+		//allData, err := ioutil.ReadAll(pConn.client.reader)
+		//fmt.Println(err)
+		allData := []byte{}
+
+		fmt.Println("allData is",allData)
+
+		if len(allData) > 0 {
+			fmt.Println(allData)
+			pConn.dataWasSent(allData)
+		}
+
 	}
 }
 
-func (pconn *playerConnection) send(packetIn PacketIn) {
-	mutex := &pconn.packetInMutex.mut
-	packetChannel := &pconn.packetInMutex.packetIn
+func (pConn *playerConnection) sendToPacketIn(data []byte){
+	packet := PacketIn{size:len(data),data:data}
 
-	mutex.Lock()
-	*packetChannel <- packetIn
-	mutex.Unlock()
+	fmt.Println("got",packet)
+
+	//sending over packetIn must be mutexed because the channel mighn have been changed by another thread
+	pConn.packetInMutex.mut.Lock()
+	pConn.packetInMutex.packetIn <- packet
+	pConn.packetInMutex.mut.Unlock()
 }
 
-func (pconn *playerConnection) SetNewPacketInChannel(packetIn chan<- PacketIn) {
-	pconn.packetInMutex.mut.Lock()
-
-	pconn.packetInMutex.packetIn = packetIn
-
-	pconn.packetInMutex.mut.Unlock()
+func (pConn *playerConnection) startTransmitting() {
+	for packet := range pConn.packetOut{
+		fmt.Println("sending packet",packet)
+		pConn.transmitPacket(packet)
+	}
 }
 
-func (pconn *playerConnection) transmitPacket(out PacketOut) {
-	pconn.client.writer.Write(out.data)
-	pconn.client.writer.Flush()
+func (pConn *playerConnection) SetNewPacketInChannel(packetIn chan<- PacketIn) {
+	pConn.packetInMutex.mut.Lock()
+
+	pConn.packetInMutex.packetIn = packetIn
+
+	pConn.packetInMutex.mut.Unlock()
+}
+
+func (pConn *playerConnection) transmitPacket(out PacketOut) {
+	pConn.client.writer.Write(out.data)
+	pConn.client.writer.Flush()
 }
 
 //to be started as a goroutine
@@ -74,3 +100,59 @@ func listenAndDispersePackets(connectionChannels []chan<- PacketOut, toDisperse 
 	}
 }
 
+func (pConn *playerConnection) dataWasSent(bytes []byte) {
+	for pConn.readBufferSize + len(bytes) > maxReadBufferSize{
+		bytes = pConn.partialUnload(bytes);
+	}
+
+	copy(pConn.readBuffer[pConn.readBufferSize:], bytes)
+	pConn.readBufferSize += len(bytes)
+
+	fmt.Println("read is", pConn.readBuffer)
+	pConn.unloadReadBuffer()
+}
+
+func (pConn *playerConnection) unloadReadBuffer() {
+	for pConn.readBufferSize >= pConn.packetSize {
+		pConn.packetSize = pConn.getPacketSize()
+		fmt.Println("got full command", pConn.readBuffer[0:pConn.readBufferSize])
+
+		pConn.readBufferSize -= pConn.packetSize
+		copy(
+			pConn.readBuffer[0:],
+			pConn.readBuffer[pConn.packetSize:])
+	}
+}
+func (pConn *playerConnection) partialUnload(bytes []byte) []byte {
+	unloadAmmount := (maxReadBufferSize - pConn.readBufferSize)
+
+	dst := pConn.readBuffer[pConn.readBufferSize:]
+	src := bytes[0:unloadAmmount]
+
+	copy(dst,src)
+	pConn.readBufferSize += unloadAmmount
+
+	fmt.Println("read buffer is", pConn.readBuffer)
+
+	pConn.unloadReadBuffer()
+
+	return bytes[unloadAmmount+1:]
+}
+
+func (pConn *playerConnection) getPacketSize() int{
+	if pConn.readBufferSize == 0 {
+		return -1
+	}
+
+	packetSize := packetSizeMap[pConn.readBuffer[0]]
+
+	if packetSize == 0{
+		fmt.Println("packet", pConn.readBuffer[0],"does not exist, handling is not complete yet")
+	}
+
+	return packetSize
+}
+
+var packetSizeMap = map[byte]int{
+	120 : 18,
+}
