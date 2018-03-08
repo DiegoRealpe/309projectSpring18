@@ -103,8 +103,9 @@ func (pConn *playerConnection) tryToPeekAndSetNewPacketLength(){
 
 		if packetLength != 0{
 			pConn.packetLength = packetLength
+			fmt.Println("setting packet length",pConn.packetLength)
 		}else{
-			log.Fatal("Invalid Packet sent, got byte",peeked[0])
+			log.Fatal("Invalid Packet sent by client, got byte ",peeked[0])
 		}
 	}
 }
@@ -123,10 +124,13 @@ func (pConn *playerConnection) tryToReadPacket(){
 	fmt.Println("full packet is",peeked)
 	pConn.client.reader.Discard(pConn.packetLength)
 	pConn.packetLength = 0
+
+	pConn.sendToPacketIn(peeked)
 }
+
 
 
 var packetLengths = map[byte]int{
 	8 : 2,
-	120 : 18,
+	120 : 17,
 }
