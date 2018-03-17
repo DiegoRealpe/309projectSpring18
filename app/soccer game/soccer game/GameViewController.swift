@@ -9,12 +9,42 @@
 import UIKit
 import SpriteKit
 import GameplayKit
+import FBSDKLoginKit
+import FacebookCore
+import FacebookLogin
 
-class GameViewController: UIViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
+class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
+    
+    
+    func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!)
+    {
+        print("User Logged In")
+        setGameScene(loginButton)
         
+        
+        if ((error) != nil)
+        {
+            // Process error
+        }
+        else if result.isCancelled {
+            // Handle cancellations
+        }
+        else {
+            // If you ask for multiple permissions at once, you
+            // should check if specific permissions missing
+            if result.grantedPermissions.contains("email")
+            {
+                // Do work
+            }
+        }
+    }
+    
+    func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
+        
+    }
+    
+    func setGameScene(_ loginButton: FBSDKLoginButton!)
+    {
         if let view = self.view as! SKView? {
             // Load the SKScene from 'GameScene.sks'
             if let scene = MainMenu(fileNamed: "MainMenu") {
@@ -24,12 +54,36 @@ class GameViewController: UIViewController {
                 // Present the scene
                 view.presentScene(scene)
             }
-            
+            loginButton.removeFromSuperview()
             view.ignoresSiblingOrder = true
             
             view.showsFPS = true
             view.showsNodeCount = true
         }
+        
+        print("token was",AccessToken.current)
+    }
+    
+    
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        let loginButton = FBSDKLoginButton()
+        // Do any additional setup after loading the view, typically from a nib.
+        
+        if let accessToken = AccessToken.current
+        {
+           setGameScene(loginButton)
+        }
+        
+        else
+        {
+        let loginButton = FBSDKLoginButton()
+        loginButton.center = view.center
+        loginButton.delegate = self // Remember to set the delegate of the loginButton
+        view.addSubview(loginButton)
+        }
+        
     }
 
     override var shouldAutorotate: Bool {
