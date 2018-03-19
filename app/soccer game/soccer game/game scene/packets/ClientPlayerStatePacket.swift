@@ -20,7 +20,6 @@ class ClientPlayerStatePacket
         yPosFloat = yPos
         xVelocity = xV
         yVelocity = yV
-        
     }
     
     

@@ -233,23 +233,11 @@ class GameScene: SKScene {
         
         print("got position packet with data:",data)
         
-        let playerNum = data[1]
-        let xPosBytes = Array(data[2...5])
-        let yPosBytes = Array(data[6...9])
-        let xVelBytes = Array(data[10...13])
-        let yVelBytes = Array(data[14...17])
+        let spsm = ServerPlayerStatePacket(rawData: data)
         
-        let xPosFloat = convertToFloat(xPosBytes).toCGFloat()
-        let yPosFloat = convertToFloat(yPosBytes).toCGFloat()
-        let xVelFloat = convertToFloat(xVelBytes).toCGFloat()
-        let yVelFloat = convertToFloat(yVelBytes).toCGFloat()
+        let player:SKSpriteNode = selectOrAddPlayer(playerNum : spsm.playerNumber)
         
-        let position = CGPoint (x : xPosFloat, y: yPosFloat)
-        let velocity = CGVector(dx: xVelFloat, dy: yVelFloat)
-        
-        let player:SKSpriteNode = selectOrAddPlayer(playerNum : Int(playerNum))
-        
-        ApplyPositionPacketToPlayer(player: player, point: position, vector: velocity)
+        ApplyPositionPacketToPlayer(player: player, point: spsm.position, vector: spsm.velocity)
     }
     
     //returns player node from players whith specified index
