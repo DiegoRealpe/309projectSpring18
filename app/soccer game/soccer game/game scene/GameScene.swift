@@ -29,6 +29,7 @@ class GameScene: SKScene {
     //after didMove is called players is initialized with the exact size of maxPlayers
     private var players : [SKSpriteNode] = []
     private var playerNumber : Int?
+    private var playerLabelRelativePosition = CGPoint(x: 0, y: 30)
     
     private var localPlayerStateWasUpdated = true
     
@@ -69,6 +70,20 @@ class GameScene: SKScene {
             self.addChild(players[playerNumber])
         }
         
+        addLabelToUserPlayer()
+        
+    }
+    
+    private func addLabelToUserPlayer(){
+        guard let modelLabel = SKScene(fileNamed : "Players")?.childNode(withName : "Player Label") as? SKLabelNode else{
+            return
+        }
+        let copiedLabel = modelLabel.copy() as! SKLabelNode
+        
+        let player = selectOrAddPlayer(playerNum : self.playerNumber!)
+        copiedLabel.position = self.playerLabelRelativePosition
+        
+        player.addChild(copiedLabel)
     }
     
     //maps funtions to packet numbers to be used by the responder in a scene-specific configuration
