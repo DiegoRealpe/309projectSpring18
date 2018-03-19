@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"testing"
 	"os"
+	"time"
 )
 
 
@@ -22,8 +23,14 @@ func TestMain(m *testing.M) {
 func TestConnectClients(t *testing.T) { //used globally for test
 
 	connectUser()
-	connectUser()
+	player1 := connectUser()
 
+	time.Sleep(100 * time.Millisecond)
+
+	player1.Write([]byte{120,0,0,0,0,0,0,0,0,152, 78, 154, 68, 152, 78, 154, 68})
+	player1.Flush()
+
+	time.Sleep(100 * time.Millisecond)
 
 }
 

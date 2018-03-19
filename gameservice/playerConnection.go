@@ -7,8 +7,6 @@ import (
 	"io"
 )
 
-const maxReadBufferSize = 100
-
 type playerConnection struct {
 	client        client
 	packetInMutex packetInMutex

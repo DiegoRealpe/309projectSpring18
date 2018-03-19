@@ -31,13 +31,12 @@ func ParseBytesTo120(rawData []byte) packet120 {
 	if len(rawData) != 17 {
 		panic(rawData)
 	}
-	Statebyte := rawData[:1] //Slicing the byte array into its subcomponents
 	xPosByte := rawData[1:5]
 	yPosByte := rawData[5:9]
 	xVelByte := rawData[9:13]
 	yVelByte := rawData[13:17]
 	resultPacket := packet120{
-		clientPlayerState: uint8(Statebyte[0]),
+		clientPlayerState: 1,
 		xPosition:         BytestoFloat32(xPosByte),
 		yPosition:         BytestoFloat32(yPosByte),
 		xVelocity:         BytestoFloat32(xVelByte),
@@ -47,7 +46,7 @@ func ParseBytesTo120(rawData []byte) packet120 {
 }
 
 //Parse121 takes a server packet and readies it to be sent as a byte slice
-func Parse121ToBytes(packet packet121) []byte {
+func (packet *packet121) toBytes() []byte {
 	rawData := make([]byte, 22)
 
 	rawData[0] = byte(121)

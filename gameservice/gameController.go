@@ -32,8 +32,6 @@ func (controller *gameController) respondToSinglePacket(in *PacketIn) {
 func (controller *gameController) buildPacketMap() {
 	packetMap := map[byte]func(*PacketIn, chan<- PacketOut){}
 
-	packetMap[0] = controller.g.respondTo0
-	packetMap[1] = controller.g.respondTo1
 	packetMap[120] = controller.g.respondTo120
 
 	controller.packetRouterMap = packetMap

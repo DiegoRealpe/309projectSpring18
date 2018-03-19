@@ -20,24 +20,12 @@ func (gOpts GameOptions) buildGame() (g Game) {
 	return
 }
 
-
-func (g *Game) respondTo0(in *PacketIn, out chan<- PacketOut) {
-	fmt.Println("game model   :::  ", "logic for packet:", in)
-
-	data := make([]byte, 2)
-	pack1 := PacketOut{2, data}
-
-	out <- pack1
-}
-
-func (g *Game) respondTo1(in *PacketIn, out chan<- PacketOut) {
-	fmt.Println("game model   :::  ", "doing whatever packet 1 would do")
-}
-
 func (g *Game) respondTo120(in *PacketIn, out chan<- PacketOut) {
 	fmt.Println("recieved 120 packet")
 
 	packet120 := ParseBytesTo120(in.data)
+
+	fmt.Println(packet120)
 
 	packet121 := packet121{
 		serverPlayerState: 121,
@@ -49,9 +37,11 @@ func (g *Game) respondTo120(in *PacketIn, out chan<- PacketOut) {
 		timestamp:         0,
 	}
 
+	fmt.Println(packet121)
+
 	packetOut := PacketOut{
 		size: 22,
-		data: Parse121ToBytes(packet121),
+		data: packet121.toBytes(),
 	}
 
 	out <- packetOut
