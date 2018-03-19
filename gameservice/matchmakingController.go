@@ -31,8 +31,3 @@ func connectionToWaitingPlayer(connection *playerConnection) waitingPlayer{
 
 	return rtn
 }
-
-
-//todo:
-//add listeners to accept and send data to player connections, but
-//for the time being, we can ignore all communications on this screen

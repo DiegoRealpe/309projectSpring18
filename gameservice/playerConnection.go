@@ -12,6 +12,7 @@ type playerConnection struct {
 	packetInMutex 	packetInMutex
 	packetOut 		chan PacketOut
 	portNumber		int
+	id				int
 
 	packetLength int //if no packet is being read, packetLength should be 0
 }
@@ -20,6 +21,10 @@ type packetInMutex struct {
 	packetIn chan<- PacketIn
 	mut      sync.Mutex
 }
+
+//needs to be a tread safe type
+var nextID = 1
+var idMutex = sync.Mutex{}
 
 func MakePlayerConnection(client client, packetIn chan<- PacketIn) *playerConnection {
 
@@ -30,6 +35,7 @@ func MakePlayerConnection(client client, packetIn chan<- PacketIn) *playerConnec
 	playerConnection.client = client
 	playerConnection.packetInMutex = packetInMutex{packetIn: packetIn}
 	playerConnection.packetOut = make(chan PacketOut, 100)
+	playerConnection.assignId()
 
 	go playerConnection.startReading()
 	go playerConnection.startTransmitting()
@@ -49,7 +55,7 @@ func (pConn *playerConnection) startReading() {
 
 func (pConn *playerConnection) sendToPacketIn(data []byte){
 	packet := PacketIn{
-		playerNum:0,
+		connectionId: pConn.id,
 		size:len(data),
 		data:data,
 	}
@@ -60,6 +66,14 @@ func (pConn *playerConnection) sendToPacketIn(data []byte){
 	pConn.packetInMutex.mut.Lock()
 	pConn.packetInMutex.packetIn <- packet
 	pConn.packetInMutex.mut.Unlock()
+}
+
+//assign next available id to player
+func (pConn *playerConnection) assignId(){
+	idMutex.Lock()
+	pConn.id = nextID
+	nextID++
+	idMutex.Unlock()
 }
 
 func (pConn *playerConnection) startTransmitting() {

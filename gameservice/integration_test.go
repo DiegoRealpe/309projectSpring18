@@ -22,13 +22,16 @@ func TestMain(m *testing.M) {
 
 func TestConnectClients(t *testing.T) { //used globally for test
 
-	connectUser()
+	player0 := connectUser()
 	player1 := connectUser()
 
 	time.Sleep(100 * time.Millisecond)
 
 	player1.Write([]byte{120,0,0,0,0,0,0,0,0,152, 78, 154, 68, 152, 78, 154, 68})
 	player1.Flush()
+
+	player0.Write([]byte{120,0,0,0,0,0,0,0,0,152, 78, 154, 68, 152, 78, 154, 68})
+	player0.Flush()
 
 	time.Sleep(100 * time.Millisecond)
 

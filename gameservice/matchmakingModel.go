@@ -63,11 +63,26 @@ func (mmm *matchMakingModel) startGame(players []waitingPlayer){
 	}
 
 	gameOpts := GameOptions{numPlayers:NUMPLAYERS}
+	gameOpts.connectionIDToPlayerNumberMap = makePlayerNumberMap(players)
+
 	packetOutChannel := startPacketOutDispersionWithPlayers(players)
 	packetInChannel := makePacketInChannelForAllPlayers(players)
 
 	go runGameController(gameOpts,packetInChannel,packetOutChannel)
 	send122PacketsToPlayers(players)
+}
+
+//assigned sequentially
+func makePlayerNumberMap(players []waitingPlayer) map[int]byte {
+	m := make(map[int]byte )
+
+	for i, val := range players{
+		m[val.connection.id] = byte(i)
+	}
+
+	fmt.Println("map is",m)
+
+	return m
 }
 
 
@@ -94,6 +109,7 @@ func makePacketInChannelForAllPlayers(players []waitingPlayer) <-chan PacketIn{
 	return packetInChannel
 }
 
+//should be in line with player numbers because both were assigned sequentially from the same slice
 func send122PacketsToPlayers(players []waitingPlayer){
 	for num, player := range players{
 		send122PacketToPlayer(player,num)
@@ -106,10 +122,4 @@ func send122PacketToPlayer(player waitingPlayer,playerNum int){
 	packet.data = []byte{122,byte(playerNum)}
 
 	player.connection.packetOut <- packet
-}
-
-func startPlayersReading(players []waitingPlayer){
-	for _, val := range players{
-		go val.connection.startReading()
-	}
 }

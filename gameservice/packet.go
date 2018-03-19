@@ -1,9 +1,9 @@
 package main
 
 type PacketIn struct {
-	playerNum byte
-	size      int
-	data      []byte
+	connectionId	int
+	size      		int
+	data      		[]byte
 }
 
 type PacketOut struct {
