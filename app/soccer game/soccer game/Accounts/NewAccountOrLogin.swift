@@ -30,7 +30,7 @@ class NewAccountOrLogin: SKScene{
         //get scene subnodes
         self.back = self.childNode(withName: "Back Button")
         self.logout = self.childNode(withName: "Logout")
-        self.logOutLabel = logout?.childNode(withName: "LogoutLabel") as! SKLabelNode
+        self.logOutLabel = logout?.childNode(withName: "LogoutLabel") as? SKLabelNode
         
          isLoggedIn = AccessToken.current != nil
         

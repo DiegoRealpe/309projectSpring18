@@ -17,6 +17,7 @@
 		3A3169752037E94700DA2DCC /* ConversionUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3169742037E94700DA2DCC /* ConversionUtils.swift */; };
 		3A3169772037EC9500DA2DCC /* SocketPacketResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3169762037EC9500DA2DCC /* SocketPacketResponder.swift */; };
 		3A3A5821205FFDB700E74D82 /* ServerPlayerStatePacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3A5820205FFDB700E74D82 /* ServerPlayerStatePacket.swift */; };
+		3A3A58242060281100E74D82 /* GameProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3A58232060281100E74D82 /* GameProperties.swift */; };
 		3A5475682034BEBB0082947E /* ManagedTCPConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5475672034BEBB0082947E /* ManagedTCPConnection.swift */; };
 		3A54756C20372C230082947E /* CommunicationProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A54756B20372C230082947E /* CommunicationProperties.swift */; };
 		3A74A5FC201E6C3E00A1583F /* MainMenu.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A74A5FB201E6C3E00A1583F /* MainMenu.sks */; };
@@ -99,6 +100,7 @@
 		3A3169742037E94700DA2DCC /* ConversionUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversionUtils.swift; sourceTree = "<group>"; };
 		3A3169762037EC9500DA2DCC /* SocketPacketResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketPacketResponder.swift; sourceTree = "<group>"; };
 		3A3A5820205FFDB700E74D82 /* ServerPlayerStatePacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerPlayerStatePacket.swift; sourceTree = "<group>"; };
+		3A3A58232060281100E74D82 /* GameProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameProperties.swift; sourceTree = "<group>"; };
 		3A5475672034BEBB0082947E /* ManagedTCPConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedTCPConnection.swift; sourceTree = "<group>"; };
 		3A54756B20372C230082947E /* CommunicationProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunicationProperties.swift; sourceTree = "<group>"; };
 		3A74A5FB201E6C3E00A1583F /* MainMenu.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MainMenu.sks; sourceTree = "<group>"; };
@@ -208,6 +210,7 @@
 				4C98FBB8201E658600378614 /* GameScene.sks */,
 				3A219ECE203B7CEE00FABE0A /* Players.sks */,
 				3A119F102048A9E400063D51 /* GamePlayerInformationModel.swift */,
+				3A3A58232060281100E74D82 /* GameProperties.swift */,
 			);
 			path = "game scene";
 			sourceTree = "<group>";
@@ -426,6 +429,7 @@
 				4C98FBBF201E658600378614 /* GameViewController.swift in Sources */,
 				3A74A604201F86ED00A1583F /* SKSceneTransitionExtension.swift in Sources */,
 				3A5475682034BEBB0082947E /* ManagedTCPConnection.swift in Sources */,
+				3A3A58242060281100E74D82 /* GameProperties.swift in Sources */,
 				3A3A5821205FFDB700E74D82 /* ServerPlayerStatePacket.swift in Sources */,
 				4C98FBB7201E658600378614 /* AppDelegate.swift in Sources */,
 				3A54756C20372C230082947E /* CommunicationProperties.swift in Sources */,

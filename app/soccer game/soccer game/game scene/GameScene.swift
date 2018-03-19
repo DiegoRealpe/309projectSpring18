@@ -15,7 +15,6 @@ class GameScene: SKScene {
     
     static let maxPlayers = 2
     let movementSpeed = 100.0
-    let offScreen = CGPoint(x :10000, y :10000)
     let packetUpdateIntervalSeconds = 0.05
     let joystickRadius = 50.0
     
@@ -65,8 +64,8 @@ class GameScene: SKScene {
         
         //move player with the number passed into the scene into view
         if let playerNumber = self.userData?.value(forKey: UserDataKeys.playerNumber.rawValue) as? Int{
-            players[playerNumber].position = CGPoint(x : 100, y : -100)
             self.playerNumber = playerNumber
+            players[playerNumber].position = defaultPlayerStartingPositions[playerNumber]!
             self.addChild(players[playerNumber])
         }
         
