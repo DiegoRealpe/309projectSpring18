@@ -8,9 +8,10 @@ import (
 )
 
 type playerConnection struct {
-	client        client
-	packetInMutex packetInMutex
-	packetOut     chan PacketOut
+	client 			client
+	packetInMutex 	packetInMutex
+	packetOut 		chan PacketOut
+	portNumber		int
 
 	packetLength int //if no packet is being read, packetLength should be 0
 }
@@ -47,7 +48,11 @@ func (pConn *playerConnection) startReading() {
 }
 
 func (pConn *playerConnection) sendToPacketIn(data []byte){
-	packet := PacketIn{size:len(data),data:data}
+	packet := PacketIn{
+		playerNum:0,
+		size:len(data),
+		data:data,
+	}
 
 	fmt.Println("got",packet)
 
