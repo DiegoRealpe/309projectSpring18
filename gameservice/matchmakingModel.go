@@ -88,15 +88,23 @@ func makePlayerNumberMap(players []waitingPlayer) map[int]byte {
 
 //builds a single channel which sends to all clients
 func startPacketOutDispersionWithPlayers(players []waitingPlayer) chan<- PacketOut{
-	chanSlice := make([]chan<- PacketOut,NUMPLAYERS)
-	for i, player := range players{
-		chanSlice[i] = player.connection.packetOut
-	}
+
+	idDispersionMap := makeIDDispersionMap(players)
 
 	toDisperse := make(chan PacketOut,50)
-	go listenAndDispersePackets(chanSlice,toDisperse)
+	go listenAndDispersePackets(idDispersionMap,toDisperse)
 
 	return toDisperse
+}
+
+func makeIDDispersionMap(players []waitingPlayer) map[int]chan<- PacketOut{
+	m := make(map[int]chan<- PacketOut)
+
+	for _, val := range players {
+		m[val.connection.id] = val.connection.packetOut
+	}
+
+	return m
 }
 
 func makePacketInChannelForAllPlayers(players []waitingPlayer) <-chan PacketIn{

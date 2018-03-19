@@ -96,14 +96,6 @@ func (pConn *playerConnection) transmitPacket(out PacketOut) {
 	pConn.client.writer.Flush()
 }
 
-//to be started as a goroutine
-func listenAndDispersePackets(connectionChannels []chan<- PacketOut, toDisperse <-chan PacketOut) {
-	for packet := range toDisperse {
-		for _, connectionChannel := range connectionChannels {
-			connectionChannel <- packet
-		}
-	}
-}
 
 func (pConn *playerConnection) peekLengthIfNoCommand(){
 	if(pConn.packetLength != 0) {
@@ -116,7 +108,7 @@ func (pConn *playerConnection) tryToPeekAndSetNewPacketLength(){
 
 	if len(peeked) == 1{
 
-		packetLength := packetLengths[peeked[0]]
+		packetLength := inputPacketLengths[peeked[0]]
 
 		if packetLength != 0{
 			pConn.packetLength = packetLength
@@ -146,8 +138,6 @@ func (pConn *playerConnection) tryToReadPacket(){
 }
 
 
-
-var packetLengths = map[byte]int{
-	8 : 2,
+var inputPacketLengths = map[byte]int{
 	120 : 17,
 }

@@ -7,8 +7,9 @@ type PacketIn struct {
 }
 
 type PacketOut struct {
-	size int
-	data []byte
+	size 		int
+	data 		[]byte
+	targetIds 	[]int
 }
 
 func (p *PacketIn) parseType() byte {

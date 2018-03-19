@@ -40,13 +40,31 @@ func (g *Game) respondTo120(in *PacketIn, out chan<- PacketOut) {
 		timestamp:         0,
 	}
 
-	fmt.Println(packet121)
-
 	packetOut := PacketOut{
 		size: 22,
 		data: packet121.toBytes(),
+		targetIds: g.allConnectionIDsBut(in.connectionId),
 	}
 
 	out <- packetOut
+}
+
+func (g *Game) allConnectionIDsBut(id int) []int {
+
+	slice := make([]int,NUMPLAYERS-1)
+
+	fmt.Println("sending to",slice)
+
+	i := 0
+	for key, _ := range g.connectionIDToPlayerNumberMap {
+		if key != id{
+			slice[i] = key
+			i++
+		}
+	}
+
+	fmt.Println("sending to",slice)
+
+	return slice
 }
 
