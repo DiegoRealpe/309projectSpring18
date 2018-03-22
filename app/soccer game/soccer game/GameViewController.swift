@@ -18,8 +18,8 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
     
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!)
     {
-        print("User Logged In")
-        setGameScene(loginButton)
+        
+       // setGameScene(loginButton)
         
         
         if ((error) != nil)
@@ -34,13 +34,18 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
             // should check if specific permissions missing
             if result.grantedPermissions.contains("email")
             {
-                // Do work
+               
             }
+             setGameScene(loginButton)
+             print("User Logged In")
         }
     }
     
     func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
-        
+        let loginButton = FBSDKLoginButton()
+        loginButton.center = view.center
+        loginButton.delegate = self // Remember to set the delegate of the loginButton
+        view.addSubview(loginButton)
     }
     
     func setGameScene(_ loginButton: FBSDKLoginButton!)
