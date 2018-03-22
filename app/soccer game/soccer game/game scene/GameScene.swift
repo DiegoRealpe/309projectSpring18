@@ -254,22 +254,37 @@ class GameScene: SKScene {
     
     
     private func buildPacketTypeDict(){
-        self.packetTypeDict[121] = PacketType(dataSize: 22, handlerFunction: executePositionPacket(data:))
+        self.packetTypeDict[121] = PacketType(dataSize: 22, handlerFunction: executePlayerPositionPacket(data:))
+        self.packetTypeDict[124] = PacketType(dataSize: 21, handlerFunction: executeBallPositionPacket(data:))
     }
     
-    func executePositionPacket(data : [UInt8]){
+    func executePlayerPositionPacket(data : [UInt8]){
         guard data.count == 22 else{
-            print("executePositionPackets did not have correct data size. expected 22, was",data.count)
+            print("executePlayerPositionPackets did not have correct data size. expected 22, was",data.count)
             return
         }
         
-        print("got position packet with data:",data)
+        print("got player position packet with data:",data)
         
-        let spsm = ServerPlayerStatePacket(rawData: data)
+        let spsp = ServerPlayerStatePacket(rawData: data)
         
-        let player:SKSpriteNode = selectOrAddPlayer(playerNum : spsm.playerNumber)
+        let player:SKSpriteNode = selectOrAddPlayer(playerNum : spsp.playerNumber)
         
-        ApplyPositionPacketToPlayer(player: player, point: spsm.position, vector: spsm.velocity)
+        ApplyPositionPacketToPlayer(player: player, point: spsp.position, vector: spsp.velocity)
+    }
+    
+    func executeBallPositionPacket(data : [UInt8]){
+        guard data.count == 21 else{
+            print("executeBallPositionPackets did not have correct data size. expected 21, was",data.count)
+            return
+        }
+        
+        print("got ball position packet with data:",data)
+        
+        let sbsp = ServerBallStatePacket(rawData: data)
+        
+        self.ballNode?.position = sbsp.position
+        self.ballNode?.physicsBody?.velocity = sbsp.velocity
     }
     
     //returns player node from players whith specified index
