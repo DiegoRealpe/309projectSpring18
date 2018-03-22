@@ -19,19 +19,20 @@ class GameScene: SKScene {
     let joystickRadius = 50.0
     
     //label used for debugging, not part of final project
-    private var mockPacketLabel : SKLabelNode?
+    var mockPacketLabel : SKLabelNode?
     
-    private var backLabel : SKLabelNode?
-    private var joyStick : Joystick?
-    private var ballNode : SKSpriteNode?
-    private var managedTcpConnection : ManagedTCPConnection?
+    var backLabel : SKLabelNode?
+    var joyStick : Joystick?
+    var ballNode : SKSpriteNode?
+    var managedTcpConnection : ManagedTCPConnection?
     
     //after didMove is called players is initialized with the exact size of maxPlayers
-    private var players : [SKSpriteNode] = []
-    private var playerNumber : Int?
-    private var playerLabelRelativePosition = CGPoint(x: 0, y: 30)
+    var players : [SKSpriteNode] = []
+    var playerNumber : Int?
+    var playerLabelRelativePosition = CGPoint(x: 0, y: 30)
     
-    private var localPlayerStateWasUpdated = true
+    var localPlayerStateWasUpdated = true
+    var localBallStateWasUpdates = true
     
     var packetTypeDict : [UInt8:PacketType] = [:]
     
@@ -147,12 +148,19 @@ class GameScene: SKScene {
             if self.localPlayerStateWasUpdated {
                 let packet = self.makePlayerStatePacket(playerNumber : self.playerNumber!)
                 
-                print("sending packet, ",packet)
-                self.managedTcpConnection?.sendTCP(data: packet)
+                print("sending player packet, ",packet)
+                self.managedTcpConnection?.sendTCP(packet: packet)
                 
                 self.localPlayerStateWasUpdated = false
             }
-            
+            if self.localBallStateWasUpdates {
+                let packet = self.makeBallStatePacket()
+                
+                print("sending ball packet, ",packet)
+                self.managedTcpConnection?.sendTCP(packet: packet)
+                
+                self.localBallStateWasUpdates = false
+            }
         })
         let waitAction = SKAction.wait(forDuration: packetUpdateIntervalSeconds)
         
@@ -160,7 +168,7 @@ class GameScene: SKScene {
         return SKAction.repeatForever(sequenceAction)
     }
     
-    func makePlayerStatePacket(playerNumber : Int)-> [UInt8]
+    func makePlayerStatePacket(playerNumber : Int)-> ClientPlayerStatePacket
     {
         let chosenPlayer = self.players[playerNumber]
         let position = chosenPlayer.position
@@ -169,7 +177,18 @@ class GameScene: SKScene {
         
         let playerPacket = ClientPlayerStatePacket(xPos: Int32(position.x), yPos: Int32(position.y), xV: Int32(velocity!.dx), yV: Int32(velocity!.dy))
         
-        return playerPacket.toByteArray()
+        return playerPacket
+    }
+    
+    func makeBallStatePacket() -> ClientBallStatePacket {
+        let position = ballNode?.position
+        let velocity = ballNode?.physicsBody?.velocity
+        
+        return ClientBallStatePacket(xPos: Int32((position?.x)!), yPos: Int32((position?.y)!), xV: Int32(velocity!.dx), yV: Int32(velocity!.dy))
+    }
+    
+    func sendBallStatePacket(){
+        
     }
     
     //for individual touches
@@ -208,8 +227,7 @@ class GameScene: SKScene {
                 
                 if let tcp = self.managedTcpConnection {
                     let packet = self.makePlayerStatePacket(playerNumber : playerNum)
-                    
-                    tcp.sendTCP(data: packet)
+                    tcp.sendTCP(packet: packet)
                 }
                 
                 self.localPlayerStateWasUpdated = true

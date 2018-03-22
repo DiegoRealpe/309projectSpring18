@@ -8,7 +8,7 @@
 
 import Foundation
 
-class AbstractClientPositionVelocityPacket {
+class AbstractClientPositionVelocityPacket : SendablePacket {
     
     var xPosFloat = Int32(0)
     var yPosFloat = Int32(0)
@@ -55,3 +55,9 @@ class AbstractClientPositionVelocityPacket {
     }
     
 }
+
+
+protocol SendablePacket{
+    func toByteArray() -> [UInt8]
+}
+
