@@ -11,7 +11,7 @@
 import SpriteKit
 import GameplayKit
 
-class GameScene: SKScene {
+class GameScene: SKScene,SKPhysicsContactDelegate {
     
     static let maxPlayers = 2
     let movementSpeed = 100.0
@@ -38,10 +38,13 @@ class GameScene: SKScene {
     override func didMove(to view: SKView) {
         print("moved to game scene")
         
+        self.physicsWorld.contactDelegate = self
         configurePlayerNodes()
         self.backLabel = self.childNode(withName: "Back Label") as? SKLabelNode
         self.ballNode = self.childNode(withName: "Ball") as? SKSpriteNode
         self.mockPacketLabel = self.childNode(withName: "Mock Packet") as? SKLabelNode
+        
+        
         
         configureManagedTCPConnection()
         configurePacketResponder()
@@ -217,6 +220,15 @@ class GameScene: SKScene {
         }
         
         for t in touches { self.touchMoved(t) }
+    }
+    
+    func didBeginContact(contact: SKPhysicsContact) {
+        
+        print("contact")
+        /*if contact.bodyA.node == player || contact.bodyB.node == player
+        {
+            
+        }*/
     }
     
     
