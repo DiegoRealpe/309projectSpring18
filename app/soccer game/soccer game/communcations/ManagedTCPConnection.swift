@@ -57,6 +57,11 @@ class ManagedTCPConnection{
         self.client.send(data: data).logError()
         print("sent: \"\(data)\"")
     }
+    
+    func sendTCP(packet : SendablePacket){
+        self.sendTCP(data: packet.toByteArray())
+    }
+    
     func stop(){
         print("stopping tcp connection")
         stopRunning = true
