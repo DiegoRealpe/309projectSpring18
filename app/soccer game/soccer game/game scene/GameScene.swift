@@ -32,7 +32,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     var playerLabelRelativePosition = CGPoint(x: 0, y: 30)
     
     var localPlayerStateWasUpdated = true
-    var localBallStateWasUpdates = true
+    var localBallStateWasUpdates = true //make true when contact is detected
     
     var packetTypeDict : [UInt8:PacketType] = [:]
     
@@ -49,6 +49,17 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         
         configureManagedTCPConnection()
         configurePacketResponder()
+    }
+    var contactCounter = 0
+    func didBegin(_ contact: SKPhysicsContact) {
+        
+        print("contact ",  contactCounter)
+        contactCounter += 1
+        localBallStateWasUpdates = true
+        /*if contact.bodyA.node == player || contact.bodyB.node == player
+         {
+         
+         }*/
     }
     
     //sets players and player num to values according to the user data passed into the scene
@@ -240,14 +251,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         for t in touches { self.touchMoved(t) }
     }
     
-    func didBeginContact(contact: SKPhysicsContact) {
-        
-        print("contact")
-        /*if contact.bodyA.node == player || contact.bodyB.node == player
-        {
-            
-        }*/
-    }
+   
     
     
     
