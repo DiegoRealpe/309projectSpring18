@@ -18,7 +18,7 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
     
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!)
     {
-        print("User Logged In")
+        
        // setGameScene(loginButton)
         
         
@@ -37,11 +37,15 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
                
             }
              setGameScene(loginButton)
+             print("User Logged In")
         }
     }
     
     func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
-        
+        let loginButton = FBSDKLoginButton()
+        loginButton.center = view.center
+        loginButton.delegate = self // Remember to set the delegate of the loginButton
+        view.addSubview(loginButton)
     }
     
     func setGameScene(_ loginButton: FBSDKLoginButton!)

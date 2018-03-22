@@ -70,8 +70,7 @@ class NewAccountOrLogin: SKScene{
                     print("Logged out")
                     
                     logOutLabel?.text = "Login"
-                    
-                    print(AccessToken.current)
+                
                 }
                 else
                 {
