@@ -81,11 +81,9 @@ class MatchMakingScene: SKScene {
             print("did not recieve correct player code size, expected 2, was",data.count)
             return
         }
-//        guard (0..<GameScene.maxPlayers).contains(Int(data[0])) else{
-//            print("recieved invalid player number")
-//            return
-//        }
         
+        print("assigned player number :",data[1])
+
         transitionToGameSceneWithData(spr : spr,playerNum: data[1])
     }
     

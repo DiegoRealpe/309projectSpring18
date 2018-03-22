@@ -15,7 +15,6 @@ class GameScene: SKScene {
     
     static let maxPlayers = 2
     let movementSpeed = 100.0
-    let offScreen = CGPoint(x :10000, y :10000)
     let packetUpdateIntervalSeconds = 0.05
     let joystickRadius = 50.0
     
@@ -30,6 +29,7 @@ class GameScene: SKScene {
     //after didMove is called players is initialized with the exact size of maxPlayers
     private var players : [SKSpriteNode] = []
     private var playerNumber : Int?
+    private var playerLabelRelativePosition = CGPoint(x: 0, y: 30)
     
     private var localPlayerStateWasUpdated = true
     
@@ -65,11 +65,25 @@ class GameScene: SKScene {
         
         //move player with the number passed into the scene into view
         if let playerNumber = self.userData?.value(forKey: UserDataKeys.playerNumber.rawValue) as? Int{
-            players[playerNumber].position = CGPoint(x : 100, y : -100)
             self.playerNumber = playerNumber
+            players[playerNumber].position = defaultPlayerStartingPositions[playerNumber]!
             self.addChild(players[playerNumber])
         }
         
+        addLabelToUserPlayer()
+        
+    }
+    
+    private func addLabelToUserPlayer(){
+        guard let modelLabel = SKScene(fileNamed : "Players")?.childNode(withName : "Player Label") as? SKLabelNode else{
+            return
+        }
+        let copiedLabel = modelLabel.copy() as! SKLabelNode
+        
+        let player = selectOrAddPlayer(playerNum : self.playerNumber!)
+        copiedLabel.position = self.playerLabelRelativePosition
+        
+        player.addChild(copiedLabel)
     }
     
     //maps funtions to packet numbers to be used by the responder in a scene-specific configuration
@@ -111,7 +125,7 @@ class GameScene: SKScene {
             let spr = SocketPacketResponder()
             spr.packetTypeDict = self.packetTypeDict
                 
-            let bytes : [UInt8] = [121,1,0,0,0,0,0,0,0,0,152, 78, 154, 68,152, 78, 154, 68]
+            let bytes : [UInt8] = [121,1,0,0,0,0,0,0,0,0,152, 78, 154, 68, 152, 78, 154, 68, 0, 0, 0, 0]
             spr.respond(data: bytes)
             
         }
@@ -222,7 +236,7 @@ class GameScene: SKScene {
     
     
     private func buildPacketTypeDict(){
-        self.packetTypeDict[121] = PacketType(dataSize: 18, handlerFunction: executePositionPacket(data:))
+        self.packetTypeDict[121] = PacketType(dataSize: 22, handlerFunction: executePositionPacket(data:))
     }
     
     func executePositionPacket(data : [UInt8]){
@@ -233,23 +247,11 @@ class GameScene: SKScene {
         
         print("got position packet with data:",data)
         
-        let playerNum = data[1]
-        let xPosBytes = Array(data[2...5])
-        let yPosBytes = Array(data[6...9])
-        let xVelBytes = Array(data[10...13])
-        let yVelBytes = Array(data[14...17])
+        let spsm = ServerPlayerStatePacket(rawData: data)
         
-        let xPosFloat = convertToFloat(xPosBytes).toCGFloat()
-        let yPosFloat = convertToFloat(yPosBytes).toCGFloat()
-        let xVelFloat = convertToFloat(xVelBytes).toCGFloat()
-        let yVelFloat = convertToFloat(yVelBytes).toCGFloat()
+        let player:SKSpriteNode = selectOrAddPlayer(playerNum : spsm.playerNumber)
         
-        let position = CGPoint (x : xPosFloat, y: yPosFloat)
-        let velocity = CGVector(dx: xVelFloat, dy: yVelFloat)
-        
-        let player:SKSpriteNode = selectOrAddPlayer(playerNum : Int(playerNum))
-        
-        ApplyPositionPacketToPlayer(player: player, point: position, vector: velocity)
+        ApplyPositionPacketToPlayer(player: player, point: spsm.position, vector: spsm.velocity)
     }
     
     //returns player node from players whith specified index
