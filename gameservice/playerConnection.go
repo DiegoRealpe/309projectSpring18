@@ -140,4 +140,5 @@ func (pConn *playerConnection) tryToReadPacket(){
 
 var inputPacketLengths = map[byte]int{
 	120 : 17,
+	123 : 17,
 }
