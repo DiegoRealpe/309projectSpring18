@@ -37,7 +37,7 @@ func main() {
 func listenForConnections(connPasser <-chan net.Conn, matchMakingController matchMakingController) {
 	fmt.Println("listening for connections")
 
-	currentClientNumber := 1
+	currentClientNumber := 0
 
 	for conn := range connPasser {
 		fmt.Println("starting handling for a connection")

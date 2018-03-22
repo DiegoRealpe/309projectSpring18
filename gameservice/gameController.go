@@ -33,6 +33,7 @@ func (controller *gameController) buildPacketMap() {
 	packetMap := map[byte]func(*PacketIn, chan<- PacketOut){}
 
 	packetMap[120] = controller.g.respondTo120
+	packetMap[123] = controller.g.respondTo123
 
 	controller.packetRouterMap = packetMap
 }

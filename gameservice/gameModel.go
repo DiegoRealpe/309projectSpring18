@@ -49,6 +49,29 @@ func (g *Game) respondTo120(in *PacketIn, out chan<- PacketOut) {
 	out <- packetOut
 }
 
+func (g *Game) respondTo123(in *PacketIn, out chan<- PacketOut) {
+	fmt.Println("recieved 123 packet")
+
+
+	packet123 := ParseBytesTo123(in.data)
+
+	packet124 := packet124{
+		xPosition:         packet123.xPosition,
+		yPosition:         packet123.yPosition,
+		xVelocity:         packet123.xVelocity,
+		yVelocity:         packet123.yVelocity,
+		timestamp:         0,
+	}
+
+	packetOut := PacketOut{
+		size: 22,
+		data: packet124.toBytes(),
+		targetIds: g.allConnectionIDsBut(in.connectionId),
+	}
+
+	out <- packetOut
+}
+
 func (g *Game) allConnectionIDsBut(id int) []int {
 
 	slice := make([]int,NUMPLAYERS-1)

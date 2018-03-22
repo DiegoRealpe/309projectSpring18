@@ -26,6 +26,23 @@ type packet121 struct {
 	timestamp         float32
 }
 
+//from the client to update the ball packets
+type packet123 struct {
+	xPosition         float32
+	yPosition         float32
+	xVelocity         float32
+	yVelocity         float32
+}
+
+type packet124 struct {
+	xPosition         float32
+	yPosition         float32
+	xVelocity         float32
+	yVelocity         float32
+	timestamp         float32
+}
+
+
 //ParseBytesTo120 Takes array of bytes and parses to a clientpacket struct
 func ParseBytesTo120(rawData []byte) packet120 {
 	if len(rawData) != 17 {
@@ -69,6 +86,48 @@ func (packet *packet121) toBytes() []byte {
 
 	return rawData
 }
+
+func (packet *packet124) toBytes() []byte {
+	rawData := make([]byte, 21)
+
+	rawData[0] = byte(124)
+
+	xpos := Float32toBytes(packet.xPosition)
+	copy(rawData[1:5], xpos)
+
+	ypos := Float32toBytes(packet.yPosition)
+	copy(rawData[5:9], ypos)
+
+	xvel := Float32toBytes(packet.xVelocity)
+	copy(rawData[9:13], xvel)
+
+	yvel := Float32toBytes(packet.yVelocity)
+	copy(rawData[13:17], yvel)
+
+	time := Float32toBytes(packet.timestamp)
+	copy(rawData[17:21], time)
+
+	return rawData
+}
+
+func ParseBytesTo123(rawData []byte) packet123 {
+	if len(rawData) != 17 {
+		panic(rawData)
+	}
+
+	xPosByte := rawData[1:5]
+	yPosByte := rawData[5:9]
+	xVelByte := rawData[9:13]
+	yVelByte := rawData[13:17]
+	resultPacket := packet123{
+		xPosition:         BytestoFloat32(xPosByte),
+		yPosition:         BytestoFloat32(yPosByte),
+		xVelocity:         BytestoFloat32(xVelByte),
+		yVelocity:         BytestoFloat32(yVelByte),
+	}
+	return resultPacket
+}
+
 
 //BytestoFloat32 Turns only a 4 byte slice into a float32 primitive
 func BytestoFloat32(input []byte) float32 {

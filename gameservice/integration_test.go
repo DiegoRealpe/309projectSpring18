@@ -22,6 +22,8 @@ func TestMain(m *testing.M) {
 
 func TestConnectClients(t *testing.T) { //used globally for test
 
+	t.Skip()
+
 	player0 := connectUser()
 	player1 := connectUser()
 

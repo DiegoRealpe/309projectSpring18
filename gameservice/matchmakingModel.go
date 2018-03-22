@@ -4,6 +4,8 @@ import (
 	"fmt"
 )
 
+//long lived struct that should always be its own goroutine, it is initialized as the entry point for new connections and, when
+//pairing is successful launches a game controller as a goroutine and sets the player connection to send packets there instead.
 type matchMakingModel struct {
 	waitingPlayers []waitingPlayer //should only be modified by pairing routine
 	waitingPlayerChan chan waitingPlayer
@@ -41,7 +43,7 @@ func (mmm *matchMakingModel) tryToPair(){
 
 		//split waiting players into a slice of players joining the game and a slice of those not
 		gamePlayers := mmm.waitingPlayers[0:NUMPLAYERS]
-		mmm.waitingPlayers = mmm.waitingPlayers[2:]
+		mmm.waitingPlayers = mmm.waitingPlayers[NUMPLAYERS:]
 
 		mmm.startGame(gamePlayers)
 	}
