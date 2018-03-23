@@ -24,14 +24,12 @@ class AbstractClientPositionVelocityPacket : SendablePacket {
         
     }
     
-    
+    //just sends the position bytes
     func toByteArray() -> [UInt8]{
         
         
         var array = [UInt8]()
-        array.reserveCapacity(18)
-        
-        array.append(120)
+        array.reserveCapacity(16)
         
         //xPos stuff
         let xPos = convertToUInt8(Float(xPosFloat))

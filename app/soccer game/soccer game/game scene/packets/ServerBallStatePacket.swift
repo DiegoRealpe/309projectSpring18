@@ -10,4 +10,10 @@ import Foundation
 
 class ServerBallStatePacket : AbstractServerPositionVelocityPacket {
     
+    override init(rawData: [UInt8]){
+    
+        //pass position-velocity
+        super.init(rawData: Array(rawData[1...16]) )
+    }
+    
 }

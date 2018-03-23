@@ -42,12 +42,13 @@ class SocketPacketResponder{
                 break
             }
             
-            let data = byteQueue.deque(ammount: bytesForPacket)
-            packetType.run(data: data)
+            let packetData = byteQueue.deque(ammount: bytesForPacket)
+            packetType.run(data: packetData)
             
             //reset controls if more packet data is avaible
             if byteQueue.size > 0{
-                setPacketTypeOptions(packetCode: data[0])
+                self.packetCode = 0
+                setPacketTypeOptions(packetCode: byteQueue.peek1())
             }else{
                 resetPacketOptions()
             }

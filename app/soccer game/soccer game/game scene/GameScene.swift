@@ -11,7 +11,7 @@
 import SpriteKit
 import GameplayKit
 
-class GameScene: SKScene,SKPhysicsContactDelegate {
+class GameScene: SKScene , SKPhysicsContactDelegate {
     
     static let maxPlayers = 2
     let movementSpeed = 100.0
@@ -49,6 +49,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
         
         configureManagedTCPConnection()
         configurePacketResponder()
+        
     }
     var contactCounter = 0
     func didBegin(_ contact: SKPhysicsContact) {
@@ -140,7 +141,7 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             let spr = SocketPacketResponder()
             spr.packetTypeDict = self.packetTypeDict
                 
-            let bytes : [UInt8] = [121,1,0,0,0,0,0,0,0,0,152, 78, 154, 68, 152, 78, 154, 68, 0, 0, 0, 0]
+            let bytes : [UInt8] = [124,0,0,0,0,0,0,0,0,152, 78, 154, 68, 152, 78, 154, 68,0,0,0,0]
             spr.respond(data: bytes)
             
         }
@@ -162,15 +163,15 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
             if self.localPlayerStateWasUpdated {
                 let packet = self.makePlayerStatePacket(playerNumber : self.playerNumber!)
                 
-                print("sending player packet, ",packet)
+                print("sending player packet, ",packet.toByteArray())
                 self.managedTcpConnection?.sendTCP(packet: packet)
                 
                 self.localPlayerStateWasUpdated = false
             }
-            if self.localBallStateWasUpdates {
+            if self.localBallStateWasUpdates, self.ballNode != nil {
                 let packet = self.makeBallStatePacket()
                 
-                print("sending ball packet, ",packet)
+                print("sending ball packet, ",packet.toByteArray())
                 self.managedTcpConnection?.sendTCP(packet: packet)
                 
                 self.localBallStateWasUpdates = false
@@ -195,10 +196,16 @@ class GameScene: SKScene,SKPhysicsContactDelegate {
     }
     
     func makeBallStatePacket() -> ClientBallStatePacket {
-        let position = ballNode?.position
-        let velocity = ballNode?.physicsBody?.velocity
         
-        return ClientBallStatePacket(xPos: Int32((position?.x)!), yPos: Int32((position?.y)!), xV: Int32(velocity!.dx), yV: Int32(velocity!.dy))
+        let position = ballNode!.position
+        let velocity = ballNode!.physicsBody!.velocity
+        
+        print(Int32(position.x))
+        print(Int32(position.y))
+        print(Int32(velocity.dx))
+        print(Int32(velocity.dy))
+        
+        return ClientBallStatePacket(xPos: Int32(position.x), yPos: Int32(position.y), xV: Int32(velocity.dx), yV: Int32(velocity.dy))
     }
     
     func sendBallStatePacket(){

@@ -16,6 +16,10 @@ class PacketByteQueue{
     private var first : Node?
     private var last : Node?
     
+    func peek1() -> UInt8 {
+        return first!.value
+    }
+    
     func deque(ammount : Int) -> [UInt8]{
         guard ammount <= size else{
             return []
