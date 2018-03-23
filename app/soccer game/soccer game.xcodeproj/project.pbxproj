@@ -24,6 +24,7 @@
 		3A3A582C2063238500E74D82 /* ServerBallStatePacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3A582B2063238500E74D82 /* ServerBallStatePacket.swift */; };
 		3A5475682034BEBB0082947E /* ManagedTCPConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5475672034BEBB0082947E /* ManagedTCPConnection.swift */; };
 		3A54756C20372C230082947E /* CommunicationProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A54756B20372C230082947E /* CommunicationProperties.swift */; };
+		3A73DC1E20655B410029E300 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A73DC1D20655B400029E300 /* GameScene.sks */; };
 		3A74A5FC201E6C3E00A1583F /* MainMenu.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A74A5FB201E6C3E00A1583F /* MainMenu.sks */; };
 		3A74A5FE201E6FDB00A1583F /* MainMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A74A5FD201E6FDB00A1583F /* MainMenu.swift */; };
 		3A74A600201F7E1900A1583F /* MatchMakingScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A74A5FF201F7E1900A1583F /* MatchMakingScene.sks */; };
@@ -51,7 +52,6 @@
 		4C45B87D2045C37E00F717B7 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C45B86E2045C37C00F717B7 /* FBSDKCoreKit.framework */; };
 		4C45B87E2045C37E00F717B7 /* FBSDKCoreKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4C45B86E2045C37C00F717B7 /* FBSDKCoreKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4C98FBB7201E658600378614 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C98FBB6201E658600378614 /* AppDelegate.swift */; };
-		4C98FBB9201E658600378614 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 4C98FBB8201E658600378614 /* GameScene.sks */; };
 		4C98FBBD201E658600378614 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C98FBBC201E658600378614 /* GameScene.swift */; };
 		4C98FBBF201E658600378614 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C98FBBE201E658600378614 /* GameViewController.swift */; };
 		4C98FBC2201E658600378614 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C98FBC0201E658600378614 /* Main.storyboard */; };
@@ -111,6 +111,7 @@
 		3A3A582B2063238500E74D82 /* ServerBallStatePacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerBallStatePacket.swift; sourceTree = "<group>"; };
 		3A5475672034BEBB0082947E /* ManagedTCPConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedTCPConnection.swift; sourceTree = "<group>"; };
 		3A54756B20372C230082947E /* CommunicationProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunicationProperties.swift; sourceTree = "<group>"; };
+		3A73DC1D20655B400029E300 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
 		3A74A5FB201E6C3E00A1583F /* MainMenu.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MainMenu.sks; sourceTree = "<group>"; };
 		3A74A5FD201E6FDB00A1583F /* MainMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenu.swift; sourceTree = "<group>"; };
 		3A74A5FF201F7E1900A1583F /* MatchMakingScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MatchMakingScene.sks; sourceTree = "<group>"; };
@@ -131,7 +132,6 @@
 		4C45B86E2045C37C00F717B7 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		4C98FBB3201E658600378614 /* soccer game.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "soccer game.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C98FBB6201E658600378614 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		4C98FBB8201E658600378614 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
 		4C98FBBC201E658600378614 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		4C98FBBE201E658600378614 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		4C98FBC1201E658600378614 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -216,10 +216,10 @@
 		3A74A609201FB92500A1583F /* game scene */ = {
 			isa = PBXGroup;
 			children = (
+				3A73DC1D20655B400029E300 /* GameScene.sks */,
 				3A3A5822205FFDDC00E74D82 /* packets */,
 				4C98FBBC201E658600378614 /* GameScene.swift */,
 				3AB377DD2023B5980019E73E /* Joystick.swift */,
-				4C98FBB8201E658600378614 /* GameScene.sks */,
 				3A219ECE203B7CEE00FABE0A /* Players.sks */,
 				3A119F102048A9E400063D51 /* GamePlayerInformationModel.swift */,
 				3A3A58232060281100E74D82 /* GameProperties.swift */,
@@ -411,9 +411,9 @@
 				4C98FBC2201E658600378614 /* Main.storyboard in Resources */,
 				3A31696E2037505900DA2DCC /* NewAccountOrLogin.sks in Resources */,
 				3A74A600201F7E1900A1583F /* MatchMakingScene.sks in Resources */,
-				4C98FBB9201E658600378614 /* GameScene.sks in Resources */,
 				4C98FBC4201E658700378614 /* Assets.xcassets in Resources */,
 				3ADFD62D202E265100AE586D /* CommTestScreen.sks in Resources */,
+				3A73DC1E20655B410029E300 /* GameScene.sks in Resources */,
 				4C98FBC7201E658700378614 /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
