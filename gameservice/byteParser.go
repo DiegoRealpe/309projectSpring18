@@ -42,6 +42,10 @@ type packet124 struct {
 	timestamp         float32
 }
 
+type packet125 struct {
+	playerNumber			uint8
+}
+
 
 //ParseBytesTo120 Takes array of bytes and parses to a clientpacket struct
 func ParseBytesTo120(rawData []byte) packet120 {
@@ -128,6 +132,18 @@ func ParseBytesTo123(rawData []byte) packet123 {
 	return resultPacket
 }
 
+func ParseBytesTo125(rawData []byte) packet125{
+	if len(rawData) != 2 {
+		panic(rawData)
+	}
+
+	playerNumberByte = rawData[1]
+
+	resultPacket := packet125{
+		playerNumber:			uint8(playerNumberByte)
+	}
+	return resultPacket
+}
 
 //BytestoFloat32 Turns only a 4 byte slice into a float32 primitive
 func BytestoFloat32(input []byte) float32 {
