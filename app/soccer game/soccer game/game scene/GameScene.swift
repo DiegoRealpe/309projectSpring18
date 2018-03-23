@@ -26,6 +26,9 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     var ballNode : SKSpriteNode?
     var managedTcpConnection : ManagedTCPConnection?
     
+    var northBound : SKSpriteNode?
+   
+    
     //after didMove is called players is initialized with the exact size of maxPlayers
     var players : [SKSpriteNode] = []
     var playerNumber : Int?
@@ -36,6 +39,10 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     
     var packetTypeDict : [UInt8:PacketType] = [:]
     
+    let boundsCategory:UInt32 = 0b1
+    let playerCategory:UInt32 = 0b1 << 1
+    let ballCategory:UInt32 = 0b1 << 2;
+    
     override func didMove(to view: SKView) {
         print("moved to game scene")
         
@@ -43,25 +50,52 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         configurePlayerNodes()
         self.backLabel = self.childNode(withName: "Back Label") as? SKLabelNode
         self.ballNode = self.childNode(withName: "Ball") as? SKSpriteNode
+        self.ballNode?.physicsBody?.categoryBitMask = ballCategory
+        self.ballNode?.physicsBody?.contactTestBitMask = playerCategory //add more later maybe, if we need to know other contacts
+        
+        self.northBound = self.childNode(withName: "North Bound") as? SKSpriteNode
+        self.northBound?.physicsBody?.categoryBitMask = boundsCategory
+        self.northBound?.physicsBody?.contactTestBitMask = ballCategory
+        
+        //give all children of the north bounds(all the bounds) the same physics category
+        for child in (northBound?.children)!
+        {
+            if let bound = child as? SKNode
+            {
+                bound.physicsBody?.categoryBitMask = boundsCategory
+                bound.physicsBody?.contactTestBitMask = ballCategory
+            }
+        }
         self.mockPacketLabel = self.childNode(withName: "Mock Packet") as? SKLabelNode
-        
-        
         
         configureManagedTCPConnection()
         configurePacketResponder()
         
     }
-    var contactCounter = 0
+    
+    var counter = 0
     func didBegin(_ contact: SKPhysicsContact) {
+        let firstCategory:UInt32 = contact.bodyA.categoryBitMask//know what category this object is in
+        let secondCategory:UInt32 = contact.bodyB.categoryBitMask
         
-        print("contact ",  contactCounter)
-        contactCounter += 1
-        localBallStateWasUpdates = true
-        /*if contact.bodyA.node == player || contact.bodyB.node == player
-         {
-         
-         }*/
+        if(firstCategory == ballCategory || secondCategory == ballCategory)//we know one of the objects is the ball
+        {
+            //get node that isnt the ball
+            let otherNode:SKNode = (firstCategory == ballCategory) ? contact.bodyB.node! : contact.bodyA.node!
+            ballDidCollide(with: otherNode)
+        }
+        
     }
+    func ballDidCollide(with other:SKNode)
+    {
+        let otherCategory = other.physicsBody?.categoryBitMask
+        if (otherCategory == boundsCategory)//could add more later to see if ball/player collide
+        {
+            print("Ball Hit Bounds")
+            localBallStateWasUpdates = true
+        }
+    }
+    
     
     //sets players and player num to values according to the user data passed into the scene
     private func configurePlayerNodes(){
@@ -69,7 +103,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         guard let modelPlayer = SKScene(fileNamed : "Players")?.childNode(withName : "Player Node") as? SKSpriteNode else{
             return
         }
-        
+        modelPlayer.physicsBody?.categoryBitMask = playerCategory
         //set players to correct length with placeholders
         self.players = [SKSpriteNode](repeating : SKSpriteNode(), count: GameScene.maxPlayers)
         
@@ -77,6 +111,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         for i in 0..<GameScene.maxPlayers {
             players[i] = modelPlayer.copy() as! SKSpriteNode
             players[i].physicsBody = modelPlayer.physicsBody?.copy() as? SKPhysicsBody
+            
         }
         
         //move player with the number passed into the scene into view

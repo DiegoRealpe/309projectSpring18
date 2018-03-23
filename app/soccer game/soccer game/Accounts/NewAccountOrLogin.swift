@@ -22,80 +22,45 @@ class NewAccountOrLogin: SKScene{
     var viewController: UIViewController?
     var logOutLabel: SKLabelNode?
     var isLoggedIn = AccessToken.current != nil
-    
+    var loginButton = LoginButton(readPermissions: [ .publicProfile ])
     
     override func didMove(to view: SKView) {
         print("got to accounts")
         
         //get scene subnodes
         self.back = self.childNode(withName: "Back Button")
-        self.logout = self.childNode(withName: "Logout")
-        self.logOutLabel = logout?.childNode(withName: "LogoutLabel") as? SKLabelNode
-        
-         isLoggedIn = AccessToken.current != nil
-        
-        if(isLoggedIn)
-        {
-            logOutLabel?.text = "Logout"
-        }
-        else
-        {
-            logOutLabel?.text = "Login"
-        }
-        
-       print(isLoggedIn)
-    
         
         
+     
+        loginButton.center = view.center
+        
+        view.addSubview(loginButton)
         
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
+    {
         
         
         //if necesarry nodes and one touch exist
-        if let t = touches.first ,let back = self.back, let logout = self.logout{
+        if let t = touches.first ,let back = self.back
+        {
             let point = t.location(in: self)
             
             //see if touch contains first
-            if (back.contains(point)){
-                self.moveToScene(.mainMenu)
-            }
-            else if (logout.contains(point))
+            if (back.contains(point))
             {
-                if(isLoggedIn)//if we're logged in and want to logout
-                {
-                    let loginManager = LoginManager()
-                    loginManager.logOut()
-                    print("Logged out")
-                    
-                    logOutLabel?.text = "Login"
-                
-                }
-                else
-                {
-                 /*   let fbLoginManager : FBSDKLoginManager = FBSDKLoginManager()
-                    fbLoginManager.logIn(withReadPermissions: ["email"], from: self.viewController) { (result, error) -> Void in
-                        if (error == nil){
-                            let fbloginresult : FBSDKLoginManagerLoginResult = result!
-                            if(fbloginresult.grantedPermissions.contains("email"))
-                            {
-                                
-                            }
-                        }
-                    }
-                    */
-                    
-                }
-                
-                
-                
-                
-                
+                self.moveToScene(.mainMenu)
+                loginButton.removeFromSuperview()
             }
+          
+                
+                
+    
         }
-        
     }
+        
+    
     
     func fadeInLabel(label : SKLabelNode?){
         if let nonOptLabel = label{
@@ -104,11 +69,6 @@ class NewAccountOrLogin: SKScene{
         }
     }
     
-    func goToLogin(){
-        var vc: UIViewController = UIViewController()
-        vc = self.view!.window!.rootViewController!
-        vc.performSegue(withIdentifier: "", sender: vc)
-    }
 
     
 }
