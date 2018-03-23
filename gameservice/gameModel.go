@@ -64,7 +64,7 @@ func (g *Game) respondTo123(in *PacketIn, out chan<- PacketOut) {
 	}
 
 	packetOut := PacketOut{
-		size: 22,
+		size: 21,
 		data: packet124.toBytes(),
 		targetIds: g.allConnectionIDsBut(in.connectionId),
 	}
