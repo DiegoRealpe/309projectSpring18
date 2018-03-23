@@ -94,6 +94,11 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
             print("Ball Hit Bounds")
             localBallStateWasUpdates = true
         }
+        else if(otherCategory == playerCategory)
+        {
+            print("Player hit ball")
+            localBallStateWasUpdates = true
+        }
     }
     
     
@@ -104,6 +109,8 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
             return
         }
         modelPlayer.physicsBody?.categoryBitMask = playerCategory
+        
+        modelPlayer.physicsBody?.contactTestBitMask = ballCategory
         //set players to correct length with placeholders
         self.players = [SKSpriteNode](repeating : SKSpriteNode(), count: GameScene.maxPlayers)
         
