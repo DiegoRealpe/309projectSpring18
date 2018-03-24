@@ -137,10 +137,10 @@ func ParseBytesTo125(rawData []byte) packet125{
 		panic(rawData)
 	}
 
-	playerNumberByte = rawData[1]
+	playerNumberByte := rawData[1]
 
 	resultPacket := packet125{
-		playerNumber:			uint8(playerNumberByte)
+		playerNumber:			uint8(playerNumberByte),
 	}
 	return resultPacket
 }
