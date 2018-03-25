@@ -47,6 +47,8 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     let boundsCategory:UInt32 = 0b1
     let playerCategory:UInt32 = 0b1 << 1
     let ballCategory:UInt32 = 0b1 << 2;
+    let leftGoalCategory:UInt32 = 0b1 << 3;
+    let rightGoalCategory:UInt32 = 0b1 << 4;
     
     override func didMove(to view: SKView) {
         print("moved to game scene")
@@ -99,6 +101,11 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
             print("Ball Hit Bounds")
             localBallStateWasUpdates = true
         }
+        else if(otherCategory == playerCategory)
+        {
+            print("Player hit ball")
+            localBallStateWasUpdates = true
+        }
     }
     
     
@@ -109,6 +116,11 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
             return
         }
         modelPlayer.physicsBody?.categoryBitMask = playerCategory
+        
+        modelPlayer.physicsBody?.contactTestBitMask = ballCategory
+        
+        
+        
         //set players to correct length with placeholders
         self.players = [SKSpriteNode](repeating : SKSpriteNode(), count: GameScene.maxPlayers)
         
