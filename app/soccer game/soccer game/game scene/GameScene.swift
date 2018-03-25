@@ -27,6 +27,11 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     var managedTcpConnection : ManagedTCPConnection?
     
     var northBound : SKSpriteNode?
+    
+    
+    let forceUpdateWaits = 20
+    var waitsSinceLastPlayerUpdate = 0
+    var waitsSinceLastBallUpdate = 0
    
     
     //after didMove is called players is initialized with the exact size of maxPlayers
@@ -195,21 +200,24 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     func makeUpdateAndSendSKAction() -> SKAction {
         let packetAction = SKAction.run({
             
-            if self.localPlayerStateWasUpdated {
+            if self.localPlayerStateWasUpdated || self.waitsSinceLastPlayerUpdate >= self.forceUpdateWaits  {
                 let packet = self.makePlayerStatePacket(playerNumber : self.playerNumber!)
                 
                 print("sending player packet, ",packet.toByteArray())
                 self.managedTcpConnection?.sendTCP(packet: packet)
                 
                 self.localPlayerStateWasUpdated = false
+                
+                self.waitsSinceLastPlayerUpdate = 0
             }
-            if self.localBallStateWasUpdates, self.ballNode != nil {
+            if (self.localBallStateWasUpdates && self.ballNode != nil) || self.waitsSinceLastBallUpdate >= self.forceUpdateWaits {
                 let packet = self.makeBallStatePacket()
                 
                 print("sending ball packet, ",packet.toByteArray())
                 self.managedTcpConnection?.sendTCP(packet: packet)
                 
                 self.localBallStateWasUpdates = false
+                self.waitsSinceLastBallUpdate = 0
             }
         })
         let waitAction = SKAction.wait(forDuration: packetUpdateIntervalSeconds)
