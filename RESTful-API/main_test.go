@@ -140,6 +140,23 @@ func TestDeleteUser(t *testing.T) {
 	checkResponseCode(t, http.StatusNotFound, response.Code)
 }
 
+func TestRegisterUser(t *testing.T) {
+	testApp = App{}
+	testApp.Initialize()
+
+	clearTable()
+	addUsers(1)
+
+	req, _ := http.NewRequest("GET", "/player/register", nil)
+	req.Header.Set("FacebookToken", testUserToken)
+	response := executeRequest(req)
+	checkResponseCode(t, http.StatusCreated, response.Code)
+	var m map[string]string
+	json.Unmarshal(response.Body.Bytes(), &m)
+	fmt.Printf(m["error"])
+	fmt.Println("")
+}
+
 //to get a new token login to facebook and get one from one of our test user
 const testUserToken = "EAACqvTZC1964BAIDRN0RFpOZBjncAJh2NILVvzX8OFG2eYQFDbbnYaZCd1uClpVZC3mciSVbJhaWw6aaUXMVwV6eDdrLuu6XYkndOaQmXFZAvumuJmeMKh5DANexeYVhv9dCZB10FG32S5Q5192ZBxeoms0lSl3B32DHiGG5MTygOeBDDwfI5pkKWApoIu39nkzVZBUgfDeXwigPt9ZCHo5VqWgWxk41rp8OWy7kjRm14VAZDZD"
 
