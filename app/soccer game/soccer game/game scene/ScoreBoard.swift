@@ -16,25 +16,25 @@ class ScoreBoard{
     
     var redTeamScore:Int32
     var blueTeamScore:Int32
-    var redTeam : SKLabelNode?
-    var blueTeam : SKLabelNode?
+    var redTeamLabel : SKLabelNode?
+    var blueTeamLabel : SKLabelNode?
     
     init(redTeamLabel : SKLabelNode, blueTeamLabel: SKLabelNode)
     {
         redTeamScore = 0
         blueTeamScore = 0
-        redTeam = redTeamLabel
-        blueTeam = blueTeamLabel
+        self.redTeamLabel = redTeamLabel
+        self.blueTeamLabel = blueTeamLabel
     }
     func redTeamScored()
     {
         redTeamScore += 1
-        redTeam?.text = String(redTeamScore)
+        redTeamLabel?.text = String(redTeamScore)
     }
     func blueTeamScored()
     {
         blueTeamScore += 1
-        blueTeam?.text = String(blueTeamScore)
+        blueTeamLabel?.text = String(blueTeamScore)
     }
     
     
