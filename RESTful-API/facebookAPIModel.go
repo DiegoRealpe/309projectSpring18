@@ -43,7 +43,7 @@ const fbApifields = "fields=id,name,email"
 func getFBUser(accesstoken string) AppUser {
 
 	fbApiUrl := makeFBApiGetUrl(accesstoken)
-	fmt.Println(fbApiUrl)
+	//fmt.Println(fbApiUrl) dont print non errors
 
 	response, error := http.Get(fbApiUrl)
 	if error != nil {

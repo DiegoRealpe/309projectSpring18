@@ -167,7 +167,7 @@ func QueryCreateFBData(db *sql.DB, u *AppUser) error {
 //QuerySetToken creates a new entry on the applicationToken table
 //giving the set ID a corresponding appToken
 func QuerySetToken(db *sql.DB, ID string, appToken string) error {
-	request := fmt.Sprintf(`INSERT INTO applicationToken (applicationToken, playerID)
+	request := fmt.Sprintf(`INSERT INTO TokenTable (applicationToken, playerID)
 	VALUES ('%s', '%s')`, appToken, ID)
 	result, err := db.Exec(request)
 	if err != nil {

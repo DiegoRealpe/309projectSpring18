@@ -45,7 +45,7 @@ func TestGetNonExistentUser(t *testing.T) {
 	checkResponseCode(t, http.StatusNotFound, response.Code)
 	var m map[string]string
 	json.Unmarshal(response.Body.Bytes(), &m)
-	if m["error"] != "User not found" {
+	if m["error"] != "" {
 		t.Errorf("Expected the 'error' key of the response to be set to 'User not found'. Got '%s'", m["error"])
 	}
 }
@@ -141,7 +141,7 @@ func TestDeleteUser(t *testing.T) {
 }
 
 //to get a new token login to facebook and get one from one of our test user
-const testUserToken = "EAACqvTZC1964BALkenPGnImpppWZBIh7xpLNWFdCxvsE5AdO1ZC3mkS6ZCUjmEZAKsgwptz9k6eYCCincNpv8ajv0hR7rnwVG4bpWi4CZBFsCT7KrQR9Q2vpx49JC2BK4O9hXTU4dZCC8a4icLI0c8YLfoZCIcjMEESa5PzW3FEicHaht2qxnAZCPMBkpdkqvavPHjI5lLMfgbEyxcggzxdf8Tzn3r1mB4gx3hTbWMhC5qgZDZD"
+const testUserToken = "EAACqvTZC1964BAIDRN0RFpOZBjncAJh2NILVvzX8OFG2eYQFDbbnYaZCd1uClpVZC3mciSVbJhaWw6aaUXMVwV6eDdrLuu6XYkndOaQmXFZAvumuJmeMKh5DANexeYVhv9dCZB10FG32S5Q5192ZBxeoms0lSl3B32DHiGG5MTygOeBDDwfI5pkKWApoIu39nkzVZBUgfDeXwigPt9ZCHo5VqWgWxk41rp8OWy7kjRm14VAZDZD"
 
 func TestFBApiAccess(t *testing.T) {
 	getFBUser(testUserToken)
@@ -166,6 +166,8 @@ func ensureTableExists() {
 }
 
 func clearTable() {
+	testApp.db.Exec("DELETE FROM TokenTable")
+	testApp.db.Exec("DELETE FROM FacebookData")
 	testApp.db.Exec("DELETE FROM Players")
 	testApp.db.Exec("ALTER TABLE Players AUTO_INCREMENT = 1")
 }
