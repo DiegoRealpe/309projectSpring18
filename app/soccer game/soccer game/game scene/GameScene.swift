@@ -25,7 +25,8 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     var joyStick : Joystick?
     var ballNode : SKSpriteNode?
     var managedTcpConnection : ManagedTCPConnection?
-    
+    var leftGoal: SKSpriteNode?
+    var rightGoal: SKSpriteNode?
     var northBound : SKSpriteNode?
    
     
@@ -51,9 +52,19 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         self.physicsWorld.contactDelegate = self
         configurePlayerNodes()
         self.backLabel = self.childNode(withName: "Back Label") as? SKLabelNode
+        
         self.ballNode = self.childNode(withName: "Ball") as? SKSpriteNode
         self.ballNode?.physicsBody?.categoryBitMask = ballCategory
-        self.ballNode?.physicsBody?.contactTestBitMask = playerCategory //add more later maybe, if we need to know other contacts
+        self.ballNode?.physicsBody?.contactTestBitMask = playerCategory | leftGoalCategory |  rightGoalCategory
+        
+        self.leftGoal = self.childNode(withName: "Left Goal") as? SKSpriteNode
+        self.rightGoal = self.childNode(withName: "Right Goal") as? SKSpriteNode
+        
+        self.leftGoal?.physicsBody?.categoryBitMask = leftGoalCategory
+        self.leftGoal?.physicsBody?.contactTestBitMask = ballCategory
+        
+        self.rightGoal?.physicsBody?.categoryBitMask = rightGoalCategory
+        self.rightGoal?.physicsBody?.contactTestBitMask = ballCategory
         
         self.northBound = self.childNode(withName: "North Bound") as? SKSpriteNode
         self.northBound?.physicsBody?.categoryBitMask = boundsCategory
@@ -100,6 +111,14 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         {
             print("Player hit ball")
             localBallStateWasUpdates = true
+        }
+        else if(otherCategory == leftGoalCategory)
+        {
+            print("Left Goal Scored")
+        }
+        else if(otherCategory == rightGoalCategory)
+        {
+            print("Right Goal Scored")
         }
     }
     
