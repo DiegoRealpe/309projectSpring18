@@ -209,31 +209,44 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         ball.physicsBody?.velocity = velocity
     }
     
+    fileprivate func sendBallStatePacketIfNecesarry() {
+        if (self.localBallStateWasUpdates && self.ballNode != nil) || self.waitsSinceLastBallUpdate >= self.forceUpdateWaits {
+            let packet = self.makeBallStatePacket()
+            
+            print("sending ball packet, ",packet.toByteArray())
+            self.managedTcpConnection?.sendTCP(packet: packet)
+            
+            self.localBallStateWasUpdates = false
+            self.waitsSinceLastBallUpdate = 0
+        }
+        else{
+            self.waitsSinceLastBallUpdate += 1
+        }
+    }
+    
+    fileprivate func sendPlayerStatePacketIfNecesarry() {
+        if self.localPlayerStateWasUpdated || self.waitsSinceLastPlayerUpdate >= self.forceUpdateWaits  {
+            let packet = self.makePlayerStatePacket(playerNumber : self.playerNumber!)
+            
+            print("sending player packet, ",packet.toByteArray())
+            self.managedTcpConnection?.sendTCP(packet: packet)
+            
+            self.localPlayerStateWasUpdated = false
+            
+            self.waitsSinceLastPlayerUpdate = 0
+        }else{
+            self.waitsSinceLastPlayerUpdate += 1
+        }
+    }
+    
     func makeUpdateAndSendSKAction() -> SKAction {
         let packetAction = SKAction.run({
-            
-            if self.localPlayerStateWasUpdated || self.waitsSinceLastPlayerUpdate >= self.forceUpdateWaits  {
-                let packet = self.makePlayerStatePacket(playerNumber : self.playerNumber!)
-                
-                print("sending player packet, ",packet.toByteArray())
-                self.managedTcpConnection?.sendTCP(packet: packet)
-                
-                self.localPlayerStateWasUpdated = false
-                
-                self.waitsSinceLastPlayerUpdate = 0
-            }
-            if (self.localBallStateWasUpdates && self.ballNode != nil) || self.waitsSinceLastBallUpdate >= self.forceUpdateWaits {
-                let packet = self.makeBallStatePacket()
-                
-                print("sending ball packet, ",packet.toByteArray())
-                self.managedTcpConnection?.sendTCP(packet: packet)
-                
-                self.localBallStateWasUpdates = false
-                self.waitsSinceLastBallUpdate = 0
-            }
+            self.sendPlayerStatePacketIfNecesarry()
+            self.sendBallStatePacketIfNecesarry()
         })
-        let waitAction = SKAction.wait(forDuration: packetUpdateIntervalSeconds)
         
+        //run the action
+        let waitAction = SKAction.wait(forDuration: packetUpdateIntervalSeconds)
         let sequenceAction = SKAction.sequence([packetAction,waitAction])
         return SKAction.repeatForever(sequenceAction)
     }
