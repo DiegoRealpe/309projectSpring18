@@ -81,6 +81,7 @@ func parseFbApiResponse(response *http.Response) *AppUser {
 	}
 }
 
+//parses FB API response into a FBAPIObject
 func parseJsonToFbApiObject(data []byte) (fbObject *fbApiObject) {
 	fbObject = &fbApiObject{}
 	json.Unmarshal(data, &fbObject)
@@ -88,6 +89,7 @@ func parseJsonToFbApiObject(data []byte) (fbObject *fbApiObject) {
 	return
 }
 
+//FBAPIObject function to return its appuser version
 func (fbObject *fbApiObject) toAppUser() (businessUser *AppUser) {
 	businessUser = &AppUser{Valid: true}
 
