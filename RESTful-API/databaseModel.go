@@ -84,10 +84,6 @@ func QuerySearchPlayer(db *sql.DB, p *Player) error {
 		return errors.New("Empty")
 	}
 	request := fmt.Sprintf("SELECT * FROM Players WHERE ID = '%s'", p.ID)
-	/*updateMask, prepErr := db.Prepare("UPDATE Players SET ? = ? WHERE ID = ?")
-	if prepErr != nil {
-		return errors.New("Statement Error")
-	}*/
 	rows, err := db.Query(request)
 	if err != nil {
 		return errors.New("Query Error")
@@ -149,6 +145,45 @@ func QueryUpdatePlayer(db *sql.DB, p *Player) error {
 
 	return nil
 }
+
+//QueryCreateFBData inserts player information obtained from graph API
+func QueryCreateFBData(db *sql.DB, u *AppUser) error {
+	request := fmt.Sprintf(`INSERT INTO FacebookData (FacebookID, PlayerID, FullName, Email)
+	VALUES ('%s', '%s', '%s', '%s')`, u.FacebookID, u.ID, u.FullName, u.Email)
+	result, err := db.Exec(request)
+	if err != nil {
+		return errors.New("Query Error")
+	}
+	affected, err2 := result.RowsAffected()
+	if err2 != nil {
+		return errors.New("Create Failed fam")
+	}
+	if affected != int64(1) {
+		return errors.New("Abnormal number of creates")
+	}
+	return nil
+}
+
+//QuerySetToken creates a new entry on the applicationToken table
+//giving the set ID a corresponding appToken
+func QuerySetToken(db *sql.DB, ID string, appToken string) error {
+	request := fmt.Sprintf(`INSERT INTO applicationToken (applicationToken, playerID)
+	VALUES ('%s', '%s')`, appToken, ID)
+	result, err := db.Exec(request)
+	if err != nil {
+		return errors.New("Query Error")
+	}
+	affected, err2 := result.RowsAffected()
+	if err2 != nil {
+		return errors.New("Create Failed fam")
+	}
+	if affected != int64(1) {
+		return errors.New("Abnormal number of creates")
+	}
+	return nil
+}
+
+/*********Helpers*********/
 
 //Helper function that uses a slice of string parameters to prepare an update function for a user
 //Parameters are on the form of col1, val1, col2, val2 ... ID of user

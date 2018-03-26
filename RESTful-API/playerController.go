@@ -129,7 +129,7 @@ func (a *App) registerPlayer(w http.ResponseWriter, r *http.Request) {
 	}
 	//4 create facebook data for player
 	user.ID = p.ID //giving appuser's info the id of the player it belongs to
-	dberr = QueryCreateFBData(a.db, user)
+	dberr = QueryCreateFBData(a.db, &user)
 	if dberr != nil {
 		handleDBErrors(w, dberr)
 	}
@@ -138,6 +138,8 @@ func (a *App) registerPlayer(w http.ResponseWriter, r *http.Request) {
 	if dberr != nil {
 		handleDBErrors(w, dberr)
 	}
+
+	respondWithJSON(w, http.StatusCreated, p)
 }
 
 func (a *App) loginPlayer(w http.ResponseWriter, r *http.Request) {
