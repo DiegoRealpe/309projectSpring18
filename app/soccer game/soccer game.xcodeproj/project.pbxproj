@@ -24,12 +24,12 @@
 		3A3A582C2063238500E74D82 /* ServerBallStatePacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3A582B2063238500E74D82 /* ServerBallStatePacket.swift */; };
 		3A5475682034BEBB0082947E /* ManagedTCPConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5475672034BEBB0082947E /* ManagedTCPConnection.swift */; };
 		3A54756C20372C230082947E /* CommunicationProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A54756B20372C230082947E /* CommunicationProperties.swift */; };
-		3A73DC1E20655B410029E300 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A73DC1D20655B400029E300 /* GameScene.sks */; };
 		3A74A5FC201E6C3E00A1583F /* MainMenu.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A74A5FB201E6C3E00A1583F /* MainMenu.sks */; };
 		3A74A5FE201E6FDB00A1583F /* MainMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A74A5FD201E6FDB00A1583F /* MainMenu.swift */; };
 		3A74A600201F7E1900A1583F /* MatchMakingScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A74A5FF201F7E1900A1583F /* MatchMakingScene.sks */; };
 		3A74A602201F7F6D00A1583F /* MatchMakingScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A74A601201F7F6D00A1583F /* MatchMakingScene.swift */; };
 		3A74A604201F86ED00A1583F /* SKSceneTransitionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A74A603201F86ED00A1583F /* SKSceneTransitionExtension.swift */; };
+		3A94062320699AEB0025D3B2 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A94062220699AEB0025D3B2 /* GameScene.sks */; };
 		3AB377DE2023B5980019E73E /* Joystick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB377DD2023B5980019E73E /* Joystick.swift */; };
 		3AB377E02023B5C50019E73E /* CGPointExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB377DF2023B5C50019E73E /* CGPointExtension.swift */; };
 		3ACF30282032ACF4009DC766 /* TCPResultExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACF30272032ACF4009DC766 /* TCPResultExtension.swift */; };
@@ -112,12 +112,12 @@
 		3A3A582B2063238500E74D82 /* ServerBallStatePacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerBallStatePacket.swift; sourceTree = "<group>"; };
 		3A5475672034BEBB0082947E /* ManagedTCPConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedTCPConnection.swift; sourceTree = "<group>"; };
 		3A54756B20372C230082947E /* CommunicationProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunicationProperties.swift; sourceTree = "<group>"; };
-		3A73DC1D20655B400029E300 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
 		3A74A5FB201E6C3E00A1583F /* MainMenu.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MainMenu.sks; sourceTree = "<group>"; };
 		3A74A5FD201E6FDB00A1583F /* MainMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenu.swift; sourceTree = "<group>"; };
 		3A74A5FF201F7E1900A1583F /* MatchMakingScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MatchMakingScene.sks; sourceTree = "<group>"; };
 		3A74A601201F7F6D00A1583F /* MatchMakingScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchMakingScene.swift; sourceTree = "<group>"; };
 		3A74A603201F86ED00A1583F /* SKSceneTransitionExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKSceneTransitionExtension.swift; sourceTree = "<group>"; };
+		3A94062220699AEB0025D3B2 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
 		3AB377DD2023B5980019E73E /* Joystick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Joystick.swift; sourceTree = "<group>"; };
 		3AB377DF2023B5C50019E73E /* CGPointExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGPointExtension.swift; sourceTree = "<group>"; };
 		3ACF30272032ACF4009DC766 /* TCPResultExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCPResultExtension.swift; sourceTree = "<group>"; };
@@ -218,7 +218,7 @@
 		3A74A609201FB92500A1583F /* game scene */ = {
 			isa = PBXGroup;
 			children = (
-				3A73DC1D20655B400029E300 /* GameScene.sks */,
+				3A94062220699AEB0025D3B2 /* GameScene.sks */,
 				3A3A5822205FFDDC00E74D82 /* packets */,
 				4C98FBBC201E658600378614 /* GameScene.swift */,
 				3AB377DD2023B5980019E73E /* Joystick.swift */,
@@ -416,7 +416,7 @@
 				3A74A600201F7E1900A1583F /* MatchMakingScene.sks in Resources */,
 				4C98FBC4201E658700378614 /* Assets.xcassets in Resources */,
 				3ADFD62D202E265100AE586D /* CommTestScreen.sks in Resources */,
-				3A73DC1E20655B410029E300 /* GameScene.sks in Resources */,
+				3A94062320699AEB0025D3B2 /* GameScene.sks in Resources */,
 				4C98FBC7201E658700378614 /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
