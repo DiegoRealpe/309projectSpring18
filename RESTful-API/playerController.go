@@ -124,16 +124,24 @@ func (a *App) updatePlayer(w http.ResponseWriter, r *http.Request) {
 
 }
 
-/*********OAuth Routes*********/
+/*********Game Routes*********/
+
+func (a *App) registerPlayer(w http.ResponseWriter, r *http.Request) {
+	//TODO
+}
 
 func (a *App) loginPlayer(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	access_token, err := vars["access_token"]
-	if err != nil {
-		respondWithError(w, http.StatusBadRequest, "token error")
-		return
-	}
+	//vars := mux.Vars(r)
+	//accessToken := vars["access_token"]
 
+}
+
+func (a *App) statsPlayer(w http.ResponseWriter, r *http.Request) {
+	//TODO
+}
+
+func (a *App) checkToken(w http.ResponseWriter, r *http.Request) {
+	//TODO
 }
 
 /*********Helpers*********/
