@@ -65,6 +65,10 @@ func (mmm *matchMakingModel) startGame(players []waitingPlayer){
 	}
 
 	gameOpts := GameOptions{numPlayers:NUMPLAYERS}
+	for i, p := range players {
+		gameOpts.ports[i] = p.connection.portNumber
+	}
+
 	gameOpts.connectionIDToPlayerNumberMap = makePlayerNumberMap(players)
 
 	packetOutChannel := startPacketOutDispersionWithPlayers(players)

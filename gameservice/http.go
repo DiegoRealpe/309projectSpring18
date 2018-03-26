@@ -7,13 +7,18 @@ import (
 	"strconv"
 )
 
+type clientConnection struct {
+	connection net.Conn
+	port int
+}
+
 type portHttpController struct {
-	connPasser chan net.Conn
+	connPasser chan clientConnection
 }
 
 
 func makePortHttpController() portHttpController {
-	connPasser := make(chan net.Conn)
+	connPasser := make(chan clientConnection)
 	return portHttpController{connPasser: connPasser}
 }
 
@@ -21,14 +26,12 @@ func makePortHttpController() portHttpController {
 //when an http request is sent, send the requester a port and start listening on that port
 func (portHttpController *portHttpController) handlePortRequested(w http.ResponseWriter, r *http.Request) {
 
-	if len(ports) < 1 {
+	if numPortsAvailable() <= 0 {
 		io.WriteString(w, "no ports avaliable, sorry fam")
 		return
 	}
 
-	usedport := ports[len(ports)-1]
-
-	ports = ports[:len(ports)-1]
+	usedport := requestPort()
 
 	stringport := strconv.Itoa(usedport)
 
@@ -39,7 +42,12 @@ func (portHttpController *portHttpController) handlePortRequested(w http.Respons
 
 		conn, _ := ln.Accept()
 
-		portHttpController.connPasser <- conn
+		connClient := clientConnection{
+			connection: conn,
+			port:				usedport,
+		}
+
+		portHttpController.connPasser <- connClient
 	}()
 
 }

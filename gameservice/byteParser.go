@@ -137,12 +137,13 @@ func ParseBytesTo125(rawData []byte) packet125{
 		panic(rawData)
 	}
 
-	playerNumberByte = rawData[1]
+	playerNumberByte := rawData[1]
 
 	resultPacket := packet125{
-		playerNumber:			uint8(playerNumberByte)
+		playerNumber:			uint8(playerNumberByte),
 	}
 	return resultPacket
+
 }
 
 //BytestoFloat32 Turns only a 4 byte slice into a float32 primitive

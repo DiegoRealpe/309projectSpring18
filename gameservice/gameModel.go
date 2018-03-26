@@ -7,17 +7,22 @@ import (
 type GameOptions struct {
 	numPlayers int
 	connectionIDToPlayerNumberMap map[int]byte
+	ports [NUMPLAYERS]int
 }
 
 type Game struct {
 	numPlayers int
 	connectionIDToPlayerNumberMap map[int]byte
+	ports [NUMPLAYERS]int
 }
 
 
 func (gOpts GameOptions) buildGame() (g Game) {
 	g.numPlayers = gOpts.numPlayers
 	g.connectionIDToPlayerNumberMap = gOpts.connectionIDToPlayerNumberMap
+	for i := 0; i < NUMPLAYERS; i++ {
+		g.ports[i] = gOpts.ports[i]
+	}
 	//ext...
 
 	return
@@ -72,6 +77,16 @@ func (g *Game) respondTo123(in *PacketIn, out chan<- PacketOut) {
 	out <- packetOut
 }
 
+func (g *Game) respondTo125(in *PacketIn, out chan<- PacketOut){
+	fmt.Println("recieved 125 packet...")
+	packet125 := ParseBytesTo125(in.data)
+	disconnectingPlayer := packet125.playerNumber
+
+	freePort(g.ports[disconnectingPlayer])
+	fmt.Println("Player", disconnectingPlayer, "has disconnected")
+
+}
+
 func (g *Game) allConnectionIDsBut(id int) []int {
 
 	slice := make([]int,NUMPLAYERS-1)
@@ -90,4 +105,3 @@ func (g *Game) allConnectionIDsBut(id int) []int {
 
 	return slice
 }
-

@@ -35,6 +35,7 @@ func MakePlayerConnection(client client, packetIn chan<- PacketIn) *playerConnec
 	playerConnection.client = client
 	playerConnection.packetInMutex = packetInMutex{packetIn: packetIn}
 	playerConnection.packetOut = make(chan PacketOut, 100)
+	playerConnection.portNumber = client.port
 	playerConnection.assignId()
 
 	go playerConnection.startReading()

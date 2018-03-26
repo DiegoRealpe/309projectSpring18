@@ -12,17 +12,17 @@ type client struct {
 	reader     *bufio.Reader
 	writer     *bufio.Writer
 	clientNum  int
+	port int
 }
-
-var ports []int
 
 const NUMPLAYERS = 2
 
 func main() {
 
 	fmt.Println("starting game service!")
+	initPortService()
 
-	ports = []int{6001, 6002, 6003, 6004, 6005, 6006, 6007, 6008, 6009, 6010, 6011, 6012} //todo: make a staic function with static variables for this
+	//ports = []int{6001, 6002, 6003, 6004, 6005, 6006, 6007, 6008, 6009, 6010, 6011, 6012} //todo: make a staic function with static variables for this
 
 	portHttpController := makePortHttpController()
 
@@ -34,7 +34,7 @@ func main() {
 	startHttpServer(portHttpController)
 }
 
-func listenForConnections(connPasser <-chan net.Conn, matchMakingController matchMakingController) {
+func listenForConnections(connPasser <-chan clientConnection, matchMakingController matchMakingController) {
 	fmt.Println("listening for connections")
 
 	currentClientNumber := 0
@@ -43,10 +43,11 @@ func listenForConnections(connPasser <-chan net.Conn, matchMakingController matc
 		fmt.Println("starting handling for a connection")
 
 		client := client{}
-		client.connection = conn
-		client.reader = bufio.NewReader(conn)
-		client.writer = bufio.NewWriter(conn)
+		client.connection = conn.connection
+		client.reader = bufio.NewReader(conn.connection)
+		client.writer = bufio.NewWriter(conn.connection)
 		client.clientNum = currentClientNumber
+		client.port = conn.port
 
 		currentClientNumber++
 

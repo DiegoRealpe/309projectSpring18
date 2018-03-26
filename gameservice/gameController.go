@@ -34,6 +34,7 @@ func (controller *gameController) buildPacketMap() {
 
 	packetMap[120] = controller.g.respondTo120
 	packetMap[123] = controller.g.respondTo123
+	packetMap[125] = controller.g.respondTo125
 
 	controller.packetRouterMap = packetMap
 }
