@@ -21,7 +21,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     //label used for debugging, not part of final project
     var mockPacketLabel : SKLabelNode?
     
-    var backLabel : SKLabelNode?
+    var quitLabel : SKLabelNode?
     var joyStick : Joystick?
     var ballNode : SKSpriteNode?
     var managedTcpConnection : ManagedTCPConnection?
@@ -51,19 +51,11 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     let leftGoalCategory:UInt32 = 0b1 << 3;
     let rightGoalCategory:UInt32 = 0b1 << 4;
     
-    override func didMove(to view: SKView) {
-        print("moved to game scene")
-        
+    fileprivate func configureCollisions() {
         self.physicsWorld.contactDelegate = self
-        configurePlayerNodes()
-        self.backLabel = self.childNode(withName: "Back Label") as? SKLabelNode
         
-        self.ballNode = self.childNode(withName: "Ball") as? SKSpriteNode
         self.ballNode?.physicsBody?.categoryBitMask = ballCategory
         self.ballNode?.physicsBody?.contactTestBitMask = playerCategory | leftGoalCategory |  rightGoalCategory
-        
-        self.leftGoal = self.childNode(withName: "Left Goal") as? SKSpriteNode
-        self.rightGoal = self.childNode(withName: "Right Goal") as? SKSpriteNode
         
         self.leftGoal?.physicsBody?.categoryBitMask = leftGoalCategory
         self.leftGoal?.physicsBody?.contactTestBitMask = ballCategory
@@ -71,18 +63,31 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         self.rightGoal?.physicsBody?.categoryBitMask = rightGoalCategory
         self.rightGoal?.physicsBody?.contactTestBitMask = ballCategory
         
-        self.northBound = self.childNode(withName: "North Bound") as? SKSpriteNode
         self.northBound?.physicsBody?.categoryBitMask = boundsCategory
         self.northBound?.physicsBody?.contactTestBitMask = ballCategory
+    }
+    
+    fileprivate func getNodesFromScene() {
+        self.quitLabel = self.childNode(withName: "Quit Label") as? SKLabelNode
+        self.ballNode = self.childNode(withName: "Ball") as? SKSpriteNode
+        self.leftGoal = self.childNode(withName: "Left Goal") as? SKSpriteNode
+        self.rightGoal = self.childNode(withName: "Right Goal") as? SKSpriteNode
+    }
+    
+    override func didMove(to view: SKView) {
+        print("moved to game scene")
+        
+        getNodesFromScene()
+        
+        self.northBound = self.childNode(withName: "North Bound") as? SKSpriteNode
+        configureCollisions()
+        configurePlayerNodes()
         
         //give all children of the north bounds(all the bounds) the same physics category
         for child in (northBound?.children)!
         {
-            if let bound = child as? SKNode
-            {
-                bound.physicsBody?.categoryBitMask = boundsCategory
-                bound.physicsBody?.contactTestBitMask = ballCategory
-            }
+            child.physicsBody?.categoryBitMask = boundsCategory
+            child.physicsBody?.contactTestBitMask = ballCategory
         }
         self.mockPacketLabel = self.childNode(withName: "Mock Packet") as? SKLabelNode
         
@@ -207,6 +212,18 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     }
     
     //for individual touches
+    fileprivate func quitWasPressed() {
+        print("back to main menu")
+        
+        //if tcp connection exists, disconnect from server
+        if let mtcp = self.managedTcpConnection {
+            mtcp.sendTCP(data: [125,UInt8(playerNumber!)]) //send packet to disconnect
+            mtcp.stop()
+        }
+        
+        self.moveToScene(.mainMenu)
+    }
+    
     private func touchBegins(_ touch : UITouch) {
         let position = touch.location(in: self)
         
@@ -214,9 +231,8 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
             self.joyStick = Joystick(parent : self, radius : self.joystickRadius, touch : touch)
         }
         
-        if self.backLabel?.contains(position) == true{
-            print("back to main menu")
-            self.moveToScene(.mainMenu)
+        if self.quitLabel?.contains(position) == true{
+            self.quitWasPressed()
         }else if self.mockPacketLabel?.contains(position) == true{
         
             print("mocking command")
