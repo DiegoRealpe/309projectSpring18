@@ -51,6 +51,7 @@
 		4C45B87C2045C37E00F717B7 /* FBSDKLoginKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4C45B86D2045C37B00F717B7 /* FBSDKLoginKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4C45B87D2045C37E00F717B7 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C45B86E2045C37C00F717B7 /* FBSDKCoreKit.framework */; };
 		4C45B87E2045C37E00F717B7 /* FBSDKCoreKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4C45B86E2045C37C00F717B7 /* FBSDKCoreKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4C45B8802069833600F717B7 /* ScoreBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C45B87F2069833600F717B7 /* ScoreBoard.swift */; };
 		4C98FBB7201E658600378614 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C98FBB6201E658600378614 /* AppDelegate.swift */; };
 		4C98FBBD201E658600378614 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C98FBBC201E658600378614 /* GameScene.swift */; };
 		4C98FBBF201E658600378614 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C98FBBE201E658600378614 /* GameViewController.swift */; };
@@ -130,6 +131,7 @@
 		4C45B86C2045C37A00F717B7 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
 		4C45B86D2045C37B00F717B7 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		4C45B86E2045C37C00F717B7 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		4C45B87F2069833600F717B7 /* ScoreBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreBoard.swift; sourceTree = "<group>"; };
 		4C98FBB3201E658600378614 /* soccer game.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "soccer game.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C98FBB6201E658600378614 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4C98FBBC201E658600378614 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
@@ -223,6 +225,7 @@
 				3A219ECE203B7CEE00FABE0A /* Players.sks */,
 				3A119F102048A9E400063D51 /* GamePlayerInformationModel.swift */,
 				3A3A58232060281100E74D82 /* GameProperties.swift */,
+				4C45B87F2069833600F717B7 /* ScoreBoard.swift */,
 			);
 			path = "game scene";
 			sourceTree = "<group>";
@@ -439,6 +442,7 @@
 				3AB377E02023B5C50019E73E /* CGPointExtension.swift in Sources */,
 				4CC91D9E20339BA700FB9236 /* NewAccountOrLogin.swift in Sources */,
 				3A3169772037EC9500DA2DCC /* SocketPacketResponder.swift in Sources */,
+				4C45B8802069833600F717B7 /* ScoreBoard.swift in Sources */,
 				4C98FBBF201E658600378614 /* GameViewController.swift in Sources */,
 				3A74A604201F86ED00A1583F /* SKSceneTransitionExtension.swift in Sources */,
 				3A5475682034BEBB0082947E /* ManagedTCPConnection.swift in Sources */,
