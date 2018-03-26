@@ -28,19 +28,8 @@ func (a *App) createPlayer(w http.ResponseWriter, r *http.Request) {
 	//Executing Create model
 	dberr := QueryCreatePlayer(a.db, &p)
 	if dberr != nil {
-		switch dberr {
-		case errors.New("Create Failed fam"):
-			respondWithError(w, http.StatusBadRequest, dberr.Error())
-		case errors.New("Query Error"):
-			respondWithError(w, http.StatusBadRequest, dberr.Error())
-		case errors.New("Abnormal number of creates"):
-			respondWithError(w, http.StatusNotImplemented, dberr.Error())
-		default:
-			respondWithError(w, http.StatusBadRequest, dberr.Error())
-		}
-		return
+		handleDBErrors(w, dberr)
 	}
-
 	respondWithJSON(w, http.StatusCreated, p)
 }
 
@@ -55,18 +44,9 @@ func (a *App) getPlayer(w http.ResponseWriter, r *http.Request) {
 	p := Player{ID: strconv.Itoa(id)}
 
 	//Executing search query
-	if err := QuerySearchPlayer(a.db, &p); err != nil {
-		switch err {
-		case errors.New("Empty"):
-			respondWithError(w, http.StatusBadRequest, "Empty")
-		case errors.New("Query Error"):
-			respondWithError(w, http.StatusBadRequest, "Bad Query")
-		case sql.ErrNoRows:
-			respondWithError(w, http.StatusNotFound, "Player not found")
-		default:
-			respondWithError(w, http.StatusInternalServerError, err.Error())
-		}
-		return
+	err = QuerySearchPlayer(a.db, &p)
+	if err != nil {
+		handleDBErrors(w, err)
 	}
 
 	respondWithJSON(w, http.StatusOK, p)
@@ -114,8 +94,7 @@ func (a *App) updatePlayer(w http.ResponseWriter, r *http.Request) {
 	//Executing Query model
 	dberr := QueryUpdatePlayer(a.db, &p)
 	if dberr != nil {
-		respondWithError(w, http.StatusNotModified, dberr.Error())
-		println(dberr.Error())
+		handleDBErrors(w, errors.New("Update Error"))
 		return
 	}
 
@@ -125,9 +104,24 @@ func (a *App) updatePlayer(w http.ResponseWriter, r *http.Request) {
 }
 
 /*********Game Routes*********/
-
+//1 get token
+//2 check token with fb and get AppUser struct
+//3 create player with nickname
+//4 create facebook data for player
+//5 create application token and update table
 func (a *App) registerPlayer(w http.ResponseWriter, r *http.Request) {
-	//TODO
+	//1
+	token := r.Header.Get("FacebookToken")
+	//2
+	user := getFBUser(token)
+	if user.Valid == false {
+		respondWithError(w, http.StatusForbidden, "Token Error")
+		return
+	}
+	//3
+
+	//
+
 }
 
 func (a *App) loginPlayer(w http.ResponseWriter, r *http.Request) {
@@ -155,4 +149,25 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	w.Write(response)
+}
+
+func handleDBErrors(w http.ResponseWriter, dberr error) {
+	switch dberr {
+
+	case errors.New("Update Error"):
+		respondWithError(w, http.StatusNotModified, dberr.Error())
+	case errors.New("Create Failed fam"):
+		respondWithError(w, http.StatusBadRequest, dberr.Error())
+	case errors.New("Query Error"):
+		respondWithError(w, http.StatusBadRequest, dberr.Error())
+	case errors.New("Abnormal number of creates"):
+		respondWithError(w, http.StatusNotImplemented, dberr.Error())
+	case errors.New("Empty"):
+		respondWithError(w, http.StatusBadRequest, "Empty")
+	case sql.ErrNoRows:
+		respondWithError(w, http.StatusNotFound, "Player not found")
+	default:
+		respondWithError(w, http.StatusBadRequest, dberr.Error())
+	}
+	return
 }
