@@ -10,6 +10,7 @@ import (
 //?
 type AppUser struct {
 	Valid      bool
+	ID         string
 	FacebookID string
 	FullName   string
 	Email      string

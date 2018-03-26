@@ -65,7 +65,7 @@ func (a *App) deletePlayer(w http.ResponseWriter, r *http.Request) {
 
 	//Executing delete query model
 	if err := QueryDeletePlayer(a.db, &p); err != nil {
-		respondWithError(w, http.StatusInternalServerError, err.Error())
+		handleDBErrors(w, errors.New("Delete Player Query Error"))
 		return
 	}
 
@@ -104,24 +104,40 @@ func (a *App) updatePlayer(w http.ResponseWriter, r *http.Request) {
 }
 
 /*********Game Routes*********/
-//1 get token
-//2 check token with fb and get AppUser struct
-//3 create player with nickname
-//4 create facebook data for player
-//5 create application token and update table
+
 func (a *App) registerPlayer(w http.ResponseWriter, r *http.Request) {
-	//1
+	//1 get token
 	token := r.Header.Get("FacebookToken")
-	//2
+	//2 check token with fb and get AppUser struct
 	user := getFBUser(token)
 	if user.Valid == false {
 		respondWithError(w, http.StatusForbidden, "Token Error")
 		return
 	}
-	//3
+	//3 get nickname and create player
+	var p Player
+	decoder := json.NewDecoder(r.Body) //Passing credentials through http request body
+	if err := decoder.Decode(&p); err != nil {
+		respondWithError(w, http.StatusNotAcceptable, "Invalid request payload")
+		return
+	}
+	defer r.Body.Close()
 
-	//
-
+	dberr := QueryCreatePlayer(a.db, &p)
+	if dberr != nil {
+		handleDBErrors(w, dberr)
+	}
+	//4 create facebook data for player
+	user.ID = p.ID //giving appuser's info the id of the player it belongs to
+	dberr = QueryCreateFBData(a.db, user)
+	if dberr != nil {
+		handleDBErrors(w, dberr)
+	}
+	//5 create application token and update table
+	dberr = QuerySetToken(a.db, p.ID, appTokenGen(p.ID))
+	if dberr != nil {
+		handleDBErrors(w, dberr)
+	}
 }
 
 func (a *App) loginPlayer(w http.ResponseWriter, r *http.Request) {
@@ -167,7 +183,14 @@ func handleDBErrors(w http.ResponseWriter, dberr error) {
 	case sql.ErrNoRows:
 		respondWithError(w, http.StatusNotFound, "Player not found")
 	default:
-		respondWithError(w, http.StatusBadRequest, dberr.Error())
+		respondWithError(w, http.StatusInternalServerError, dberr.Error())
 	}
 	return
+}
+
+//Stupid funtion to try and make a random number
+func appTokenGen(ID string) string {
+	i, _ := strconv.Atoi(ID)
+	i = i*186282 + i*299792 //speed of light in mps and kms
+	return strconv.Itoa(i)
 }
