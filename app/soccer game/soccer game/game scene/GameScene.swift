@@ -28,8 +28,9 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     var leftGoal: SKSpriteNode?
     var rightGoal: SKSpriteNode?
     var northBound : SKSpriteNode?
-    
-    
+    var redTeamScore: SKLabelNode?
+    var blueTeamScore:SKLabelNode?
+    var scoreBoard:ScoreBoard?
     let forceUpdateWaits = 20
     var waitsSinceLastPlayerUpdate = 0
     var waitsSinceLastBallUpdate = 0
@@ -86,6 +87,12 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         }
         self.mockPacketLabel = self.childNode(withName: "Mock Packet") as? SKLabelNode
         
+        //scoreboard stuff
+        self.redTeamScore = self.childNode(withName: "Left Team Score") as? SKLabelNode
+        self.blueTeamScore = self.childNode(withName: "Right Team Score") as? SKLabelNode
+        scoreBoard = ScoreBoard(redTeamLabel: redTeamScore!, blueTeamLabel: blueTeamScore!)
+        
+        
         configureManagedTCPConnection()
         configurePacketResponder()
         
@@ -119,24 +126,18 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         }
         else if(otherCategory == leftGoalCategory)
         {
-            leftGoalScored()
+            
+            scoreBoard?.redTeamScored()
             print("Left Goal Scored")
         }
         else if(otherCategory == rightGoalCategory)
         {
-            rightGoalScored()
+            scoreBoard?.blueTeamScored()
             print("Right Goal Scored")
         }
     }
     
-    func leftGoalScored()
-    {
-        
-    }
-    func rightGoalScored()
-    {
-        
-    }
+   
     
     
     //sets players and player num to values according to the user data passed into the scene
