@@ -126,7 +126,15 @@ func (a *App) updatePlayer(w http.ResponseWriter, r *http.Request) {
 
 /*********OAuth Routes*********/
 
-//TODO
+func (a *App) loginPlayer(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	access_token, err := vars["access_token"]
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, "token error")
+		return
+	}
+
+}
 
 /*********Helpers*********/
 
