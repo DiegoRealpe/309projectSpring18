@@ -86,7 +86,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         
     }
     
-    var counter = 0
+    
     func didBegin(_ contact: SKPhysicsContact) {
         let firstCategory:UInt32 = contact.bodyA.categoryBitMask//know what category this object is in
         let secondCategory:UInt32 = contact.bodyB.categoryBitMask
@@ -114,12 +114,23 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         }
         else if(otherCategory == leftGoalCategory)
         {
+            leftGoalScored()
             print("Left Goal Scored")
         }
         else if(otherCategory == rightGoalCategory)
         {
+            rightGoalScored()
             print("Right Goal Scored")
         }
+    }
+    
+    func leftGoalScored()
+    {
+        
+    }
+    func rightGoalScored()
+    {
+        
     }
     
     
