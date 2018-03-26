@@ -145,9 +145,9 @@ func TestRegisterUser(t *testing.T) {
 	testApp.Initialize()
 
 	clearTable()
-	addUsers(1)
 
-	req, _ := http.NewRequest("GET", "/player/register", nil)
+	payload := []byte(`{"Nickname":"User 1"}`)
+	req, _ := http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
 	req.Header.Set("FacebookToken", testUserToken)
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusCreated, response.Code)
@@ -155,6 +155,46 @@ func TestRegisterUser(t *testing.T) {
 	json.Unmarshal(response.Body.Bytes(), &m)
 	fmt.Printf(m["error"])
 	fmt.Println("")
+}
+
+func TestLoginUser(t *testing.T) {
+	testApp = App{}
+	testApp.Initialize()
+
+	clearTable()
+
+	payload := []byte(`{"Nickname":"User 1"}`)
+	req, _ := http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
+	req.Header.Set("FacebookToken", testUserToken)
+	response := executeRequest(req)
+	checkResponseCode(t, http.StatusCreated, response.Code)
+
+	req, _ = http.NewRequest("GET", "/player/1/login", nil)
+	req.Header.Set("FacebookToken", testUserToken)
+	response = executeRequest(req)
+	checkResponseCode(t, http.StatusOK, response.Code)
+}
+
+func TestCheckToken(t *testing.T) {
+	testApp = App{}
+	testApp.Initialize()
+
+	clearTable()
+
+	payload := []byte(`{"Nickname":"User 1"}`)
+	req, _ := http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
+	req.Header.Set("FacebookToken", testUserToken)
+	response := executeRequest(req)
+	checkResponseCode(t, http.StatusCreated, response.Code)
+
+	var m map[string]string
+	json.Unmarshal(response.Body.Bytes(), &m)
+	testAppToken := m["ApplicationToken"]
+
+	req, _ = http.NewRequest("GET", "/internal/checkApplicationToken", nil)
+	req.Header.Set("ApplicationToken", testAppToken)
+	response = executeRequest(req)
+	checkResponseCode(t, http.StatusOK, response.Code)
 }
 
 //to get a new token login to facebook and get one from one of our test user
