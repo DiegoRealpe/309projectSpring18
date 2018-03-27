@@ -66,7 +66,7 @@ func (mmm *matchMakingModel) startGame(players []waitingPlayer){
 
 	gameOpts := GameOptions{numPlayers:NUMPLAYERS}
 	for i, p := range players {
-		gameOpts.ports[i] = p.connection.portNumber
+		gameOpts.players[i] = p.connection
 	}
 
 	gameOpts.connectionIDToPlayerNumberMap = makePlayerNumberMap(players)

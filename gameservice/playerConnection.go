@@ -13,6 +13,7 @@ type playerConnection struct {
 	packetOut 		chan PacketOut
 	portNumber		int
 	id				int
+	isActive int
 
 	packetLength int //if no packet is being read, packetLength should be 0
 }
@@ -37,6 +38,7 @@ func MakePlayerConnection(client client, packetIn chan<- PacketIn) *playerConnec
 	playerConnection.packetOut = make(chan PacketOut, 100)
 	playerConnection.portNumber = client.port
 	playerConnection.assignId()
+	playerConnection.isActive = 1
 
 	go playerConnection.startReading()
 	go playerConnection.startTransmitting()
@@ -47,11 +49,11 @@ func MakePlayerConnection(client client, packetIn chan<- PacketIn) *playerConnec
 func (pConn *playerConnection) startReading() {
 
 	fmt.Println("player reading")
-	for {
-
+	for pConn.isActive == 1 {
 		pConn.tryToPeekAndSetNewPacketLength()
 		pConn.tryToReadPacket()
 	}
+	fmt.Println("No longer reading from player with id", pConn.id)
 }
 
 func (pConn *playerConnection) sendToPacketIn(data []byte){
@@ -81,6 +83,10 @@ func (pConn *playerConnection) startTransmitting() {
 	for packet := range pConn.packetOut{
 		fmt.Println("sending packet",packet)
 		pConn.transmitPacket(packet)
+		if pConn.isActive == 0 {
+			break
+		}
+		fmt.Println("No longer transmitting to player with id", pConn.id)
 	}
 }
 
