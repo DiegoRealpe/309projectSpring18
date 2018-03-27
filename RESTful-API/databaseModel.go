@@ -41,7 +41,7 @@ func QueryCreatePlayer(db *sql.DB, p *Player) error {
 	VALUES ('%s', '0', '0', '0', '0')`, p.Nickname)
 	result, err := db.Exec(request)
 	if err != nil {
-		return errors.New("Query Error")
+		return err
 	}
 	affected, err2 := result.RowsAffected()
 	if err2 != nil {
@@ -113,7 +113,7 @@ func QuerySearchPlayer(db *sql.DB, p *Player) error {
 
 //QueryUpdatePlayer Searchs for a matching ID and updates based on player values given
 //Returns errors in case of not finding the correct ID or getting a wrong value
-//MODIFIES Player object to overrw
+//MODIFIES Player object to overrwrite
 func QueryUpdatePlayer(db *sql.DB, p *Player) error {
 	if p.ID == "" {
 		return errors.New("Empty ID")
@@ -153,7 +153,7 @@ func QueryCreateFBData(db *sql.DB, u *AppUser) error {
 	VALUES ('%s', '%s', '%s', '%s')`, u.FacebookID, u.ID, u.FullName, u.Email)
 	result, err := db.Exec(request)
 	if err != nil {
-		return errors.New("Query Error")
+		return err
 	}
 	affected, err2 := result.RowsAffected()
 	if err2 != nil {
@@ -172,7 +172,7 @@ func QuerySetToken(db *sql.DB, ID string, appToken string, tokenLife int) error 
 	VALUES ('%s', '%s', '%d')`, appToken, ID, getExpiration(tokenLife))
 	result, err := db.Exec(request)
 	if err != nil {
-		return errors.New("Query Error")
+		return err
 	}
 	affected, err2 := result.RowsAffected()
 	if err2 != nil {
