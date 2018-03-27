@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -165,6 +166,16 @@ func QueryCreateFBData(db *sql.DB, u *AppUser) error {
 	return nil
 }
 
+//QueryGetFBDataID Looks in the db if there is an ID corresponding the AppUser's FB ID
+func QueryGetFBDataID(db *sql.DB, u *AppUser) error {
+	row := db.QueryRow("SELECT PlayerID FROM FacebookData WHERE FacebookID = ?", u.FacebookID)
+	row.Scan(&u.ID)
+	if strings.Compare(u.ID, "") == 0 {
+		return errors.New("ID not found")
+	}
+	return nil
+}
+
 //QuerySetToken creates a new entry on the applicationToken table
 //giving the set ID a corresponding appToken and assigning an expiration
 func QuerySetToken(db *sql.DB, ID string, appToken string, tokenLife int) error {
@@ -178,10 +189,11 @@ func QuerySetToken(db *sql.DB, ID string, appToken string, tokenLife int) error 
 	if err2 != nil {
 		return errors.New("Create Failed fam")
 	}
-	if affected != int64(1) {
-		return errors.New("Abnormal number of creates")
-	}
 	return nil
+}
+
+funct QueryGetToken(db *sql.DB, ID string) error {
+	
 }
 
 /*********Helpers*********/

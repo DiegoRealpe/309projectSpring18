@@ -53,7 +53,30 @@ func (a *App) registerPlayer(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) loginPlayer(w http.ResponseWriter, r *http.Request) {
-	//TODO
+	//1 get fb token
+	token := r.Header.Get("FacebookToken")
+	//2 check the graph api and get AppUser object
+	user := getFBUser(token)
+	if user.Valid == false {
+		respondWithError(w, http.StatusForbidden, "Token Error")
+		return
+	}
+	//3 query AppUser FBID in FBdatatable to get game id
+	dberr := QueryGetFBDataID(a.db, &user)
+	if dberr != nil {
+		handleDBErrors(w, dberr)
+		return
+	}
+	//4 use GET player model to get info
+	p := Player{ID: user.ID}
+	dberr = QuerySearchPlayer(a.db, &p)
+	if dberr != nil {
+		handleDBErrors(w, dberr)
+		return
+	}
+	//5 use GET token model to get apptoken (handle expired)
+
+	//answer with player struct and apptoken
 }
 
 func (a *App) statsPlayer(w http.ResponseWriter, r *http.Request) {
