@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -165,10 +166,10 @@ func QueryCreateFBData(db *sql.DB, u *AppUser) error {
 }
 
 //QuerySetToken creates a new entry on the applicationToken table
-//giving the set ID a corresponding appToken
-func QuerySetToken(db *sql.DB, ID string, appToken string) error {
-	request := fmt.Sprintf(`INSERT INTO TokenTable (applicationToken, playerID)
-	VALUES ('%s', '%s')`, appToken, ID)
+//giving the set ID a corresponding appToken and assigning an expiration
+func QuerySetToken(db *sql.DB, ID string, appToken string, tokenLife int) error {
+	request := fmt.Sprintf(`INSERT INTO TokenTable (applicationToken, playerID, expiration)
+	VALUES ('%s', '%s', '%d')`, appToken, ID, getExpiration(tokenLife))
 	result, err := db.Exec(request)
 	if err != nil {
 		return errors.New("Query Error")
@@ -201,4 +202,11 @@ func prepUpdate(parameters []string) string {
 	}
 
 	return stmt + fmt.Sprintf("`%s` = '%s' WHERE ID = '%s'", parameters[j], parameters[j+1], parameters[j+2])
+}
+
+//Helper functions that returns a future epoch time
+//calculated from the time of the call plus a number of days given by parameter
+func getExpiration(days int) int64 {
+	epochDays := 86400 * days //epoch day lenght for every day in parameter
+	return (time.Now().Unix() + int64(epochDays))
 }

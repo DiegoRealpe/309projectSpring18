@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"strconv"
-
 	"net/http"
+	"strconv"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
@@ -140,8 +140,10 @@ func (a *App) registerPlayer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Println("4")
+	t := time.Now().Unix()
+	fmt.Println(t)
 	//5 create application token and update table
-	dberr = QuerySetToken(a.db, p.ID, appTokenGen(p.ID))
+	dberr = QuerySetToken(a.db, p.ID, appTokenGen(p.ID), 1)
 	if dberr != nil {
 		handleDBErrors(w, dberr)
 		return

@@ -79,9 +79,9 @@ func TestGetUser(t *testing.T) {
 
 	clearTable()
 	addUsers(1)
-	req, _ := http.NewRequest("GET", "/player/3", nil)
+	req, _ := http.NewRequest("GET", "/player/1", nil)
 	response := executeRequest(req)
-	checkResponseCode(t, http.StatusNotFound, response.Code)
+	checkResponseCode(t, http.StatusOK, response.Code)
 
 }
 
@@ -198,7 +198,7 @@ func TestCheckToken(t *testing.T) {
 }
 
 //to get a new token login to facebook and get one from one of our test user
-const testUserToken = "EAACqvTZC1964BAKF1S7kg5fVaKxA97T01OopdzYvw8qz1I30tkZBhyt8ZApaUZBzEA2wLBkREY3RS1sFOXekIisfEZCcuJ5AoySFay2ZBEI4yrr03oThYrMcZBCwk7wfcmYXrGaA2VJXxiaUA15kk3SsnP1ZBJkhoUMoIEQ8ZA1KE689QncjLX0ejXlk9ioMYZCKJbs4kqVkIDtzpy36Qcng7T1zgEZBrndtAHZC74h4ylMhde34BeKUZBFfG"
+const testUserToken = "EAACqvTZC1964BACpI8kC0bQizoFRwoPyM5hO7olvQhekl83VqyZAMlqsgnlTjxZAqTCVZB7CysuPWEHsXvsCrjeLOJZCZAhjVPPISdbRyIZBvracxZCYEruTFwyhN0RfTciknHOUs39PEKUmJKL5JoHI4IttiQPTSZChakVVfgNpEKmg5CSgZCcebZCtty1h3xXChrcXBfcD5Vv8b6JtNpdXD6BUzigiwz4CsWZCdZCZBXlCha2AZDZD"
 
 func TestFBApiAccess(t *testing.T) {
 	getFBUser(testUserToken)
