@@ -81,7 +81,7 @@ func (pConn *playerConnection) assignId(){
 
 func (pConn *playerConnection) startTransmitting() {
 	for packet := range pConn.packetOut{
-		fmt.Println("sending packet",packet)
+		if debug {fmt.Println("sending packet",packet)}
 		pConn.transmitPacket(packet)
 		if pConn.isActive == 0 {
 			break
@@ -119,7 +119,7 @@ func (pConn *playerConnection) tryToPeekAndSetNewPacketLength(){
 
 		if packetLength != 0{
 			pConn.packetLength = packetLength
-			fmt.Println("setting packet length",pConn.packetLength)
+			if debug {fmt.Println("setting packet length",pConn.packetLength)}
 		}else{
 			log.Fatal("Invalid Packet sent by client, got byte ",peeked[0])
 		}
@@ -137,7 +137,7 @@ func (pConn *playerConnection) tryToReadPacket(){
 		fmt.Println("tried to peek bytes and got non EOF error",error)
 	}
 
-	fmt.Println("full packet is",peeked)
+	if debug {fmt.Println("full packet is",peeked)}
 	pConn.client.reader.Discard(pConn.packetLength)
 	pConn.packetLength = 0
 

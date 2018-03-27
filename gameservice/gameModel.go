@@ -29,7 +29,7 @@ func (gOpts GameOptions) buildGame() (g Game) {
 }
 
 func (g *Game) respondTo120(in *PacketIn, out chan<- PacketOut) {
-	fmt.Println("recieved 120 packet")
+	if debug {fmt.Println("recieved 120 packet")}
 
 	playerNumber := g.connectionIDToPlayerNumberMap[in.connectionId]
 
@@ -55,7 +55,7 @@ func (g *Game) respondTo120(in *PacketIn, out chan<- PacketOut) {
 }
 
 func (g *Game) respondTo123(in *PacketIn, out chan<- PacketOut) {
-	fmt.Println("recieved 123 packet")
+	if debug {fmt.Println("recieved 123 packet")}
 
 
 	packet123 := ParseBytesTo123(in.data)
@@ -92,7 +92,7 @@ func (g *Game) allConnectionIDsBut(id int) []int {
 
 	slice := make([]int,NUMPLAYERS-1)
 
-	fmt.Println("sending to",slice)
+	if debug {fmt.Println("sending to",slice)}
 
 	i := 0
 	for key, _ := range g.connectionIDToPlayerNumberMap {
@@ -102,7 +102,7 @@ func (g *Game) allConnectionIDsBut(id int) []int {
 		}
 	}
 
-	fmt.Println("sending to",slice)
+	if debug {fmt.Println("sending to",slice)}
 
 	return slice
 }

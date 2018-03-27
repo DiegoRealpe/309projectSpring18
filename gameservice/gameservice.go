@@ -15,6 +15,8 @@ type client struct {
 	port int
 }
 
+const debug = false
+
 const NUMPLAYERS = 2
 
 func main() {
