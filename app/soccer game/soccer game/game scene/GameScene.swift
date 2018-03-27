@@ -31,7 +31,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     var redTeamScore: SKLabelNode?
     var blueTeamScore:SKLabelNode?
     var scoreBoard:ScoreBoard?
-    let forceUpdateWaits = 20
+    let forceUpdateWaits = 50
     var waitsSinceLastPlayerUpdate = 0
     var waitsSinceLastBallUpdate = 0
    
@@ -66,6 +66,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         
         self.northBound?.physicsBody?.categoryBitMask = boundsCategory
         self.northBound?.physicsBody?.contactTestBitMask = ballCategory
+        
     }
     
     fileprivate func getNodesFromScene() {
@@ -321,10 +322,6 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         print(Int32(velocity.dy))
         
         return ClientBallStatePacket(xPos: Int32(position.x), yPos: Int32(position.y), xV: Int32(velocity.dx), yV: Int32(velocity.dy))
-    }
-    
-    func sendBallStatePacket(){
-        
     }
     
     //for individual touches

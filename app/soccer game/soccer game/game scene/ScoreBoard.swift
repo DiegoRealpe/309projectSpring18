@@ -37,8 +37,6 @@ class ScoreBoard{
         blueTeamLabel?.text = String(blueTeamScore)
     }
     
-    
-    
 }
 
 
