@@ -48,7 +48,7 @@ func MakePlayerConnection(client client, packetIn chan<- PacketIn) *playerConnec
 
 func (pConn *playerConnection) startReading() {
 
-	fmt.Println("player reading")
+	if debug {fmt.Println("player reading")}
 	for pConn.isActive == 1 {
 		pConn.tryToPeekAndSetNewPacketLength()
 		pConn.tryToReadPacket()
@@ -63,7 +63,7 @@ func (pConn *playerConnection) sendToPacketIn(data []byte){
 		data:data,
 	}
 
-	fmt.Println("got",packet)
+	if debug {fmt.Println("got",packet)}
 
 	//sending over packetIn must be mutexed because the channel mighn have been changed by another thread
 	pConn.packetInMutex.mut.Lock()
@@ -86,8 +86,8 @@ func (pConn *playerConnection) startTransmitting() {
 		if pConn.isActive == 0 {
 			break
 		}
-		fmt.Println("No longer transmitting to player with id", pConn.id)
 	}
+	fmt.Println("No longer transmitting to player with id", pConn.id)
 }
 
 func (pConn *playerConnection) SetNewPacketInChannel(packetIn chan<- PacketIn) {
