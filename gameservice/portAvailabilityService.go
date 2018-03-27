@@ -8,7 +8,10 @@ is shared memory safe
 
 package main
 
-import "sync"
+import (
+	"sync"
+	"fmt"
+)
 
 const maxUnusedPortsSize = 120
 const basePort = 6001
@@ -29,34 +32,36 @@ unusedPortsSize = maxUnusedPortsSize
 }
 
 func numPortsAvailable() int {
-portArrayMut.Lock()
-size := unusedPortsSize
-portArrayMut.Unlock()
+	portArrayMut.Lock()
+	size := unusedPortsSize
+	portArrayMut.Unlock()
 
-return size
+	return size
 }
 
 func requestPort() int {
-portArrayMut.Lock()
-checkedOutMut.Lock()
+	portArrayMut.Lock()
+	checkedOutMut.Lock()
 
-port := unusedPorts[unusedPortsSize-1]
-unusedPortsSize--
+	port := unusedPorts[unusedPortsSize-1]
+	unusedPortsSize--
 
-checkedOut[port] = true
+	checkedOut[port] = true
 
-portArrayMut.Unlock()
-checkedOutMut.Unlock()
+	portArrayMut.Unlock()
+	checkedOutMut.Unlock()
 
 return port
 }
 
 func freePort(portNumber int) {
-portArrayMut.Lock()
-checkedOutMut.Lock()
-checkedOut[portNumber] = false
-unusedPorts[unusedPortsSize] = portNumber
-unusedPortsSize++
-checkedOutMut.Unlock()
-portArrayMut.Unlock()
+	portArrayMut.Lock()
+	checkedOutMut.Lock()
+	checkedOut[portNumber] = false
+	unusedPorts[unusedPortsSize] = portNumber
+	unusedPortsSize++
+	checkedOutMut.Unlock()
+	portArrayMut.Unlock()
+
+	fmt.Println("port freed, now",numPortsAvailable(),"available")
 }
