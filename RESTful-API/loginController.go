@@ -47,9 +47,8 @@ func (a *App) registerPlayer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	respondWithJSON(w, http.StatusCreated, p)
-	response, _ := json.Marshal(map[string]string{"ApplicationToken": apptoken})
-	w.Write(response) //Appending the application token with the player object
+	profile := PlayerProfile{Profile: p, AppToken: apptoken}
+	respondWithJSON(w, http.StatusCreated, profile)
 }
 
 func (a *App) loginPlayer(w http.ResponseWriter, r *http.Request) {
@@ -75,8 +74,13 @@ func (a *App) loginPlayer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	//5 use GET token model to get apptoken (handle expired)
-
+	dberr = QueryGetToken(a.db, user.ID)
+	if dberr != nil {
+		handleDBErrors(w, dberr)
+		return
+	}
 	//answer with player struct and apptoken
+	respondWithJSON(w, http.StatusCreated, p)
 }
 
 func (a *App) statsPlayer(w http.ResponseWriter, r *http.Request) {

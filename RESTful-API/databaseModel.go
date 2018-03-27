@@ -19,6 +19,13 @@ type Player struct {
 	GoalsScored string `json:"goalsscored,omitempty"`
 }
 
+//PlayerProfile contains a player struct with its respective apptoken
+type PlayerProfile struct {
+	Profile  Player
+	AppToken string `json:"ApplicationToken,omitempty"`
+	Error    string `json:"error-message,omitempty"`
+}
+
 //QueryDeletePlayer Clears Player in database
 func QueryDeletePlayer(db *sql.DB, p *Player) error {
 	request := fmt.Sprintf(`DELETE FROM Players WHERE ID = '%s'`, p.ID)
@@ -189,11 +196,16 @@ func QuerySetToken(db *sql.DB, ID string, appToken string, tokenLife int) error 
 	if err2 != nil {
 		return errors.New("Create Failed fam")
 	}
+	if affected != int64(1) {
+		return errors.New("Abnormal number of creates")
+	}
 	return nil
 }
 
-funct QueryGetToken(db *sql.DB, ID string) error {
-	
+//QueryGetToken query to return the token assigned to a specific token
+func QueryGetToken(db *sql.DB, ID string) error {
+
+	return nil
 }
 
 /*********Helpers*********/
