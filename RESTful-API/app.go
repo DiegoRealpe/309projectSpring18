@@ -45,8 +45,8 @@ func (a *App) initializeRoutes() {
 	a.router.HandleFunc("/player/{ID}", a.deletePlayer).Methods("DELETE")
 	a.router.HandleFunc("/player/{ID}", a.updatePlayer).Methods("PUT")
 	//game methods
-	a.router.HandleFunc("/player/{ID}/login", a.loginPlayer).Methods("GET")             //TODO
-	a.router.HandleFunc("/player/register", a.registerPlayer).Methods("POST")           //TODO
-	a.router.HandleFunc("/player/{ID}/stats", a.statsPlayer).Methods("GET")             //TODO
-	a.router.HandleFunc("/internal/checkApplicationToken", a.checkToken).Methods("GET") //TODO
+	a.router.HandleFunc("/player/{ID}/login", a.loginPlayer).Methods("GET")
+	a.router.HandleFunc("/player/register", a.registerPlayer).Methods("POST")
+	a.router.HandleFunc("/player/{ID}/stats", a.statsPlayer).Methods("GET") //TODO
+	a.router.HandleFunc("/internal/checkApplicationToken", a.checkToken).Methods("GET")
 }

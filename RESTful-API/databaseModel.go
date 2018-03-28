@@ -64,29 +64,6 @@ func QueryCreatePlayer(db *sql.DB, p *Player) error {
 	return errors.New("Abnormal number of creates")
 }
 
-//QueryAllPlayers Returns all the Players stored in the Players table
-func QueryAllPlayers(db *sql.DB) error {
-	return errors.New("Not ready")
-	/*var rows, err = db.Query("SELECT * FROM Players")
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer rows.Close()
-
-	var ID string
-	var Nickname string
-	var results, a, b, c, d int
-	for rows.Next() {
-		err := rows.Scan(&ID, &Nickname, &a, &b, &c, &d)
-		if err != nil {
-			fmt.Println(err)
-		}
-		results++
-		fmt.Println("ID = ", ID, "Nickname = ", Nickname)
-	}
-	fmt.Println("Players in total:", results)*/
-}
-
 //QuerySearchPlayer Looks for Player in database
 func QuerySearchPlayer(db *sql.DB, p *Player) error {
 	if p.ID == "" {
@@ -235,12 +212,27 @@ func QueryGetToken(db *sql.DB, ID string) (string, error) {
 	row.Next()
 	err = row.Scan(&tok, &exp)
 	if err != nil {
-		return "", errors.New("No Token Found")
+		return "", errors.New("No Player Found")
 	}
 	if exp < time.Now().Unix() {
 		return "", errors.New("Application Token Expired")
 	}
 	return tok, nil
+}
+
+//QueryAssertToken returns the nickname of the given apptoken or 404
+func QueryAssertToken(db *sql.DB, AppToken string) (string, error) {
+	row, err := db.Query("SELECT Nickname, expiration FROM TokenTable WHERE applicationToken = ?", AppToken)
+	if err != nil {
+		return "", err
+	}
+	var Nickname string
+	row.Next()
+	err = row.Scan(&Nickname)
+	if err != nil {
+		return "", errors.New("No Player Found")
+	}
+	return Nickname, nil
 }
 
 /*********Helpers*********/

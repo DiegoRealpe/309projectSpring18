@@ -74,7 +74,7 @@ func (a *App) loginPlayer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	//5 use GET token model to get apptoken (handle expired)
-	apptoken, dberr := QueryGetToken(a.db, user.ID)
+	apptoken, dberr := QueryGetUpdateToken(a.db, user.ID)
 	if dberr != nil {
 		handleDBErrors(w, dberr)
 		return
@@ -89,7 +89,13 @@ func (a *App) statsPlayer(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) checkToken(w http.ResponseWriter, r *http.Request) {
-	//TODO
+	token := r.Header.Get("ApplicationToken")
+	nickname, dberr := QueryAssertToken(a.db, token)
+	if dberr != nil {
+		handleDBErrors(w, dberr)
+		return
+	}
+	respondWithJSON(w, http.StatusOK, map[string]string{"Nickname": nickname})
 }
 
 /*********Helpers*********/
