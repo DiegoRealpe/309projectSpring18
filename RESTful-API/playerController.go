@@ -1,7 +1,6 @@
 package main
 
 import (
-	"database/sql"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -100,38 +99,4 @@ func (a *App) updatePlayer(w http.ResponseWriter, r *http.Request) {
 	//Returning modified object
 	respondWithJSON(w, http.StatusOK, p)
 
-}
-
-/*********Helpers*********/
-
-func respondWithError(w http.ResponseWriter, code int, message string) {
-	respondWithJSON(w, code, map[string]string{"error": message})
-}
-
-func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
-	response, _ := json.Marshal(payload)
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(code)
-	w.Write(response)
-}
-
-func handleDBErrors(w http.ResponseWriter, dberr error) {
-	switch dberr {
-
-	case errors.New("Update Error"):
-		respondWithError(w, http.StatusNotModified, dberr.Error())
-	case errors.New("Create Failed fam"):
-		respondWithError(w, http.StatusBadRequest, dberr.Error())
-	case errors.New("Query Error"):
-		respondWithError(w, http.StatusBadRequest, dberr.Error())
-	case errors.New("Abnormal number of creates"):
-		respondWithError(w, http.StatusNotImplemented, dberr.Error())
-	case errors.New("Empty"):
-		respondWithError(w, http.StatusBadRequest, "Empty")
-	case sql.ErrNoRows:
-		respondWithError(w, http.StatusNotFound, "Player not found")
-	default:
-		respondWithError(w, http.StatusInternalServerError, dberr.Error())
-	}
-	return
 }

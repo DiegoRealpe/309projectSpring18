@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"strconv"
 	"strings"
 	"time"
 
@@ -238,31 +237,4 @@ func QueryAssertToken(db *sql.DB, AppToken string) (string, error) {
 		return "", errors.New("Application Token Expired")
 	}
 	return Nickname, nil
-}
-
-/*********Helpers*********/
-
-//Helper function that uses a slice of string parameters to prepare an update function for a user
-//Parameters are on the form of col1, val1, col2, val2 ... ID of user
-//Any less than 3 strings will return an empty string instead
-func prepUpdate(parameters []string) string {
-	i := len(parameters)
-	var j int
-	if (i%2) != 1 || i < 2 {
-		return "Not enough parameters: " + strconv.Itoa(i)
-	}
-	stmt := "UPDATE Players SET"
-	for j < i-3 {
-		stmt += fmt.Sprintf("`%s` = '%s',", parameters[j], parameters[j+1])
-		j += 2
-	}
-
-	return stmt + fmt.Sprintf("`%s` = '%s' WHERE ID = '%s'", parameters[j], parameters[j+1], parameters[j+2])
-}
-
-//Helper functions that returns a future epoch time
-//calculated from the time of the call plus a number of days given by parameter
-func getExpiration(days int) int64 {
-	epochDays := 86400 * days //epoch day lenght for every day in parameter
-	return (time.Now().Unix() + int64(epochDays))
 }

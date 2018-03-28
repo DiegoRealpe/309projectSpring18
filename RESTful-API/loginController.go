@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -96,13 +95,4 @@ func (a *App) checkToken(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	respondWithJSON(w, http.StatusOK, map[string]string{"Nickname": nickname})
-}
-
-/*********Helpers*********/
-
-//Stupid funtion to try and make a random number
-func appTokenGen(ID string) string {
-	i, _ := strconv.Atoi(ID)
-	i = i*186282 + i*299792 //speed of light in mps and kms
-	return strconv.Itoa(i)
 }

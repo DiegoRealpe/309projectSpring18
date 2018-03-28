@@ -229,7 +229,7 @@ func TestFBApiAccess(t *testing.T) {
 	getFBUser(testUserToken)
 }
 
-/*********Helpers*********/
+/*********Test Helpers*********/
 
 func addUsers(count int) {
 	if count < 1 {
