@@ -13,7 +13,7 @@ type playerConnection struct {
 	packetOut 		chan PacketOut
 	portNumber		int
 	id				int
-	isActive int
+	isActive 		int
 
 	packetLength int //if no packet is being read, packetLength should be 0
 }
@@ -144,6 +144,9 @@ func (pConn *playerConnection) tryToReadPacket(){
 	pConn.sendToPacketIn(peeked)
 }
 
+func (pConn *playerConnection) disconnect(){
+	pConn.client.connection.Close()
+}
 
 var inputPacketLengths = map[byte]int{
 	120 : 17,

@@ -42,6 +42,8 @@ func (portHttpController *portHttpController) handlePortRequested(w http.Respons
 
 		conn, _ := ln.Accept()
 
+		ln.Close()// close connection so no new connections are accepted after player has quit
+
 		connClient := clientConnection{
 			connection: conn,
 			port:				usedport,

@@ -85,7 +85,7 @@ func (g *Game) respondTo125(in *PacketIn, out chan<- PacketOut){
 	freePort(g.players[disconnectingPlayer].portNumber)
 	g.players[disconnectingPlayer].isActive = 0
 	fmt.Println("Player", disconnectingPlayer, "has disconnected")
-
+	g.players[disconnectingPlayer].disconnect()
 }
 
 func (g *Game) allConnectionIDsBut(id int) []int {
