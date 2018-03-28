@@ -231,7 +231,7 @@ func QueryAssertToken(db *sql.DB, AppToken string) (string, error) {
 	row.Next()
 	err = row.Scan(&Nickname, &exp)
 	if err != nil {
-		return "", errors.New("No Player Found")
+		return "", errors.New("Empty Query")
 	}
 	if exp < time.Now().Unix() {
 		return "", errors.New("Application Token Expired")
