@@ -15,14 +15,14 @@ func (a *App) registerPlayer(w http.ResponseWriter, r *http.Request) {
 	//2 check token with fb and get AppUser struct
 	user := getFBUser(token)
 	if user.Valid == false {
-		respondWithError(w, http.StatusForbidden, "Token Error")
+		respondWithError(w, http.StatusConflict, "Facebook Token Error")
 		return
 	}
 	//3 get nickname and create player
 	var p Player
 	decoder := json.NewDecoder(r.Body) //Passing credentials through http request body
 	if err := decoder.Decode(&p); err != nil {
-		respondWithError(w, http.StatusNotAcceptable, "Invalid request payload")
+		respondWithError(w, http.StatusBadRequest, "Invalid request body")
 		return
 	}
 	defer r.Body.Close()
@@ -56,7 +56,7 @@ func (a *App) loginPlayer(w http.ResponseWriter, r *http.Request) {
 	//2 check the graph api and get AppUser object
 	user := getFBUser(token)
 	if user.Valid == false {
-		respondWithError(w, http.StatusForbidden, "Token Error")
+		respondWithError(w, http.StatusConflict, "Facebook Token Error")
 		return
 	}
 	//3 query AppUser FBID in FBdatatable to get game id
@@ -80,7 +80,7 @@ func (a *App) loginPlayer(w http.ResponseWriter, r *http.Request) {
 	}
 	//6 answer with player struct and apptoken
 	profile := PlayerProfile{Profile: p, AppToken: apptoken}
-	respondWithJSON(w, http.StatusOK, profile)
+	respondWithJSON(w, http.StatusAccepted, profile)
 }
 
 func (a *App) statsPlayer(w http.ResponseWriter, r *http.Request) {

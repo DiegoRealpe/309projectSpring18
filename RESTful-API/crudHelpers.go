@@ -59,18 +59,18 @@ func handleDBErrors(w http.ResponseWriter, dberr error) {
 		respondWithError(w, http.StatusBadRequest, dberr.Error())
 	case errors.New("Query Error"):
 		respondWithError(w, http.StatusBadRequest, dberr.Error())
-	case errors.New("Abnormal number of creates"):
+	case errors.New("Create Fail"):
 		respondWithError(w, http.StatusNotImplemented, dberr.Error())
 	case errors.New("Empty"):
 		respondWithError(w, http.StatusBadRequest, "Empty")
 	case sql.ErrNoRows:
-		respondWithError(w, http.StatusNotFound, "Player not found")
-	case errors.New("Empty Query"):
+		respondWithError(w, http.StatusNotFound, "Database Not Affected")
+	case errors.New("Player Not Found"):
 		respondWithError(w, http.StatusNotFound, dberr.Error())
 	case errors.New("Application Token Expired"):
 		respondWithError(w, http.StatusUnauthorized, dberr.Error())
 	default:
-		respondWithError(w, http.StatusInternalServerError, dberr.Error())
+		respondWithError(w, http.StatusBadRequest, dberr.Error())
 	}
 	return
 }

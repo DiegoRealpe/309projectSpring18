@@ -50,17 +50,17 @@ func QueryCreatePlayer(db *sql.DB, p *Player) error {
 	if err != nil {
 		return err
 	}
-	affected, err2 := result.RowsAffected()
-	if err2 != nil {
-		return errors.New("Create Failed fam")
+	affected, err := result.RowsAffected()
+	if err != nil {
+		return err
 	}
-	if affected == int64(1) {
-		db.QueryRow("SELECT ID FROM Players WHERE Nickname = ?", p.Nickname).Scan(&p.ID)
-		p.GamesPlayed = "0"
-		p.GoalsScored = "0"
-		return nil
+	if affected == int64(0) {
+		return errors.New("Create Fail")
 	}
-	return errors.New("Abnormal number of creates")
+	db.QueryRow("SELECT ID FROM Players WHERE Nickname = ?", p.Nickname).Scan(&p.ID)
+	p.GamesPlayed = "0"
+	p.GoalsScored = "0"
+	return nil
 }
 
 //QuerySearchPlayer Looks for Player in database
@@ -141,10 +141,10 @@ func QueryCreateFBData(db *sql.DB, u *AppUser) error {
 	}
 	affected, err2 := result.RowsAffected()
 	if err2 != nil {
-		return errors.New("Create Failed fam")
+		return err2
 	}
-	if affected != int64(1) {
-		return errors.New("Abnormal number of creates")
+	if affected == int64(0) {
+		return errors.New("Create Fail")
 	}
 	return nil
 }
@@ -170,7 +170,7 @@ func QuerySetToken(db *sql.DB, ID string, appToken string, tokenLife int) error 
 	}
 	affected, _ := result.RowsAffected()
 	if affected != int64(1) {
-		return errors.New("Abnormal number of creates")
+		return errors.New("Create Fail")
 	}
 	return nil
 }
@@ -195,7 +195,7 @@ func QueryGetUpdateToken(db *sql.DB, ID string) (string, error) {
 	row.Next()
 	err = row.Scan(&tok)
 	if err != nil {
-		return "", errors.New("No Token Found")
+		return "", errors.New("Player Not Found")
 	}
 	return tok, nil
 }
@@ -211,7 +211,7 @@ func QueryGetToken(db *sql.DB, ID string) (string, error) {
 	row.Next()
 	err = row.Scan(&tok, &exp)
 	if err != nil {
-		return "", errors.New("No Player Found")
+		return "", errors.New("Player Not Found")
 	}
 	if exp < time.Now().Unix() {
 		return "", errors.New("Application Token Expired")
@@ -231,7 +231,7 @@ func QueryAssertToken(db *sql.DB, AppToken string) (string, error) {
 	row.Next()
 	err = row.Scan(&Nickname, &exp)
 	if err != nil {
-		return "", errors.New("Empty Query")
+		return "", errors.New("Player Not Found")
 	}
 	if exp < time.Now().Unix() {
 		return "", errors.New("Application Token Expired")
