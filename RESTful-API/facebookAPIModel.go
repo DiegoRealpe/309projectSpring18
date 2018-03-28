@@ -66,19 +66,17 @@ func parseFbApiResponse(response *http.Response) *AppUser {
 	//read full body
 	body, _ := ioutil.ReadAll(response.Body)
 
-	wasError, fbError := wasFBError(body)
+	wasError, _ := wasFBError(body)
 	if wasError {
-		//log error and return appUser s.t. Valid = false
-		fmt.Println(fbError)
 
 		return &AppUser{Valid: false}
-	} else {
-
-		fbApiObject := parseJsonToFbApiObject(body)
-		appUser := fbApiObject.toAppUser()
-
-		return appUser
 	}
+
+	fbApiObject := parseJsonToFbApiObject(body)
+	appUser := fbApiObject.toAppUser()
+
+	return appUser
+
 }
 
 //parses FB API response into a FBAPIObject

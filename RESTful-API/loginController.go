@@ -74,13 +74,14 @@ func (a *App) loginPlayer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	//5 use GET token model to get apptoken (handle expired)
-	dberr = QueryGetToken(a.db, user.ID)
+	/*dberr = QueryGetToken(a.db, user.ID)
 	if dberr != nil {
 		handleDBErrors(w, dberr)
 		return
-	}
+	}*/
 	//answer with player struct and apptoken
-	respondWithJSON(w, http.StatusCreated, p)
+	//profile := PlayerProfile{Profile: p, AppToken: apptoken}
+	//respondWithJSON(w, http.StatusCreated, profile)
 }
 
 func (a *App) statsPlayer(w http.ResponseWriter, r *http.Request) {

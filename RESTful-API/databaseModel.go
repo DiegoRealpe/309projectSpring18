@@ -192,20 +192,42 @@ func QuerySetToken(db *sql.DB, ID string, appToken string, tokenLife int) error 
 	if err != nil {
 		return err
 	}
-	affected, err2 := result.RowsAffected()
-	if err2 != nil {
-		return errors.New("Create Failed fam")
-	}
+	affected, _ := result.RowsAffected()
 	if affected != int64(1) {
 		return errors.New("Abnormal number of creates")
 	}
 	return nil
 }
 
-//QueryGetToken query to return the token assigned to a specific token
-func QueryGetToken(db *sql.DB, ID string) error {
+//QueryGetUpdateToken query to return the token assigned to a specific ID
+func QueryGetUpdateToken(db *sql.DB, ID string) (string, error) {
+	res, err := db.Exec(`UPDATE TokenTable SET expiration = ? WHERE playerID = 1`, getExpiration(1), ID)
+	if err != nil {
+		return "", err
+	}
+	affected, _ := res.RowsAffected()
+	if int(affected) == 0 {
+		//return "no results", nil
+	}
+	row, err := db.Query("SELECT applicationToken FROM TokenTable WHERE playerID = ?", ID)
+	if err != nil {
+		return "", err
+	}
+	var t string
+	row.Scan(&t)
+	return t, nil
+}
 
-	return nil
+//QueryGetToken query to return the token assigned to a specific ID
+func QueryGetToken(db *sql.DB, ID int) (string, error) {
+	row, err := db.Query("SELECT applicationToken FROM TokenTable WHERE playerID = ? AND expiration > ?",
+		ID, time.Now().Unix())
+	if err != nil {
+		return "", err
+	}
+	var t string
+	row.Scan(&t)
+	return t, nil
 }
 
 /*********Helpers*********/
