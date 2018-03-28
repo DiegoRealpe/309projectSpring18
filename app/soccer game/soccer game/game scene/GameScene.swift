@@ -40,6 +40,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     var players : [SKSpriteNode] = []
     var playerNumber : Int?
     var playerLabelRelativePosition = CGPoint(x: 0, y: 30)
+    var isHost = false
     
     var localPlayerStateWasUpdated = true
     var localBallStateWasUpdates = true //make true when contact is detected
@@ -51,30 +52,6 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     let ballCategory:UInt32 = 0b1 << 2;
     let leftGoalCategory:UInt32 = 0b1 << 3;
     let rightGoalCategory:UInt32 = 0b1 << 4;
-    
-    fileprivate func configureCollisions() {
-        self.physicsWorld.contactDelegate = self
-        
-        self.ballNode?.physicsBody?.categoryBitMask = ballCategory
-        self.ballNode?.physicsBody?.contactTestBitMask = playerCategory | leftGoalCategory |  rightGoalCategory
-        
-        self.leftGoal?.physicsBody?.categoryBitMask = leftGoalCategory
-        self.leftGoal?.physicsBody?.contactTestBitMask = ballCategory
-        
-        self.rightGoal?.physicsBody?.categoryBitMask = rightGoalCategory
-        self.rightGoal?.physicsBody?.contactTestBitMask = ballCategory
-        
-        self.northBound?.physicsBody?.categoryBitMask = boundsCategory
-        self.northBound?.physicsBody?.contactTestBitMask = ballCategory
-        
-    }
-    
-    fileprivate func getNodesFromScene() {
-        self.quitLabel = self.childNode(withName: "Quit Label") as? SKLabelNode
-        self.ballNode = self.childNode(withName: "Ball") as? SKSpriteNode
-        self.leftGoal = self.childNode(withName: "Left Goal") as? SKSpriteNode
-        self.rightGoal = self.childNode(withName: "Right Goal") as? SKSpriteNode
-    }
     
     override func didMove(to view: SKView) {
         print("moved to game scene")
@@ -102,6 +79,30 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         configureManagedTCPConnection()
         configurePacketResponder()
         
+    }
+    
+    fileprivate func configureCollisions() {
+        self.physicsWorld.contactDelegate = self
+        
+        self.ballNode?.physicsBody?.categoryBitMask = ballCategory
+        self.ballNode?.physicsBody?.contactTestBitMask = playerCategory | leftGoalCategory |  rightGoalCategory
+        
+        self.leftGoal?.physicsBody?.categoryBitMask = leftGoalCategory
+        self.leftGoal?.physicsBody?.contactTestBitMask = ballCategory
+        
+        self.rightGoal?.physicsBody?.categoryBitMask = rightGoalCategory
+        self.rightGoal?.physicsBody?.contactTestBitMask = ballCategory
+        
+        self.northBound?.physicsBody?.categoryBitMask = boundsCategory
+        self.northBound?.physicsBody?.contactTestBitMask = ballCategory
+        
+    }
+    
+    fileprivate func getNodesFromScene() {
+        self.quitLabel = self.childNode(withName: "Quit Label") as? SKLabelNode
+        self.ballNode = self.childNode(withName: "Ball") as? SKSpriteNode
+        self.leftGoal = self.childNode(withName: "Left Goal") as? SKSpriteNode
+        self.rightGoal = self.childNode(withName: "Right Goal") as? SKSpriteNode
     }
     
     
@@ -177,6 +178,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         
         addLabelToUserPlayer()
         
+        self.isHost = self.playerNumber == 0
     }
     
     private func addLabelToUserPlayer(){
@@ -258,6 +260,10 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     }
     
     fileprivate func sendBallStatePacketIfNecesarry() {
+        guard self.isHost else{
+            return
+        }
+        
         if (self.localBallStateWasUpdates && self.ballNode != nil) || self.waitsSinceLastBallUpdate >= self.forceUpdateWaits {
             let packet = self.makeBallStatePacket()
             
