@@ -205,16 +205,17 @@ func TestTokenQuery(t *testing.T) {
 
 	//clearTable()
 
-	_, err := QueryGetUpdateToken(testApp.db, "1")
-	//t.Errorf("Whaaaat?  %s Whaaat???", strconv.Itoa(int(getExpiration(1))))
+	_, err := QueryGetToken(testApp.db, "3")
+	//t.Errorf("AAAAAAAAA" + s)
 	if err != nil {
-		fmt.Println(err.Error())
+		t.Errorf(err.Error())
 	}
+
 }
 
 //to get a new token login to facebook and get one from one of our test user
-const testUserToken = "EAACqvTZC1964BAFhvjWqqG8U1ijxhgIG2CTZAucjj9OZBKHW65rE0iE5q9OVgZBd0Jb1I0ZBZBetZBCCeNFufTVULJpreWPMpOLtuXZCoZBgBECyqDHlNgoUS3BMtnyLTSJUKlqwpnW7ZC4S3JSDoZBhJZC0ZCt2X5wcJOvZARZAJBDHNaWS7jnWhGMIkg8H6zVd3ZBofK1QcQ3QviVxgouJR8h6y5NFLfVVK3coFXZBUBeiY0GLABwZDZD"
-const testUserToken2 = "EAACqvTZC1964BAO0joMrQ6sNLxLbyGWwK1ZCk54q3DetZAyRO9pAcSOYJEc96pb6nfbpZAdBIovqgWUVkkNhEXfZAHhUTQde9CPZBxrmxxh6MUmKJyXNHEVITr7k0frw9ZAEZBfr0i2Nm1rDmdZBWu3hN9uzZAizZBrBUeGfwSjxP5ymnx62TroVY8fi2lGvYHu4nw9KHSSLz9IPdjMGnZBPakmDjKNLTlVbm8zTuR4YidaHFwZDZD"
+const testUserToken = "EAACqvTZC1964BAI65ZAGpMQTZAkTWdOaFvncQPeHzTnWOoJJXbcr0wQpXjZAfwGaHqL9PE2aoNuBHZCcbRKnCualIhYbb5HfCgDUoZAfXaW6c0wI9vZBkbcuVD466JN0rk4SpWfNh3C9MF8xsdnRqtpREOULfdv3DSlGiL7hKDiWI1pIf73KvtvRT6afubu1AqJtjifPbEphYKbERwyT9ZBq1WAx89qsyLLd8HqWvGOFQZCbqHYSwgjZB0"
+const testUserToken2 = "EAACqvTZC1964BAMzmhvGu9XPgRdmozn5fZAZCZBPa3aq1qUIsTV4ccqxYShkDhp9rHoQn15WdsKDFcxYHwV6pDUbUivNolLoY1qznMCYCtK28zji0Xfp3z4gZAF7eWrJ4s6N1BMH7vTNseO3SLDsAAA0b44Yc3UySbKrMe6qKTuv58293Q7f3yU4uaazazzaLnfJMXV9h6FDwFjhElyWK27CMVZAjb7bWb11tqlZBtmggZDZD"
 
 func TestFBApiAccess(t *testing.T) {
 	getFBUser(testUserToken)

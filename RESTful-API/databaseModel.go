@@ -201,33 +201,46 @@ func QuerySetToken(db *sql.DB, ID string, appToken string, tokenLife int) error 
 
 //QueryGetUpdateToken query to return the token assigned to a specific ID
 func QueryGetUpdateToken(db *sql.DB, ID string) (string, error) {
-	res, err := db.Exec(`UPDATE TokenTable SET expiration = ? WHERE playerID = 1`, getExpiration(1), ID)
+	res, err := db.Exec(`UPDATE TokenTable SET expiration = ? WHERE playerID = ?`, getExpiration(1), ID)
 	if err != nil {
 		return "", err
 	}
 	affected, _ := res.RowsAffected()
 	if int(affected) == 0 {
-		//return "no results", nil
+		return "", sql.ErrNoRows
 	}
-	row, err := db.Query("SELECT applicationToken FROM TokenTable WHERE playerID = ?", ID)
+
+	row, err := db.Query("SELECT applicationToken FROM TokenTable WHERE playerID = ?",
+		ID)
 	if err != nil {
 		return "", err
 	}
-	var t string
-	row.Scan(&t)
-	return t, nil
+	var tok string
+	row.Next()
+	err = row.Scan(&tok)
+	if err != nil {
+		return "", errors.New("No Token Found")
+	}
+	return tok, nil
 }
 
 //QueryGetToken query to return the token assigned to a specific ID
-func QueryGetToken(db *sql.DB, ID int) (string, error) {
-	row, err := db.Query("SELECT applicationToken FROM TokenTable WHERE playerID = ? AND expiration > ?",
-		ID, time.Now().Unix())
+func QueryGetToken(db *sql.DB, ID string) (string, error) {
+	row, err := db.Query("SELECT applicationToken, expiration FROM TokenTable WHERE playerID = ?", ID)
 	if err != nil {
 		return "", err
 	}
-	var t string
-	row.Scan(&t)
-	return t, nil
+	var tok string
+	var exp int64
+	row.Next()
+	err = row.Scan(&tok, &exp)
+	if err != nil {
+		return "", errors.New("No Token Found")
+	}
+	if exp < time.Now().Unix() {
+		return "", errors.New("Application Token Expired")
+	}
+	return tok, nil
 }
 
 /*********Helpers*********/
