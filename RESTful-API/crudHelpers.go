@@ -53,18 +53,14 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 func handleDBErrors(w http.ResponseWriter, dberr error) {
 	switch dberr {
 
-	case errors.New("Update Error"):
+	case errors.New("Not Modified"):
 		respondWithError(w, http.StatusNotModified, dberr.Error())
-	case errors.New("Create Failed fam"):
-		respondWithError(w, http.StatusBadRequest, dberr.Error())
-	case errors.New("Query Error"):
-		respondWithError(w, http.StatusBadRequest, dberr.Error())
 	case errors.New("Create Fail"):
 		respondWithError(w, http.StatusNotImplemented, dberr.Error())
-	case errors.New("Empty"):
-		respondWithError(w, http.StatusBadRequest, "Empty")
+	case errors.New("Invalid user ID"):
+		respondWithError(w, http.StatusBadRequest, dberr.Error())
 	case sql.ErrNoRows:
-		respondWithError(w, http.StatusNotFound, "Database Not Affected")
+		respondWithError(w, http.StatusNotFound, dberr.Error())
 	case errors.New("Player Not Found"):
 		respondWithError(w, http.StatusNotFound, dberr.Error())
 	case errors.New("Application Token Expired"):

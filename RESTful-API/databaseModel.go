@@ -30,14 +30,14 @@ func QueryDeletePlayer(db *sql.DB, p *Player) error {
 	request := fmt.Sprintf(`DELETE FROM Players WHERE ID = '%s'`, p.ID)
 	result, err := db.Exec(request)
 	if err != nil {
-		return errors.New("Query Error")
+		return err
 	}
 	affected, err2 := result.RowsAffected()
 	if err2 != nil {
-		return errors.New("Resulting Rows Error")
+		return err2
 	}
 	if affected != int64(1) {
-		return errors.New("None Found")
+		return errors.New("Player Not Found")
 	}
 	return nil
 }
@@ -66,12 +66,12 @@ func QueryCreatePlayer(db *sql.DB, p *Player) error {
 //QuerySearchPlayer Looks for Player in database
 func QuerySearchPlayer(db *sql.DB, p *Player) error {
 	if p.ID == "" {
-		return errors.New("Empty")
+		return errors.New("Invalid user ID")
 	}
 	request := fmt.Sprintf("SELECT * FROM Players WHERE ID = '%s'", p.ID)
 	rows, err := db.Query(request)
 	if err != nil {
-		return errors.New("Query Error")
+		return err
 	}
 	defer rows.Close()
 
@@ -81,7 +81,7 @@ func QuerySearchPlayer(db *sql.DB, p *Player) error {
 	for rows.Next() {
 		err := rows.Scan(&ID, &Nickname, &a, &b, &c, &d)
 		if err != nil {
-			fmt.Println(err)
+			return sql.ErrNoRows
 		}
 		results++
 		p.Nickname = Nickname
@@ -100,7 +100,7 @@ func QuerySearchPlayer(db *sql.DB, p *Player) error {
 //MODIFIES Player object to overrwrite
 func QueryUpdatePlayer(db *sql.DB, p *Player) error {
 	if p.ID == "" {
-		return errors.New("Empty ID")
+		return errors.New("Invalid user ID")
 	}
 	var mods []string //Declaring slie of values to change
 
@@ -123,7 +123,10 @@ func QueryUpdatePlayer(db *sql.DB, p *Player) error {
 	if execErr != nil {
 		return execErr
 	}
-	i, _ := effect.RowsAffected()
+	i, err := effect.RowsAffected()
+	if err != nil {
+		return err
+	}
 	if int(i) == 0 {
 		return errors.New("Not Modified")
 	}
@@ -151,10 +154,10 @@ func QueryCreateFBData(db *sql.DB, u *AppUser) error {
 
 //QueryGetFBDataID Looks in the db if there is an ID corresponding the AppUser's FB ID
 func QueryGetFBDataID(db *sql.DB, u *AppUser) error {
-	row := db.QueryRow("SELECT PlayerID FROM FacebookData WHERE FacebookID = ?", u.FacebookID)
+	row, err := db.Query("SELECT PlayerID FROM FacebookData WHERE FacebookID = ?", u.FacebookID)
 	row.Scan(&u.ID)
-	if strings.Compare(u.ID, "") == 0 {
-		return errors.New("ID not found")
+	if strings.Compare(u.ID, "") == 0 || err != nil {
+		return errors.New("Invalid user ID")
 	}
 	return nil
 }

@@ -18,7 +18,7 @@ func (a *App) createPlayer(w http.ResponseWriter, r *http.Request) {
 	var p Player
 	decoder := json.NewDecoder(r.Body) //Passing credentials through http request body
 	if err := decoder.Decode(&p); err != nil {
-		respondWithError(w, http.StatusNotAcceptable, "Invalid request payload")
+		respondWithError(w, http.StatusBadRequest, "Invalid request body")
 		return
 	}
 	defer r.Body.Close()
@@ -36,7 +36,7 @@ func (a *App) getPlayer(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["ID"])
 	if err != nil {
-		respondWithError(w, http.StatusBadRequest, "Invalid user ID")
+		handleDBErrors(w, errors.New("Invalid user ID"))
 		return
 	}
 	p := Player{ID: strconv.Itoa(id)}
@@ -47,7 +47,7 @@ func (a *App) getPlayer(w http.ResponseWriter, r *http.Request) {
 		handleDBErrors(w, err)
 	}
 
-	respondWithJSON(w, http.StatusOK, p)
+	respondWithJSON(w, http.StatusAccepted, nil)
 }
 
 func (a *App) deletePlayer(w http.ResponseWriter, r *http.Request) {
@@ -56,18 +56,18 @@ func (a *App) deletePlayer(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["ID"])
 	if err != nil || id == 0 {
-		respondWithError(w, http.StatusBadRequest, "Invalid User ID")
+		handleDBErrors(w, errors.New("Invalid user ID"))
 		return
 	}
 	p := Player{ID: strconv.Itoa(id)}
 
 	//Executing delete query model
 	if err := QueryDeletePlayer(a.db, &p); err != nil {
-		handleDBErrors(w, errors.New("Delete Player Query Error"))
+		handleDBErrors(w, err)
 		return
 	}
 
-	respondWithJSON(w, http.StatusOK, map[string]string{"result": "success"})
+	respondWithJSON(w, http.StatusAccepted, nil)
 }
 
 func (a *App) updatePlayer(w http.ResponseWriter, r *http.Request) {
