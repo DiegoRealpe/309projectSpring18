@@ -3,74 +3,64 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"io"
 	"net"
 	"net/http"
-	"strconv"
 )
 
-type client struct{
+type client struct {
 	connection net.Conn
-	reader *bufio.Reader
-	writer *bufio.Writer
-	clientno int
+	reader     *bufio.Reader
+	writer     *bufio.Writer
+	clientNum  int
+	port int
 }
 
-var ports []int
+const debug = false
 
-const NUMPLAYERS int = 2
+const NUMPLAYERS = 2
 
-var connPasser chan net.Conn
+func main() {
 
-//when an http request is sent, send the requester a port and start listening on that port
-func handler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("starting game service!")
+	initPortService()
 
-	if len(ports) < 1 {
-		io.WriteString(w, "no ports avaliable, sorry fam")
-		return
-	}
+	//ports = []int{6001, 6002, 6003, 6004, 6005, 6006, 6007, 6008, 6009, 6010, 6011, 6012} //todo: make a staic function with static variables for this
 
-	usedport := ports[len(ports)-1]
+	portHttpController := makePortHttpController()
 
-	ports = ports[:len(ports)-1]
+	matchMakingController := makeMatchmakingController()
 
-	stringport := strconv.Itoa(usedport)
+	go listenForConnections(portHttpController.connPasser,matchMakingController)
 
-	io.WriteString(w, stringport)
-
-	go func() {//accept the first attempted connection on the port
-		ln, _ := net.Listen("tcp", ":"+stringport)
-
-		conn, _ := ln.Accept()
-
-		connPasser <- conn
-	}()
-
+	//start listening for http
+	startHttpServer(portHttpController)
 }
 
-func main(){
-	ports = []int{5543, 9078}
-	connPasser = make(chan net.Conn)
-	startHttpServer()
-	group := new([NUMPLAYERS]client)
-	i := 0
+func listenForConnections(connPasser <-chan clientConnection, matchMakingController matchMakingController) {
+	fmt.Println("listening for connections")
+
+	currentClientNumber := 0
+
 	for conn := range connPasser {
-		group[i].connection = conn
-		group[i].reader = bufio.NewReader(conn)
-		group[i].writer = bufio.NewWriter(conn)
-		group[i].clientno = i
-		i++
-		if i == NUMPLAYERS - 1{
-			go func(group *[NUMPLAYERS]client){
-				initgame(group)
-			}(group)
-			i = 0
-		}
+		fmt.Println("starting handling for a connection")
+
+		client := client{}
+		client.connection = conn.connection
+		client.reader = bufio.NewReader(conn.connection)
+		client.writer = bufio.NewWriter(conn.connection)
+		client.clientNum = currentClientNumber
+		client.port = conn.port
+
+		currentClientNumber++
+
+		playerConnection := MakePlayerConnection(client,nil)
+
+		matchMakingController.addConnectionToPool(playerConnection)
 	}
 }
 
-func startHttpServer() {
-	http.HandleFunc("/", handler)
+func startHttpServer(portHttpController portHttpController) {
+	http.HandleFunc("/", portHttpController.handlePortRequested)
 	err := http.ListenAndServe(":6000", nil)
 
 	if err != nil {
