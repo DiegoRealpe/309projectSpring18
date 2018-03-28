@@ -178,7 +178,7 @@ func QuerySetToken(db *sql.DB, ID string, appToken string, tokenLife int) error 
 
 //QueryGetUpdateToken query to return the token assigned to a specific ID
 func QueryGetUpdateToken(db *sql.DB, ID string) (string, error) {
-	res, err := db.Exec(`UPDATE TokenTable SET expiration = ? WHERE playerID = ?`, getExpiration(1), ID)
+	res, err := db.Exec(`UPDATE TokenTable SET expiration = ? WHERE playerID = ?`, getExpiration(2), ID)
 	if err != nil {
 		return "", err
 	}
@@ -222,15 +222,20 @@ func QueryGetToken(db *sql.DB, ID string) (string, error) {
 
 //QueryAssertToken returns the nickname of the given apptoken or 404
 func QueryAssertToken(db *sql.DB, AppToken string) (string, error) {
-	row, err := db.Query("SELECT Nickname, expiration FROM TokenTable WHERE applicationToken = ?", AppToken)
+	row, err := db.Query(`SELECT Nickname, expiration FROM TokenTable 
+	JOIN Players ON TokenTable.playerID = Players.ID WHERE applicationToken = ?`, AppToken)
 	if err != nil {
 		return "", err
 	}
 	var Nickname string
+	var exp int64
 	row.Next()
-	err = row.Scan(&Nickname)
+	err = row.Scan(&Nickname, &exp)
 	if err != nil {
 		return "", errors.New("No Player Found")
+	}
+	if exp < time.Now().Unix() {
+		return "", errors.New("Application Token Expired")
 	}
 	return Nickname, nil
 }

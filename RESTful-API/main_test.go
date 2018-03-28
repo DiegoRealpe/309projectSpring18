@@ -203,10 +203,18 @@ func TestTokenQuery(t *testing.T) {
 	testApp = App{}
 	testApp.Initialize()
 
-	//clearTable()
+	clearTable()
 
-	_, err := QueryGetToken(testApp.db, "3")
-	//t.Errorf("AAAAAAAAA" + s)
+	payload := []byte(`{"Nickname":"dumdum1"}`)
+	req, _ := http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
+	req.Header.Set("FacebookToken", testUserToken)
+	response := executeRequest(req)
+	checkResponseCode(t, http.StatusCreated, response.Code)
+
+	s, err := QueryAssertToken(testApp.db, "486074")
+	if s != "dumdum1" {
+		t.Errorf("returning nickname expected to be 'dumdum1'. Got '%s'", s)
+	}
 	if err != nil {
 		t.Errorf(err.Error())
 	}
@@ -214,8 +222,8 @@ func TestTokenQuery(t *testing.T) {
 }
 
 //to get a new token login to facebook and get one from one of our test user
-const testUserToken = "EAACqvTZC1964BAI65ZAGpMQTZAkTWdOaFvncQPeHzTnWOoJJXbcr0wQpXjZAfwGaHqL9PE2aoNuBHZCcbRKnCualIhYbb5HfCgDUoZAfXaW6c0wI9vZBkbcuVD466JN0rk4SpWfNh3C9MF8xsdnRqtpREOULfdv3DSlGiL7hKDiWI1pIf73KvtvRT6afubu1AqJtjifPbEphYKbERwyT9ZBq1WAx89qsyLLd8HqWvGOFQZCbqHYSwgjZB0"
-const testUserToken2 = "EAACqvTZC1964BAMzmhvGu9XPgRdmozn5fZAZCZBPa3aq1qUIsTV4ccqxYShkDhp9rHoQn15WdsKDFcxYHwV6pDUbUivNolLoY1qznMCYCtK28zji0Xfp3z4gZAF7eWrJ4s6N1BMH7vTNseO3SLDsAAA0b44Yc3UySbKrMe6qKTuv58293Q7f3yU4uaazazzaLnfJMXV9h6FDwFjhElyWK27CMVZAjb7bWb11tqlZBtmggZDZD"
+const testUserToken = "EAACqvTZC1964BAJe75cMt5tRyWcEoXo6fhFEjuaq8uXZAolqPSObU1AQ3LV59UiPMwW0ZC5dUgSCw9tin24GqMFZAMN67aST9NpZBtH5LDXvgWgUDEyhKMn7giZAG4H0UgmlRwSVhWRY8Qdagn87ZA8WdZAYvheA2vgXee4ZA7YCMY1unZBySRselJ7SZAwtCN0OqvTdkfzxZCweCNhrGnpLuGyrCFn683pbKkQbMkGAlmzixAZDZD"
+const testUserToken2 = "EAACqvTZC1964BALDmZBZAONvSUYWBLq7Cvzxy3jNYmyX9GkvsZA7BJ8kxuh62Ekz4Fz0qJaZCAbeEWJcsCrR7Rtbev5zX8Ax5qRTaKd2ZAwYQHppZBz6ZCd8ZAR2LBJcZCE5HaGheeHGlO1eb80ipTp2OLBKxqphpk0GgKKqjO81yj8mAEvDBPkUCd4rMXnAKWbvA57YAS8pVKZAA3Hg5ZC5HZAeCjwMKOKuYQa0GHZCyZB0N9C5wZDZD"
 
 func TestFBApiAccess(t *testing.T) {
 	getFBUser(testUserToken)
