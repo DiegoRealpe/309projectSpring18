@@ -12,6 +12,8 @@
 		3A0C313E2038A4860011D18A /* UserDataKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C313D2038A4860011D18A /* UserDataKeys.swift */; };
 		3A119F112048A9E400063D51 /* GamePlayerInformationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A119F102048A9E400063D51 /* GamePlayerInformationModel.swift */; };
 		3A219ECF203B7CEE00FABE0A /* Players.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A219ECE203B7CEE00FABE0A /* Players.sks */; };
+		3A2EFC5F206C25C900C7E36B /* LobbyScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A2EFC5E206C25C900C7E36B /* LobbyScene.sks */; };
+		3A2EFC61206C265600C7E36B /* LobbyScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A2EFC60206C265600C7E36B /* LobbyScene.swift */; };
 		3A31696E2037505900DA2DCC /* NewAccountOrLogin.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A31696D2037505900DA2DCC /* NewAccountOrLogin.sks */; };
 		3A3169722037E84E00DA2DCC /* PacketByteQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3169712037E84E00DA2DCC /* PacketByteQueue.swift */; };
 		3A3169752037E94700DA2DCC /* ConversionUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3169742037E94700DA2DCC /* ConversionUtils.swift */; };
@@ -100,6 +102,8 @@
 		3A0C313D2038A4860011D18A /* UserDataKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataKeys.swift; sourceTree = "<group>"; };
 		3A119F102048A9E400063D51 /* GamePlayerInformationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamePlayerInformationModel.swift; sourceTree = "<group>"; };
 		3A219ECE203B7CEE00FABE0A /* Players.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Players.sks; sourceTree = "<group>"; };
+		3A2EFC5E206C25C900C7E36B /* LobbyScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = LobbyScene.sks; sourceTree = "<group>"; };
+		3A2EFC60206C265600C7E36B /* LobbyScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LobbyScene.swift; sourceTree = "<group>"; };
 		3A31696D2037505900DA2DCC /* NewAccountOrLogin.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = NewAccountOrLogin.sks; sourceTree = "<group>"; };
 		3A3169712037E84E00DA2DCC /* PacketByteQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketByteQueue.swift; sourceTree = "<group>"; };
 		3A3169742037E94700DA2DCC /* ConversionUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversionUtils.swift; sourceTree = "<group>"; };
@@ -181,6 +185,15 @@
 				3A0C313D2038A4860011D18A /* UserDataKeys.swift */,
 			);
 			path = transitional;
+			sourceTree = "<group>";
+		};
+		3A2EFC5D206C257200C7E36B /* lobby scene */ = {
+			isa = PBXGroup;
+			children = (
+				3A2EFC5E206C25C900C7E36B /* LobbyScene.sks */,
+				3A2EFC60206C265600C7E36B /* LobbyScene.swift */,
+			);
+			path = "lobby scene";
 			sourceTree = "<group>";
 		};
 		3A3169732037E8F600DA2DCC /* util */ = {
@@ -283,6 +296,7 @@
 		4C98FBB5201E658600378614 /* soccer game */ = {
 			isa = PBXGroup;
 			children = (
+				3A2EFC5D206C257200C7E36B /* lobby scene */,
 				3A0C313C2038A4430011D18A /* transitional */,
 				3A3169732037E8F600DA2DCC /* util */,
 				4CC91D9A20339A1C00FB9236 /* Accounts */,
@@ -410,6 +424,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3A219ECF203B7CEE00FABE0A /* Players.sks in Resources */,
+				3A2EFC5F206C25C900C7E36B /* LobbyScene.sks in Resources */,
 				3A74A5FC201E6C3E00A1583F /* MainMenu.sks in Resources */,
 				4C98FBC2201E658600378614 /* Main.storyboard in Resources */,
 				3A31696E2037505900DA2DCC /* NewAccountOrLogin.sks in Resources */,
@@ -442,6 +457,7 @@
 				3AB377E02023B5C50019E73E /* CGPointExtension.swift in Sources */,
 				4CC91D9E20339BA700FB9236 /* NewAccountOrLogin.swift in Sources */,
 				3A3169772037EC9500DA2DCC /* SocketPacketResponder.swift in Sources */,
+				3A2EFC61206C265600C7E36B /* LobbyScene.swift in Sources */,
 				4C45B8802069833600F717B7 /* ScoreBoard.swift in Sources */,
 				4C98FBBF201E658600378614 /* GameViewController.swift in Sources */,
 				3A74A604201F86ED00A1583F /* SKSceneTransitionExtension.swift in Sources */,

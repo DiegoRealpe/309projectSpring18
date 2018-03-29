@@ -221,7 +221,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         
         //if tcp connection exists, disconnect from server
         if let mtcp = self.managedTcpConnection {
-            mtcp.sendTCP(data: [125,UInt8(playerNumber!)]) //send packet to disconnect
+            mtcp.sendTCP(data: [125]) //send packet to disconnect
             mtcp.stop()
         }
         

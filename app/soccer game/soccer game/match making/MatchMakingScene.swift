@@ -17,12 +17,16 @@ class MatchMakingScene: SKScene {
     var tcpConn:ManagedTCPConnection?
     
     var connectLabel : SKLabelNode?
+    var quitLabel : SKLabelNode?
     
     override func didMove(to view: SKView) {
         
         //get nodes from parent
-        self.connectLabel = self.childNode(withName: "Connect Label") as? SKLabelNode
+        self.connectLabel = self.childNode(withName: "Match Making Label") as? SKLabelNode
+        self.quitLabel = self.childNode(withName: "Quit Label") as? SKLabelNode
         
+        
+        askServerForTCPPort()
     }
     
     //for simplicity this scene currently only explicitly supplrts 1 touch
@@ -30,11 +34,24 @@ class MatchMakingScene: SKScene {
         guard let first = touches.first else{
             return
         }
-        let location = first.location(in: self)
         
-        if let label = self.connectLabel, label.contains(location) {
-            askServerForTCPPort()
+        let touchPosition = first.location(in: self)
+        if let quit = self.quitLabel, quit.contains(touchPosition){
+            quitWasPressed()
         }
+        
+    }
+    
+    private func quitWasPressed() {
+        print("back to main menu")
+        
+        //if tcp connection exists, disconnect from server
+        if let mtcp = self.tcpConn {
+            mtcp.sendTCP(data: [125]) //send packet to disconnect
+            mtcp.stop()
+        }
+        
+        self.moveToScene(.mainMenu)
     }
     
     //start handshake where server gives TCP port to use for sockets
@@ -64,6 +81,8 @@ class MatchMakingScene: SKScene {
             //set ManagedTCPConnection to use spr as responder
             self.tcpConn = ManagedTCPConnection(address : CommunicationProperties.host, port : port, dataHandler : spr.respond(data:))
         }
+        
+        self.connectLabel?.text = "Waiting for a match"
     }
     
     //for interfacing with the SocketPacketResponder
