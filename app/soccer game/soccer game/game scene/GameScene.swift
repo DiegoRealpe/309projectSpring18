@@ -400,8 +400,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         }
         print("got player left game packet with data:",data)
         
-        let playerToRemove = self.pm!.selectPlayer(playerNum: Int(data[0]))
-        playerToRemove.removeFromParent()
+        self.pm!.removePlayerFromGame(playerNumber: Int(data[1]))
     }
     
     func lookupPlayerNumber() -> Int {
