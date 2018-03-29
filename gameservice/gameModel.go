@@ -84,6 +84,14 @@ func (g *Game) respondTo125(in *PacketIn, out chan<- PacketOut){
 	g.players[disconnectingPlayer].isActive = 0
 	fmt.Println("Player", disconnectingPlayer, "has disconnected")
 	g.players[disconnectingPlayer].disconnect()
+
+	packet126 := PacketOut{
+		size : 2,
+		data : []byte{126,disconnectingPlayer},
+		targetIds: g.allConnectionIDsBut(in.connectionId),
+	}
+
+	out <- packet126
 }
 
 func (g *Game) allConnectionIDsBut(id int) []int {
