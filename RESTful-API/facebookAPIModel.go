@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-//?
+//AppUser contains the user information usable by the crud login controller and the db facebook tables
 type AppUser struct {
 	Valid      bool
 	ID         string
@@ -17,7 +17,7 @@ type AppUser struct {
 }
 
 //structure mimics that of JSON returned by Facebook's API
-type fbApiObject struct {
+type graphUser struct {
 	ID    string `json:"id"`
 	Name  string `json:"name"`
 	Email string `json:"email"`
@@ -33,35 +33,35 @@ type fbError struct {
 	Message   string `json:"message"`
 	Type      string `json:"type"`
 	Code      int    `json:"code"`
-	FBTraceId string `json:"fbtrace_id"`
+	FBTraceID string `json:"fbtrace_id"`
 }
 
-const fbApiRequestBase = "https://graph.facebook.com/v2.3/me"
-const fbApifields = "fields=id,name,email"
+const graphRequestAddress = "https://graph.facebook.com/v2.3/me"
+const fieldsRequested = "fields=id,name,email"
 
 //return user information from facebook. if token was invalid, log error, and return AppUser{Valid:false}
 func getFBUser(accesstoken string) AppUser {
 
-	fbApiUrl := makeFBApiGetUrl(accesstoken)
+	graphRequest := getFacebookAddress(accesstoken)
 	//fmt.Println(fbApiUrl) dont print non errors
 
-	response, error := http.Get(fbApiUrl)
+	response, error := http.Get(graphRequest)
 	if error != nil {
 		fmt.Println(error)
 		return AppUser{Valid: false}
 	}
 	defer response.Body.Close()
 
-	return *parseFbApiResponse(response)
+	return *parseAPIResponse(response)
 }
 
-//makeFBApiGetUrl returns formatted string to query FB API
-func makeFBApiGetUrl(accessToken string) string {
-	return fbApiRequestBase + "?" + fbApifields + "&access_token=" + accessToken
+//getFacebookAddress returns formatted string to query FB API
+func getFacebookAddress(accessToken string) string {
+	return graphRequestAddress + "?" + fieldsRequested + "&access_token=" + accessToken
 }
 
 //parses API response into
-func parseFbApiResponse(response *http.Response) *AppUser {
+func parseAPIResponse(response *http.Response) *AppUser {
 
 	//read full body
 	body, _ := ioutil.ReadAll(response.Body)
@@ -72,23 +72,23 @@ func parseFbApiResponse(response *http.Response) *AppUser {
 		return &AppUser{Valid: false}
 	}
 
-	fbApiObject := parseJsonToFbApiObject(body)
-	appUser := fbApiObject.toAppUser()
+	APIResponseObject := parseJSONResponse(body)
+	appUser := APIResponseObject.toAppUser()
 
 	return appUser
 
 }
 
 //parses FB API response into a FBAPIObject
-func parseJsonToFbApiObject(data []byte) (fbObject *fbApiObject) {
-	fbObject = &fbApiObject{}
+func parseJSONResponse(data []byte) (fbObject *graphUser) {
+	fbObject = &graphUser{}
 	json.Unmarshal(data, &fbObject)
 
 	return
 }
 
 //FBAPIObject function to return its appuser version
-func (fbObject *fbApiObject) toAppUser() (businessUser *AppUser) {
+func (fbObject *graphUser) toAppUser() (businessUser *AppUser) {
 	businessUser = &AppUser{Valid: true}
 
 	businessUser.FullName = fbObject.Name
@@ -117,5 +117,5 @@ const errorLogFormat = `** Facebook authentication error:
 `
 
 func (error fbError) String() string {
-	return fmt.Sprintf(errorLogFormat, error.Message, error.Type, error.Code, error.FBTraceId)
+	return fmt.Sprintf(errorLogFormat, error.Message, error.Type, error.Code, error.FBTraceID)
 }
