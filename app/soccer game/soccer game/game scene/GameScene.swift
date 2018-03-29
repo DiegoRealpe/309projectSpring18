@@ -37,9 +37,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
    
     
     //after didMove is called players is initialized with the exact size of maxPlayers
-    var players : [SKSpriteNode] = []
-    var playerNumber : Int?
-    var playerLabelRelativePosition = CGPoint(x: 0, y: 30)
+    var pm : PlayerManager?
     var isHost = false
     
     var localPlayerStateWasUpdated = true
@@ -47,26 +45,29 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     
     var packetTypeDict : [UInt8:PacketType] = [:]
     
-    let boundsCategory:UInt32 = 0b1
-    let playerCategory:UInt32 = 0b1 << 1
-    let ballCategory:UInt32 = 0b1 << 2;
-    let leftGoalCategory:UInt32 = 0b1 << 3;
-    let rightGoalCategory:UInt32 = 0b1 << 4;
+    static let boundsCategory:UInt32 = 0b1
+    static let playerCategory:UInt32 = 0b1 << 1
+    static let ballCategory:UInt32 = 0b1 << 2;
+    static let leftGoalCategory:UInt32 = 0b1 << 3;
+    static let rightGoalCategory:UInt32 = 0b1 << 4;
     
     override func didMove(to view: SKView) {
         print("moved to game scene")
         
         getNodesFromScene()
         
+        let playerNumber = self.lookupPlayerNumber()
         self.northBound = self.childNode(withName: "North Bound") as? SKSpriteNode
         configureCollisions()
-        configurePlayerNodes()
+        
+        self.pm = PlayerManager(playerNumber : playerNumber,scene : self)
+        self.isHost = self.pm!.playerNumber == 0 //todo make more complex logic
         
         //give all children of the north bounds(all the bounds) the same physics category
         for child in (northBound?.children)!
         {
-            child.physicsBody?.categoryBitMask = boundsCategory
-            child.physicsBody?.contactTestBitMask = ballCategory
+            child.physicsBody?.categoryBitMask = GameScene.boundsCategory
+            child.physicsBody?.contactTestBitMask = GameScene.ballCategory
         }
         self.mockPacketLabel = self.childNode(withName: "Mock Packet") as? SKLabelNode
         
@@ -84,17 +85,17 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     fileprivate func configureCollisions() {
         self.physicsWorld.contactDelegate = self
         
-        self.ballNode?.physicsBody?.categoryBitMask = ballCategory
-        self.ballNode?.physicsBody?.contactTestBitMask = playerCategory | leftGoalCategory |  rightGoalCategory
+        self.ballNode?.physicsBody?.categoryBitMask = GameScene.ballCategory
+        self.ballNode?.physicsBody?.contactTestBitMask = GameScene.playerCategory | GameScene.leftGoalCategory |  GameScene.rightGoalCategory
         
-        self.leftGoal?.physicsBody?.categoryBitMask = leftGoalCategory
-        self.leftGoal?.physicsBody?.contactTestBitMask = ballCategory
+        self.leftGoal?.physicsBody?.categoryBitMask = GameScene.leftGoalCategory
+        self.leftGoal?.physicsBody?.contactTestBitMask = GameScene.ballCategory
         
-        self.rightGoal?.physicsBody?.categoryBitMask = rightGoalCategory
-        self.rightGoal?.physicsBody?.contactTestBitMask = ballCategory
+        self.rightGoal?.physicsBody?.categoryBitMask = GameScene.rightGoalCategory
+        self.rightGoal?.physicsBody?.contactTestBitMask = GameScene.ballCategory
         
-        self.northBound?.physicsBody?.categoryBitMask = boundsCategory
-        self.northBound?.physicsBody?.contactTestBitMask = ballCategory
+        self.northBound?.physicsBody?.categoryBitMask = GameScene.boundsCategory
+        self.northBound?.physicsBody?.contactTestBitMask = GameScene.ballCategory
         
     }
     
@@ -110,10 +111,10 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         let firstCategory:UInt32 = contact.bodyA.categoryBitMask//know what category this object is in
         let secondCategory:UInt32 = contact.bodyB.categoryBitMask
         
-        if(firstCategory == ballCategory || secondCategory == ballCategory)//we know one of the objects is the ball
+        if(firstCategory == GameScene.ballCategory || secondCategory == GameScene.ballCategory)//we know one of the objects is the ball
         {
             //get node that isnt the ball
-            let otherNode:SKNode = (firstCategory == ballCategory) ? contact.bodyB.node! : contact.bodyA.node!
+            let otherNode:SKNode = (firstCategory == GameScene.ballCategory) ? contact.bodyB.node! : contact.bodyA.node!
             ballDidCollide(with: otherNode)
         }
         
@@ -121,77 +122,29 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     func ballDidCollide(with other:SKNode)
     {
         let otherCategory = other.physicsBody?.categoryBitMask
-        if (otherCategory == boundsCategory)//could add more later to see if ball/player collide
+        if (otherCategory == GameScene.boundsCategory)//could add more later to see if ball/player collide
         {
             print("Ball Hit Bounds")
             localBallStateWasUpdates = true
         }
-        else if(otherCategory == playerCategory)
+        else if(otherCategory == GameScene.playerCategory)
         {
             print("Player hit ball")
             localBallStateWasUpdates = true
         }
-        else if(otherCategory == leftGoalCategory)
+        else if(otherCategory == GameScene.leftGoalCategory)
         {
             
             scoreBoard?.redTeamScored()
             print("Left Goal Scored")
         }
-        else if(otherCategory == rightGoalCategory)
+        else if(otherCategory == GameScene.rightGoalCategory)
         {
             scoreBoard?.blueTeamScored()
             print("Right Goal Scored")
         }
     }
     
-   
-    
-    
-    //sets players and player num to values according to the user data passed into the scene
-    private func configurePlayerNodes(){
-        //get player node from Players.sks
-        guard let modelPlayer = SKScene(fileNamed : "Players")?.childNode(withName : "Player Node") as? SKSpriteNode else{
-            return
-        }
-        modelPlayer.physicsBody?.categoryBitMask = playerCategory
-        
-        modelPlayer.physicsBody?.contactTestBitMask = ballCategory
-        
-        
-        
-        //set players to correct length with placeholders
-        self.players = [SKSpriteNode](repeating : SKSpriteNode(), count: GameScene.maxPlayers)
-        
-        //copy model player into each index of self.players
-        for i in 0..<GameScene.maxPlayers {
-            players[i] = modelPlayer.copy() as! SKSpriteNode
-            players[i].physicsBody = modelPlayer.physicsBody?.copy() as? SKPhysicsBody
-            
-        }
-        
-        //move player with the number passed into the scene into view
-        if let playerNumber = self.userData?.value(forKey: UserDataKeys.playerNumber.rawValue) as? Int{
-            self.playerNumber = playerNumber
-            players[playerNumber].position = defaultPlayerStartingPositions[playerNumber]!
-            self.addChild(players[playerNumber])
-        }
-        
-        addLabelToUserPlayer()
-        
-        self.isHost = self.playerNumber == 0
-    }
-    
-    private func addLabelToUserPlayer(){
-        guard let modelLabel = SKScene(fileNamed : "Players")?.childNode(withName : "Player Label") as? SKLabelNode else{
-            return
-        }
-        let copiedLabel = modelLabel.copy() as! SKLabelNode
-        
-        let player = selectOrAddPlayer(playerNum : self.playerNumber!)
-        copiedLabel.position = self.playerLabelRelativePosition
-        
-        player.addChild(copiedLabel)
-    }
     
     //maps funtions to packet numbers to be used by the responder in a scene-specific configuration
     private func configurePacketResponder() {
@@ -280,7 +233,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     
     fileprivate func sendPlayerStatePacketIfNecesarry() {
         if self.localPlayerStateWasUpdated || self.waitsSinceLastPlayerUpdate >= self.forceUpdateWaits  {
-            let packet = self.makePlayerStatePacket(playerNumber : self.playerNumber!)
+            let packet = self.makePlayerStatePacket(playerNumber : self.pm!.playerNumber)
             
             print("sending player packet, ",packet.toByteArray())
             self.managedTcpConnection?.sendTCP(packet: packet)
@@ -307,7 +260,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     
     func makePlayerStatePacket(playerNumber : Int)-> ClientPlayerStatePacket
     {
-        let chosenPlayer = self.players[playerNumber]
+        let chosenPlayer = self.pm!.selectPlayer(playerNum : playerNumber)
         let position = chosenPlayer.position
         let velocity = chosenPlayer.physicsBody?.velocity
         
@@ -361,8 +314,8 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
             let dy = js.yDirection * movementSpeed
             
             //set the local player to the correct velocity
-            if let playerNum = self.playerNumber {
-                self.players[playerNum].physicsBody!.velocity = CGVector(dx: dx, dy: dy)
+            if let playerNum = self.pm?.playerNumber {
+                self.pm?.selectPlayer(playerNum: playerNum).physicsBody!.velocity = CGVector(dx: dx, dy: dy)
                 
                 if let tcp = self.managedTcpConnection {
                     let packet = self.makePlayerStatePacket(playerNumber : playerNum)
@@ -397,6 +350,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     private func buildPacketTypeDict(){
         self.packetTypeDict[121] = PacketType(dataSize: 22, handlerFunction: executePlayerPositionPacket(data:))
         self.packetTypeDict[124] = PacketType(dataSize: 21, handlerFunction: executeBallPositionPacket(data:))
+        self.packetTypeDict[126] = PacketType(dataSize: 2, handlerFunction: executePlayerLeftGamePacket(data:))
     }
     
     func executePlayerPositionPacket(data : [UInt8]){
@@ -409,7 +363,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         
         let spsp = ServerPlayerStatePacket(rawData: data)
         
-        let player:SKSpriteNode = selectOrAddPlayer(playerNum : spsp.playerNumber)
+        let player:SKSpriteNode = self.pm!.selectPlayer(playerNum : spsp.playerNumber)
         
         ApplyPositionPacketToPlayer(player: player, point: spsp.position, vector: spsp.velocity)
     }
@@ -428,15 +382,6 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         self.ballNode?.physicsBody?.velocity = sbsp.velocity
     }
     
-    //returns player node from players whith specified index
-    //if the node is not a child of the SKScene it is added as a child
-    private func selectOrAddPlayer(playerNum : Int) -> SKSpriteNode{
-        let player:SKSpriteNode = players[Int(playerNum)]
-        if player.parent != self {
-            self.addChild(player)
-        }
-        return player
-    }
     
     private func ApplyPositionPacketToPlayer(player : SKSpriteNode, point : CGPoint, vector : CGVector){
         player.position = point
@@ -446,6 +391,21 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     func isInBottomLeftQuadrant(_ touch : UITouch) -> Bool{
         let loc = touch.location(in: self)
         return loc.x < 0 && loc.y < 0
+    }
+    
+    func executePlayerLeftGamePacket(data : [UInt8]){
+        guard data.count == 2 else{
+            print("executePlayerLeftGamePacket did not have correct data size. expected 2, was",data.count)
+            return
+        }
+        print("got player left game packet with data:",data)
+        
+        let playerToRemove = self.pm!.selectPlayer(playerNum: Int(data[0]))
+        playerToRemove.removeFromParent()
+    }
+    
+    func lookupPlayerNumber() -> Int {
+        return self.userData!.value(forKey: UserDataKeys.playerNumber.rawValue) as! Int
     }
 }
 
