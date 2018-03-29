@@ -66,7 +66,7 @@ func handleDBErrors(w http.ResponseWriter, dberr error) {
 	case errors.New("Application Token Expired"):
 		respondWithError(w, http.StatusUnauthorized, dberr.Error())
 	default:
-		respondWithError(w, http.StatusBadRequest, dberr.Error())
+		respondWithError(w, http.StatusForbidden, dberr.Error())
 	}
 	return
 }

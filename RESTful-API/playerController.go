@@ -47,7 +47,7 @@ func (a *App) getPlayer(w http.ResponseWriter, r *http.Request) {
 		handleDBErrors(w, err)
 	}
 
-	respondWithJSON(w, http.StatusAccepted, nil)
+	respondWithJSON(w, http.StatusOK, p)
 }
 
 func (a *App) deletePlayer(w http.ResponseWriter, r *http.Request) {

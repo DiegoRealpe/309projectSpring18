@@ -51,6 +51,7 @@ func (a *App) registerPlayer(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) loginPlayer(w http.ResponseWriter, r *http.Request) {
+
 	//1 get fb token
 	token := r.Header.Get("FacebookToken")
 	//2 check the graph api and get AppUser object

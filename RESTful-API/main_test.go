@@ -113,7 +113,7 @@ func TestUpdateUser(t *testing.T) {
 	json.Unmarshal(response.Body.Bytes(), &jsonPlayerR)
 
 	if jsonPlayer.ID != jsonPlayerR.ID {
-		t.Errorf("Expected the id to remain the same (%v). Got %v", jsonPlayer.ID, jsonPlayerR.ID)
+		t.Errorf("Expected the id to remain the same (%s). Got %s", jsonPlayer.ID, jsonPlayerR.ID)
 	}
 	if jsonPlayer.GamesPlayed != jsonPlayerR.GamesPlayed {
 		t.Errorf("Expected the name to change from '%v' to '%v'. Got '%v'", jsonPlayer.GamesPlayed, "21", jsonPlayerR.GamesPlayed)
@@ -134,7 +134,7 @@ func TestDeleteUser(t *testing.T) {
 	checkResponseCode(t, http.StatusOK, response.Code)
 	req, _ = http.NewRequest("DELETE", "/player/1", nil)
 	response = executeRequest(req)
-	checkResponseCode(t, http.StatusOK, response.Code)
+	checkResponseCode(t, http.StatusAccepted, response.Code)
 	req, _ = http.NewRequest("GET", "/player/1", nil)
 	response = executeRequest(req)
 	checkResponseCode(t, http.StatusNotFound, response.Code)
@@ -156,7 +156,11 @@ func TestRegisterUser(t *testing.T) {
 	req, _ = http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
 	req.Header.Set("FacebookToken", testUserToken2)
 	response = executeRequest(req)
+	var m map[string]string
+	json.Unmarshal(response.Body.Bytes(), &m)
+	fmt.Println(m["error"])
 	checkResponseCode(t, http.StatusCreated, response.Code)
+
 }
 
 func TestLoginUser(t *testing.T) {
@@ -165,16 +169,23 @@ func TestLoginUser(t *testing.T) {
 
 	clearTable()
 
-	payload := []byte(`{"Nickname":"User 1"}`)
+	payload := []byte(`{"Nickname":"dumdum1"}`)
 	req, _ := http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
 	req.Header.Set("FacebookToken", testUserToken)
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusCreated, response.Code)
 
-	req, _ = http.NewRequest("GET", "/player/1/login", nil)
-	req.Header.Set("FacebookToken", testUserToken)
-	response = executeRequest(req)
-	checkResponseCode(t, http.StatusOK, response.Code)
+	req2, err := http.NewRequest("GET", "/player/login", nil)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	req2.Header.Set("FacebookToken", testUserToken)
+	response2 := executeRequest(req2)
+	var m map[string]string
+	json.Unmarshal(response2.Body.Bytes(), &m)
+	fmt.Println(m["ApplicationToken"])
+	checkResponseCode(t, http.StatusAccepted, response2.Code)
+
 }
 
 func TestCheckToken(t *testing.T) {
@@ -222,8 +233,8 @@ func TestTokenQuery(t *testing.T) {
 }
 
 //to get a new token login to facebook and get one from one of our test user
-const testUserToken = "EAACqvTZC1964BAEJli5isAg5SLvQGRgGFbGZBe246DWuZBPfpfZADyx2YSmw6k6BUvnqxpk2eOaAq7FqMbVlRtu3S83ZCb6CagIlx5AB3tBtOgKZCeh3NDBhq69FlNaDMqtGvDeaejlj0ybIDXw5qh6BSMaQueeC5msK6mRhHJe6xyxo4BG3Ui8auuOJYMFVrAPiyb7zUQ63mZAF9bDCjVkiTsVZBCfAvDoyiqTkAldkoAZDZD"
-const testUserToken2 = "EAACqvTZC1964BALDmZBZAONvSUYWBLq7Cvzxy3jNYmyX9GkvsZA7BJ8kxuh62Ekz4Fz0qJaZCAbeEWJcsCrR7Rtbev5zX8Ax5qRTaKd2ZAwYQHppZBz6ZCd8ZAR2LBJcZCE5HaGheeHGlO1eb80ipTp2OLBKxqphpk0GgKKqjO81yj8mAEvDBPkUCd4rMXnAKWbvA57YAS8pVKZAA3Hg5ZC5HZAeCjwMKOKuYQa0GHZCyZB0N9C5wZDZD"
+const testUserToken = "EAACqvTZC1964BAFS5e4ZBi6SrxeocFDZB3RBVfZAaagNYB6iSZC21nujLmpKDkPwaZB21phJrG1P4orrPharnrpvlvmJOZBQaZB2NmJBGNd22GlcPtcApdsU0LejyPRBDYqJ5H9XNXnBriWb8eqZAoQT2mrEWP3euMKudRTTUYGDmGZBqKZAU4maFdNG9mTCtU65bHLZCQbXMCVQTNi4vrw9biFXwvqifKrCUIIaZArZCuTunrTwZDZD"
+const testUserToken2 = "EAACqvTZC1964BAEwIK3G6zPMHoyrb46GH1tsQH2ZAYFd0ZCYjMyQFXmAvsOQjnlixoMa18qWEHB4tQjC7ZCf8rIAxqU80qMEj3v6ZBI5ZAyTWZCBZBNGoUQAxR7dzk7p37rPtZCpjWA6hzQbHvhjasaKB3XPhYUezhAy8ZC6TqMZAWBzZAfc4ZAGW1woZAMwvS4gwNpm11KF6v67IKdOLryzqQmJbNgC67fnmncBZA7VKzL01c7LgZDZD"
 
 func TestFBApiAccess(t *testing.T) {
 	getFBUser(testUserToken)

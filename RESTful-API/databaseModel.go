@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"strings"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -155,9 +154,13 @@ func QueryCreateFBData(db *sql.DB, u *AppUser) error {
 //QueryGetFBDataID Looks in the db if there is an ID corresponding the AppUser's FB ID
 func QueryGetFBDataID(db *sql.DB, u *AppUser) error {
 	row, err := db.Query("SELECT PlayerID FROM FacebookData WHERE FacebookID = ?", u.FacebookID)
-	row.Scan(&u.ID)
-	if strings.Compare(u.ID, "") == 0 || err != nil {
-		return errors.New("Invalid user ID")
+	if err != nil {
+		return err
+	}
+	row.Next()
+	err2 := row.Scan(&u.ID)
+	if err2 != nil {
+		return errors.New(u.ID)
 	}
 	return nil
 }
