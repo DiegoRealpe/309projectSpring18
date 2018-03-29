@@ -146,10 +146,11 @@ func (pConn *playerConnection) tryToReadPacket(){
 
 func (pConn *playerConnection) disconnect(){
 	pConn.client.connection.Close()
+	freePort(pConn.portNumber)
 }
 
 var inputPacketLengths = map[byte]int{
 	120 : 17,
 	123 : 17,
-	125 : 2,
+	125 : 1,
 }

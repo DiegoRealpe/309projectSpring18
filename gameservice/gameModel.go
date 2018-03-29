@@ -79,10 +79,8 @@ func (g *Game) respondTo123(in *PacketIn, out chan<- PacketOut) {
 
 func (g *Game) respondTo125(in *PacketIn, out chan<- PacketOut){
 	fmt.Println("recieved 125 packet...")
-	packet125 := ParseBytesTo125(in.data)
-	disconnectingPlayer := packet125.playerNumber
+	disconnectingPlayer := g.connectionIDToPlayerNumberMap[in.connectionId]
 
-	freePort(g.players[disconnectingPlayer].portNumber)
 	g.players[disconnectingPlayer].isActive = 0
 	fmt.Println("Player", disconnectingPlayer, "has disconnected")
 	g.players[disconnectingPlayer].disconnect()
