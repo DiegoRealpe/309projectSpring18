@@ -68,12 +68,16 @@ func (mmm *matchMakingModel) acceptPlayer(connection *playerConnection){
 }
 
 func (mmm *matchMakingModel) disconnectPlayer(id int) {
-	disconnectingPlayer := mmm.waitingPlayers[id]
 
-	fmt.Println("Player", disconnectingPlayer.connection.id, "has left matchmaking")
-	disconnectingPlayer.connection.disconnect()
+	disconnectingPlayer, playerExisted := mmm.waitingPlayers[id]
 
-	delete(mmm.waitingPlayers, disconnectingPlayer.connection.id)
+	//because we are disconnecting using 125 and connection being closed this sometimes is called twice per player
+	if playerExisted {
+		fmt.Println("Player", disconnectingPlayer.connection.id, "has left matchmaking")
+		disconnectingPlayer.connection.disconnect()
+
+		delete(mmm.waitingPlayers, disconnectingPlayer.connection.id)
+	}
 }
 
 func (mmm *matchMakingModel) startGame(players []waitingPlayer) {
