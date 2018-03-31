@@ -31,19 +31,13 @@ func (lc *LobbyController) addPlayer(connecter *playerConnection){
 }
 
 func (lc *LobbyController) removePlayer(id int){
-  fmt.Println("recieved 125 packet...")
-	disconnectingPlayer := lc.connectionIDToPlayerNumberMap[id]
-
-	fmt.Println("Player", disconnectingPlayer, "has disconnected")
-	lc.l.members[disconnectingPlayer].disconnect()
-
-	packet126 := PacketOut{
-		size : 2,
-		data : []byte{126,disconnectingPlayer},
-		targetIds: g.allConnectionIDsBut(in.connectionId),
-	}
-
-	out <- packet126
+  playernum := lc.packetRouterMap[id]
+  lc.l.connectionIDToPlayerNumberMap[id] = 0
+  lc.l.isReady[playernum] = 0
+  lc.packetRouterMap[id] = 0
+  lc.dispersionMap[id].close()
+  lc.l.members[playernum] = nil
+  lc.l.numMembers--
 }
 
 func (lc *LobbyController) allConnectionIDsBut(id int) []int {
@@ -128,5 +122,17 @@ func (lc *LobbyController) respondTo202(in *PacketIn, out chan<- PacketOut){//pl
 }
 
 func (lc *LobbyController) respondTo125(in *PacketIn, out chan<- PacketOut){//player leaves the lobby
+  fmt.Println("recieved 125 packet...")
+	disconnectingPlayer := lc.connectionIDToPlayerNumberMap[in.id]
 
+	fmt.Println("Player", disconnectingPlayer, "has disconnected")
+	lc.l.members[disconnectingPlayer].disconnect()
+
+	packet126 := PacketOut{
+    size : 2,
+		data : []byte{126,disconnectingPlayer},
+		targetIds: lc.allConnectionIDsBut(in.connectionId),
+	}
+
+	out <- packet126
 }
