@@ -81,7 +81,6 @@ func (g *Game) respondTo125(in *PacketIn, out chan<- PacketOut){
 	fmt.Println("recieved 125 packet...")
 	disconnectingPlayer := g.connectionIDToPlayerNumberMap[in.connectionId]
 
-	g.players[disconnectingPlayer].isActive = 0
 	fmt.Println("Player", disconnectingPlayer, "has disconnected")
 	g.players[disconnectingPlayer].disconnect()
 

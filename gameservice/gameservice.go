@@ -15,7 +15,7 @@ type client struct {
 	port int
 }
 
-const debug = true
+const debug = false
 
 const NUMPLAYERS = 2
 
