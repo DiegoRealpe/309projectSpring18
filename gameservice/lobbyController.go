@@ -19,6 +19,7 @@ func (lc *LobbyController) addPlayer(connecter *playerConnection){
     return
   }
   connecter.SetNewPacketInChannel(lc.packetIn)
+  lc.dispersionMap[connecter.id] = connecter.packetOut
 
   for i := 0; i < NUMPLAYERS; i++{
     if lc.l.members[i] == nil{
@@ -27,6 +28,41 @@ func (lc *LobbyController) addPlayer(connecter *playerConnection){
       break
     }
   }
+}
+
+func (lc *LobbyController) removePlayer(id int){
+  fmt.Println("recieved 125 packet...")
+	disconnectingPlayer := lc.connectionIDToPlayerNumberMap[id]
+
+	fmt.Println("Player", disconnectingPlayer, "has disconnected")
+	lc.l.members[disconnectingPlayer].disconnect()
+
+	packet126 := PacketOut{
+		size : 2,
+		data : []byte{126,disconnectingPlayer},
+		targetIds: g.allConnectionIDsBut(in.connectionId),
+	}
+
+	out <- packet126
+}
+
+func (lc *LobbyController) allConnectionIDsBut(id int) []int {
+
+	slice := make([]int,NUMPLAYERS-1)
+
+	if debug {fmt.Println("sending to",slice)}
+
+	i := 0
+	for key, _ := range lc.connectionIDToPlayerNumberMap {
+		if key != id{
+			slice[i] = key
+			i++
+		}
+	}
+
+	if debug {fmt.Println("sending to",slice)}
+
+	return slice
 }
 
 func (lc *LobbyController) LobbyReceiveAndRespond(){
@@ -58,4 +94,39 @@ func startLobby(in chan PacketIn, out chan PacketOut){
   lc.packetIn = in
   lc.packetOut = out
   go lc.LobbyReceiveAndRespond()
+  go lc.listenAndDispersePackets(lc.dispersionMap, lc.packetOut)
+}
+
+func (lc *LobbyController) respondTo200(in *PacketIn, out chan<- PacketOut){//player is ready
+  playernum := connectionIDToPlayerNumberMap[in.connectionId]
+  isReady[playernum] = 1
+  outpacket := PacketOut{
+    size: 2,
+    data: [2]byte,
+    targetIds: lc.allConnectionIDsBut(in.connectionId)
+  }
+  outpacket.data[0] = byte(204)
+  outpacket.data[1] = byte(playernum)
+  out <- outpacket
+}
+
+func (lc *LobbyController) respondTo201(in *PacketIn, out chan<- PacketOut){//player is no longer ready
+  playernum := connectionIDToPlayerNumberMap[in.connectionId]
+  isReady[playernum] = 0
+  outpacket := PacketOut{
+    size: 2,
+    data: [2]byte,
+    targetIds: lc.allConnectionIDsBut(in.connectionId)
+  }
+  outpacket.data[0] = byte(205)
+  outpacket.data[1] = byte(playernum)
+  out <- outpacket
+}
+
+func (lc *LobbyController) respondTo202(in *PacketIn, out chan<- PacketOut){//player send a message in chat
+
+}
+
+func (lc *LobbyController) respondTo125(in *PacketIn, out chan<- PacketOut){//player leaves the lobby
+
 }

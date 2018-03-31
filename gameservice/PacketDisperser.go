@@ -6,6 +6,7 @@ func listenAndDispersePackets(dispersionMap map[int]chan<- PacketOut, toDisperse
 		disperseSinglePacket(packet, dispersionMap)
 	}
 }
+
 func disperseSinglePacket(packet PacketOut, dispersionMap map[int]chan<- PacketOut) {
 	for _, val := range packet.targetIds {
 		connectionChan := dispersionMap[val]
