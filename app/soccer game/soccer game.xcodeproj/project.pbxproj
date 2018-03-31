@@ -19,6 +19,8 @@
 		3A3169722037E84E00DA2DCC /* PacketByteQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3169712037E84E00DA2DCC /* PacketByteQueue.swift */; };
 		3A3169752037E94700DA2DCC /* ConversionUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3169742037E94700DA2DCC /* ConversionUtils.swift */; };
 		3A3169772037EC9500DA2DCC /* SocketPacketResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3169762037EC9500DA2DCC /* SocketPacketResponder.swift */; };
+		3A32F5182070076900FA19D4 /* LobbyPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A32F5172070076900FA19D4 /* LobbyPlayerManager.swift */; };
+		3A32F51A2070105E00FA19D4 /* ReadyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A32F5192070105E00FA19D4 /* ReadyManager.swift */; };
 		3A3A5821205FFDB700E74D82 /* ServerPlayerStatePacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3A5820205FFDB700E74D82 /* ServerPlayerStatePacket.swift */; };
 		3A3A58242060281100E74D82 /* GameProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3A58232060281100E74D82 /* GameProperties.swift */; };
 		3A3A582620631FCF00E74D82 /* ClientBallStatePacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3A582520631FCF00E74D82 /* ClientBallStatePacket.swift */; };
@@ -110,6 +112,8 @@
 		3A3169712037E84E00DA2DCC /* PacketByteQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketByteQueue.swift; sourceTree = "<group>"; };
 		3A3169742037E94700DA2DCC /* ConversionUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversionUtils.swift; sourceTree = "<group>"; };
 		3A3169762037EC9500DA2DCC /* SocketPacketResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketPacketResponder.swift; sourceTree = "<group>"; };
+		3A32F5172070076900FA19D4 /* LobbyPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LobbyPlayerManager.swift; sourceTree = "<group>"; };
+		3A32F5192070105E00FA19D4 /* ReadyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadyManager.swift; sourceTree = "<group>"; };
 		3A3A5820205FFDB700E74D82 /* ServerPlayerStatePacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerPlayerStatePacket.swift; sourceTree = "<group>"; };
 		3A3A58232060281100E74D82 /* GameProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameProperties.swift; sourceTree = "<group>"; };
 		3A3A582520631FCF00E74D82 /* ClientBallStatePacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientBallStatePacket.swift; sourceTree = "<group>"; };
@@ -194,6 +198,8 @@
 			children = (
 				3A2EFC5E206C25C900C7E36B /* LobbyScene.sks */,
 				3A2EFC60206C265600C7E36B /* LobbyScene.swift */,
+				3A32F5172070076900FA19D4 /* LobbyPlayerManager.swift */,
+				3A32F5192070105E00FA19D4 /* ReadyManager.swift */,
 			);
 			path = "lobby scene";
 			sourceTree = "<group>";
@@ -455,6 +461,7 @@
 			files = (
 				3AB377DE2023B5980019E73E /* Joystick.swift in Sources */,
 				3A3169722037E84E00DA2DCC /* PacketByteQueue.swift in Sources */,
+				3A32F5182070076900FA19D4 /* LobbyPlayerManager.swift in Sources */,
 				3A3A582A2063216200E74D82 /* AbstractServerPositionVelocitPacket.swift in Sources */,
 				4C98FBBD201E658600378614 /* GameScene.swift in Sources */,
 				3AB377E02023B5C50019E73E /* CGPointExtension.swift in Sources */,
@@ -475,6 +482,7 @@
 				3A3A58282063207100E74D82 /* AbstractClientPositionVelocityPacket.swift in Sources */,
 				3ADFD62B202E263900AE586D /* CommTestScreen.swift in Sources */,
 				3A0C313E2038A4860011D18A /* UserDataKeys.swift in Sources */,
+				3A32F51A2070105E00FA19D4 /* ReadyManager.swift in Sources */,
 				4CED0622203775D100B8F603 /* ClientPlayerStatePacket.swift in Sources */,
 				3A74A5FE201E6FDB00A1583F /* MainMenu.swift in Sources */,
 				3A74A602201F7F6D00A1583F /* MatchMakingScene.swift in Sources */,

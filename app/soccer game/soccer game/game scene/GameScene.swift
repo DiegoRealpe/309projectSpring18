@@ -69,6 +69,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
             child.physicsBody?.categoryBitMask = GameScene.boundsCategory
             child.physicsBody?.contactTestBitMask = GameScene.ballCategory
         }
+        
         self.mockPacketLabel = self.childNode(withName: "Mock Packet") as? SKLabelNode
         
         //scoreboard stuff
