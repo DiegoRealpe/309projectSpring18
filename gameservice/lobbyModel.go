@@ -9,7 +9,7 @@ type Lobby struct{
   members [NUMPLAYERS]*playerConnection
   isReady [NUMPLAYERS]int
   numMembers int
-  packetRouterMap map[int]func(*PacketIn, chan<- PacketOut)
+  connectionIDToPlayerNumberMap map[int]int
 }
 
 func (l *Lobby) buildLobbyPacketMap(){
@@ -18,18 +18,23 @@ func (l *Lobby) buildLobbyPacketMap(){
   packetMap[200] = respondTo200()
 }
 
-func (l *Lobby) respondTo200(*PacketIn, chan<- PacketOut){//player is ready
+func (l *Lobby) respondTo200(in *PacketIn, out chan<- PacketOut){//player is ready
+  playernum := connectionIDToPlayerNumberMap[in.connectionId]
+  isReady[playernum] = 1
+  var outpacket [2]byte
+  outpacket[0] = byte(204)
+  outpacket[1] = byte(playernum)
 
 }
 
-func (l *Lobby) respondTo201(*PacketIn, chan<- PacketOut){//player is no longer ready
+func (l *Lobby) respondTo201(in *PacketIn, out chan<- PacketOut){//player is no longer ready
 
 }
 
-func (l *Lobby) respondTo202(*PacketIn, chan<- PacketOut){//player send a message in chat
+func (l *Lobby) respondTo202(in *PacketIn, out chan<- PacketOut){//player send a message in chat
 
 }
 
-func (l *Lobby) respondTo125(*PacketIn, chan<- PacketOut){//player leaves the lobby
+func (l *Lobby) respondTo125(in *PacketIn, out chan<- PacketOut){//player leaves the lobby
 
 }

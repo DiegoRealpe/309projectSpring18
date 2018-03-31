@@ -42,10 +42,26 @@ type packet124 struct {
 	timestamp         float32
 }
 
-type packet125 struct {
+type packet202 struct {//client sends a message in chat.
+	message						[100]byte
+}
+
+type packet203 struct {//server broadcasts a message to the rest of the clients
+	playerNumber			uint8
+	message						[100]byte
+}
+
+type packet204 struct {//server informs clients that one client is ready.
 	playerNumber			uint8
 }
 
+type packet205 struct {//server informs clients that one clinet is no longer ready.
+	playerNumber			uint8
+}
+
+type packet206 struct {//server informs clients that another client has disconnected.
+	playerNumber			uint8
+}
 
 //ParseBytesTo120 Takes array of bytes and parses to a clientpacket struct
 func ParseBytesTo120(rawData []byte) packet120 {
@@ -112,6 +128,10 @@ func (packet *packet124) toBytes() []byte {
 	copy(rawData[17:21], time)
 
 	return rawData
+}
+
+func (packet *packet203) toBytes() []byte{
+	//TODO
 }
 
 func ParseBytesTo123(rawData []byte) packet123 {
