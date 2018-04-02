@@ -10,12 +10,25 @@ import UIKit
 
 class ChatView: UIView {
 
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
+    @IBOutlet var contentView: UIView!
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        initCommon()
     }
-    */
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        initCommon()
+    }
+    
+    
+    func initCommon(){
+        Bundle.main.loadNibNamed("ChatView", owner: self, options: nil)
+        addSubview(contentView)
+        
+        contentView.frame = CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height)
+
+    }
 
 }
