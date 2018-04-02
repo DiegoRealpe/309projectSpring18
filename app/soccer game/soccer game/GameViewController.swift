@@ -12,6 +12,7 @@ import GameplayKit
 import FBSDKLoginKit
 import FacebookCore
 import FacebookLogin
+import Alamofire
 
 class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
     
@@ -73,21 +74,44 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        
         let loginButton = FBSDKLoginButton()
         // Do any additional setup after loading the view, typically from a nib.
         
+        //if player logged in
         if let accessToken = AccessToken.current
         {
+           
+            
+            let userID = AccessToken.current?.userId
+            let requestString = "http://localhost:8000/player/login"
+            
+            let header:HTTPHeaders = ["FacebookToken": "\(userID!)"]
+            
+            print("UserID😎\(userID!)")
+            Alamofire.request(requestString, method: .get, headers: header).responseString(completionHandler: loginRequestResponse(_:))
+            
+            
            setGameScene(loginButton)
         }
         
         else
         {
+         
         let loginButton = FBSDKLoginButton()
         loginButton.center = view.center
         loginButton.delegate = self // Remember to set the delegate of the loginButton
         view.addSubview(loginButton)
         }
+        
+    }
+    
+    //function to do things with response from server to a login request by client
+    func loginRequestResponse(_ response : DataResponse<String>)
+    {
+        print("🍆\(response)")
         
     }
 
