@@ -10,7 +10,7 @@
 		3A0A8BD22038F1CE001E073A /* SwiftSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A0A8BD02038F1C7001E073A /* SwiftSocket.framework */; };
 		3A0A8BD32038F1CE001E073A /* SwiftSocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A0A8BD02038F1C7001E073A /* SwiftSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3A0C313E2038A4860011D18A /* UserDataKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C313D2038A4860011D18A /* UserDataKeys.swift */; };
-		3A119F112048A9E400063D51 /* GamePlayerInformationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A119F102048A9E400063D51 /* GamePlayerInformationModel.swift */; };
+		3A1987A520729FA000514B81 /* KickButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A1987A420729FA000514B81 /* KickButton.swift */; };
 		3A219ECF203B7CEE00FABE0A /* Players.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A219ECE203B7CEE00FABE0A /* Players.sks */; };
 		3A2EFC5F206C25C900C7E36B /* LobbyScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A2EFC5E206C25C900C7E36B /* LobbyScene.sks */; };
 		3A2EFC61206C265600C7E36B /* LobbyScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A2EFC60206C265600C7E36B /* LobbyScene.swift */; };
@@ -103,7 +103,7 @@
 /* Begin PBXFileReference section */
 		3A0A8BD02038F1C7001E073A /* SwiftSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SwiftSocket.framework; sourceTree = "<group>"; };
 		3A0C313D2038A4860011D18A /* UserDataKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataKeys.swift; sourceTree = "<group>"; };
-		3A119F102048A9E400063D51 /* GamePlayerInformationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamePlayerInformationModel.swift; sourceTree = "<group>"; };
+		3A1987A420729FA000514B81 /* KickButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KickButton.swift; sourceTree = "<group>"; };
 		3A219ECE203B7CEE00FABE0A /* Players.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Players.sks; sourceTree = "<group>"; };
 		3A2EFC5E206C25C900C7E36B /* LobbyScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = LobbyScene.sks; sourceTree = "<group>"; };
 		3A2EFC60206C265600C7E36B /* LobbyScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LobbyScene.swift; sourceTree = "<group>"; };
@@ -239,15 +239,15 @@
 		3A74A609201FB92500A1583F /* game scene */ = {
 			isa = PBXGroup;
 			children = (
-				3A94062220699AEB0025D3B2 /* GameScene.sks */,
 				3A3A5822205FFDDC00E74D82 /* packets */,
+				3A94062220699AEB0025D3B2 /* GameScene.sks */,
 				4C98FBBC201E658600378614 /* GameScene.swift */,
 				3AB377DD2023B5980019E73E /* Joystick.swift */,
 				3A219ECE203B7CEE00FABE0A /* Players.sks */,
-				3A119F102048A9E400063D51 /* GamePlayerInformationModel.swift */,
 				3A3A58232060281100E74D82 /* GameProperties.swift */,
 				4C45B87F2069833600F717B7 /* ScoreBoard.swift */,
 				3A2EFC62206D58D200C7E36B /* PlayerManager.swift */,
+				3A1987A420729FA000514B81 /* KickButton.swift */,
 			);
 			path = "game scene";
 			sourceTree = "<group>";
@@ -478,6 +478,7 @@
 				3A3A582C2063238500E74D82 /* ServerBallStatePacket.swift in Sources */,
 				4C98FBB7201E658600378614 /* AppDelegate.swift in Sources */,
 				3A54756C20372C230082947E /* CommunicationProperties.swift in Sources */,
+				3A1987A520729FA000514B81 /* KickButton.swift in Sources */,
 				3ACF30282032ACF4009DC766 /* TCPResultExtension.swift in Sources */,
 				3A3A58282063207100E74D82 /* AbstractClientPositionVelocityPacket.swift in Sources */,
 				3ADFD62B202E263900AE586D /* CommTestScreen.swift in Sources */,
@@ -487,7 +488,6 @@
 				3A74A5FE201E6FDB00A1583F /* MainMenu.swift in Sources */,
 				3A74A602201F7F6D00A1583F /* MatchMakingScene.swift in Sources */,
 				3A3A582620631FCF00E74D82 /* ClientBallStatePacket.swift in Sources */,
-				3A119F112048A9E400063D51 /* GamePlayerInformationModel.swift in Sources */,
 				3A3169752037E94700DA2DCC /* ConversionUtils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

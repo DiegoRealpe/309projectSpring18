@@ -23,6 +23,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     
     var quitLabel : SKLabelNode?
     var joyStick : Joystick?
+    var kickButton : KickButton!
     var ballNode : SKSpriteNode?
     var managedTcpConnection : ManagedTCPConnection?
     var leftGoal: SKSpriteNode?
@@ -81,6 +82,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         configureManagedTCPConnection()
         configurePacketResponder()
         
+        kickButton = KickButton(scene: self)
     }
     
     fileprivate func configureCollisions() {
@@ -135,7 +137,6 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         }
         else if(otherCategory == GameScene.leftGoalCategory)
         {
-            
             scoreBoard?.redTeamScored()
             print("Left Goal Scored")
         }
@@ -188,10 +189,13 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         if self.joyStick == nil && isInBottomLeftQuadrant(_ : touch) {
             self.joyStick = Joystick(parent : self, radius : self.joystickRadius, touch : touch)
         }
-        
+        if self.kickButton.contains(position){
+            doKick()
+        }
         if self.quitLabel?.contains(position) == true{
             self.quitWasPressed()
-        }else if self.mockPacketLabel?.contains(position) == true{
+        }
+        if self.mockPacketLabel?.contains(position) == true{
         
             print("mocking command")
             let spr = SocketPacketResponder()
@@ -406,6 +410,10 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     
     func lookupPlayerNumber() -> Int {
         return self.userData!.value(forKey: UserDataKeys.playerNumber.rawValue) as! Int
+    }
+    
+    func doKick(){
+        print("kick")
     }
 }
 
