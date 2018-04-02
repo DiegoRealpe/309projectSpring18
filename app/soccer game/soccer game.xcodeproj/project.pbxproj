@@ -331,6 +331,7 @@
 			children = (
 				3A31696D2037505900DA2DCC /* NewAccountOrLogin.sks */,
 				4CC91D9D20339BA700FB9236 /* NewAccountOrLogin.swift */,
+				3A73DC2120696D200029E300 /* UserInformation.swift */,
 			);
 			path = Accounts;
 			sourceTree = "<group>";
@@ -465,6 +466,7 @@
 				4C98FBBF201E658600378614 /* GameViewController.swift in Sources */,
 				3A2EFC63206D58D200C7E36B /* PlayerManager.swift in Sources */,
 				3A74A604201F86ED00A1583F /* SKSceneTransitionExtension.swift in Sources */,
+				3A73DC2220696D200029E300 /* UserInformation.swift in Sources */,
 				3A5475682034BEBB0082947E /* ManagedTCPConnection.swift in Sources */,
 				3A3A58242060281100E74D82 /* GameProperties.swift in Sources */,
 				3A3A5821205FFDB700E74D82 /* ServerPlayerStatePacket.swift in Sources */,

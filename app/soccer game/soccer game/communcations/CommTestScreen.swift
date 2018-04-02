@@ -70,7 +70,7 @@ class CommTestScreen: SKScene {
     }
     
     fileprivate func askServerForTCPPort(){
-        let requestString = "http://\(CommunicationProperties.host):\(CommunicationProperties.httpport)/tcpport"
+        let requestString = "http://\(CommunicationProperties.gameServiceHost):\(CommunicationProperties.gameServiceHttpPort)/tcpport"
         print("sending get to \(requestString)")
         Alamofire.request(requestString, method: .get)
             .responseString(completionHandler: respondToPortHandshake(_:))
@@ -87,7 +87,7 @@ class CommTestScreen: SKScene {
             }
             
             self.httpHandshakeLabel!.text = str
-            self.tcpConn = ManagedTCPConnection(address : CommunicationProperties.host, port : port)
+            self.tcpConn = ManagedTCPConnection(address : CommunicationProperties.gameServiceHost, port : port)
         }
     }
     

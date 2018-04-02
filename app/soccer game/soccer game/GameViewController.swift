@@ -20,9 +20,6 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!)
     {
         
-       // setGameScene(loginButton)
-        
-        
         if ((error) != nil)
         {
             // Process error
@@ -37,8 +34,9 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
             {
                
             }
-             setGameScene(loginButton)
-             print("User Logged In")
+            print("LoggedInThroughFB")
+            
+            sendCRUDServiceLoginRequest(FBToken : AccessToken.current!.authenticationToken)
         }
     }
     
@@ -68,6 +66,7 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
         }
         
         print("token was",AccessToken.current)
+        sendCRUDServiceLoginRequest(FBToken: AccessToken.current!.authenticationToken)
     }
     
     
@@ -135,4 +134,49 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
     override var prefersStatusBarHidden: Bool {
         return true
     }
+    
+    func loginIfNecesarry(){
+        //todo: remove this once we are asking game service for login
+        if let accessToken = AccessToken.current
+        {
+            sendCRUDServiceLoginRequest(FBToken: accessToken.authenticationToken)
+        }
+            
+        else
+        {
+            let loginButton = FBSDKLoginButton()
+            loginButton.center = view.center
+            loginButton.delegate = self // Remember to set the delegate of the loginButton
+            view.addSubview(loginButton)
+        }
+        
+    }
+    
+    
+    //returns application token
+    func sendCRUDServiceLoginRequest(FBToken : String) {
+        
+        let requestURL = "\(CommunicationProperties.crudServiceHost):\(CommunicationProperties.crudServicePort)/player/login"
+        
+        let headers: HTTPHeaders = [
+            "FacebookToken": FBToken,
+            ]
+        
+        print("logging in with CRUD Service at URL",requestURL,"\nwith headers : \(headers)")
+        
+        Alamofire.request(requestURL , method : .get , headers : headers)
+            .responseString(completionHandler: loginResponse(_:))
+    }
+    
+    struct loginCompletion {
+        var finished = false
+        var token: Int
+    }
+    
+    //currently not doing anything until crud service is sorted out
+    func loginResponse(_ response : DataResponse<String>){
+        print("login response was",String(describing : response.data))
+        
+    }
+
 }
