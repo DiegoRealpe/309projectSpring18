@@ -20,6 +20,8 @@ class LobbyScene: SKScene {
     var rm : ReadyManager?
     var viewController: UIViewController?
     
+    var chatView : ChatView!
+    
     override func didMove(to view: SKView) {
         
         self.pm = LobbyPlayerManager(scene : self)
@@ -32,32 +34,15 @@ class LobbyScene: SKScene {
         
         self.pm!.removePlayer(playerNumber: 0)
         
-        presentChatSubview()
+        startChatView()
     }
     
-    
-    func presentChatSubview(){
-        DispatchQueue.main.async {
-//            let chatView =
-//            chatView.center = self.view!.center
-//            chatView.frame = CGRect(x: 100, y: 100, width: 100, height: 100)
-//
-//            self.view!.insertSubview(chatView, at: 0)
-
-            //self.view!.addSubview(chatView)
-            //self.view!.bringSubview(toFront: chatView)
-            
-            var txtField: UITextField = UITextField(frame: CGRect(x: 0, y: 0, width: 200, height: 30));
-            txtField.backgroundColor = UIColor(red: 125/255, green: 125/250, blue: 125/250, alpha: 0.5)
-            txtField.text = "hello"
-
-            self.view!.addSubview(txtField)
-            self.view!.superview!.insertSubview(txtField, aboveSubview: self.view!)
-
-            print(self.view!.subviews)
-            print(txtField.description)
-            print(txtField.superview)
-
+    private func startChatView(){
+        DispatchQueue.main.sync {
+            chatView = GameViewController.globalChatView
+            print(chatView)
+            chatView.loadChat()
+            chatView.isHidden = false
         }
     }
     

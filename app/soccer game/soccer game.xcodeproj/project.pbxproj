@@ -12,7 +12,8 @@
 		3A0C313E2038A4860011D18A /* UserDataKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C313D2038A4860011D18A /* UserDataKeys.swift */; };
 		3A119F112048A9E400063D51 /* GamePlayerInformationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A119F102048A9E400063D51 /* GamePlayerInformationModel.swift */; };
 		3A1987A120728D4000514B81 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A1987A020728D4000514B81 /* ChatView.swift */; };
-		3A1987A320728D5600514B81 /* ChatView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3A1987A220728D5600514B81 /* ChatView.xib */; };
+		3A1987A82073031E00514B81 /* LocalChatMessageViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A1987A62073031D00514B81 /* LocalChatMessageViewCell.swift */; };
+		3A1987A92073031E00514B81 /* RemoteChatMessageViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A1987A72073031D00514B81 /* RemoteChatMessageViewCell.swift */; };
 		3A219ECF203B7CEE00FABE0A /* Players.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A219ECE203B7CEE00FABE0A /* Players.sks */; };
 		3A2EFC5F206C25C900C7E36B /* LobbyScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A2EFC5E206C25C900C7E36B /* LobbyScene.sks */; };
 		3A2EFC61206C265600C7E36B /* LobbyScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A2EFC60206C265600C7E36B /* LobbyScene.swift */; };
@@ -107,7 +108,8 @@
 		3A0C313D2038A4860011D18A /* UserDataKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataKeys.swift; sourceTree = "<group>"; };
 		3A119F102048A9E400063D51 /* GamePlayerInformationModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamePlayerInformationModel.swift; sourceTree = "<group>"; };
 		3A1987A020728D4000514B81 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
-		3A1987A220728D5600514B81 /* ChatView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatView.xib; sourceTree = "<group>"; };
+		3A1987A62073031D00514B81 /* LocalChatMessageViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalChatMessageViewCell.swift; sourceTree = "<group>"; };
+		3A1987A72073031D00514B81 /* RemoteChatMessageViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteChatMessageViewCell.swift; sourceTree = "<group>"; };
 		3A219ECE203B7CEE00FABE0A /* Players.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Players.sks; sourceTree = "<group>"; };
 		3A2EFC5E206C25C900C7E36B /* LobbyScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = LobbyScene.sks; sourceTree = "<group>"; };
 		3A2EFC60206C265600C7E36B /* LobbyScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LobbyScene.swift; sourceTree = "<group>"; };
@@ -205,7 +207,8 @@
 				3A32F5172070076900FA19D4 /* LobbyPlayerManager.swift */,
 				3A32F5192070105E00FA19D4 /* ReadyManager.swift */,
 				3A1987A020728D4000514B81 /* ChatView.swift */,
-				3A1987A220728D5600514B81 /* ChatView.xib */,
+				3A1987A62073031D00514B81 /* LocalChatMessageViewCell.swift */,
+				3A1987A72073031D00514B81 /* RemoteChatMessageViewCell.swift */,
 			);
 			path = "lobby scene";
 			sourceTree = "<group>";
@@ -439,7 +442,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				3A219ECF203B7CEE00FABE0A /* Players.sks in Resources */,
-				3A1987A320728D5600514B81 /* ChatView.xib in Resources */,
 				3A2EFC5F206C25C900C7E36B /* LobbyScene.sks in Resources */,
 				3A74A5FC201E6C3E00A1583F /* MainMenu.sks in Resources */,
 				4C98FBC2201E658600378614 /* Main.storyboard in Resources */,
@@ -470,6 +472,7 @@
 				3A3169722037E84E00DA2DCC /* PacketByteQueue.swift in Sources */,
 				3A32F5182070076900FA19D4 /* LobbyPlayerManager.swift in Sources */,
 				3A3A582A2063216200E74D82 /* AbstractServerPositionVelocitPacket.swift in Sources */,
+				3A1987A82073031E00514B81 /* LocalChatMessageViewCell.swift in Sources */,
 				4C98FBBD201E658600378614 /* GameScene.swift in Sources */,
 				3AB377E02023B5C50019E73E /* CGPointExtension.swift in Sources */,
 				4CC91D9E20339BA700FB9236 /* NewAccountOrLogin.swift in Sources */,
@@ -496,6 +499,7 @@
 				3A74A602201F7F6D00A1583F /* MatchMakingScene.swift in Sources */,
 				3A3A582620631FCF00E74D82 /* ClientBallStatePacket.swift in Sources */,
 				3A119F112048A9E400063D51 /* GamePlayerInformationModel.swift in Sources */,
+				3A1987A92073031E00514B81 /* RemoteChatMessageViewCell.swift in Sources */,
 				3A3169752037E94700DA2DCC /* ConversionUtils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

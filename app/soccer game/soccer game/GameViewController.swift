@@ -19,6 +19,7 @@ class GameViewController:
 UIViewController,FBSDKLoginButtonDelegate {
     
     @IBOutlet weak var chatView: ChatView!
+    static var globalChatView: ChatView!
     
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!)
     {
@@ -72,7 +73,8 @@ UIViewController,FBSDKLoginButtonDelegate {
             
         }
         
-        //hideChatView()
+        hideChatView()
+        GameViewController.globalChatView = chatView
         
         print("token was",AccessToken.current!)
     }
