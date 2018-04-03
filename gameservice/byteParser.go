@@ -132,6 +132,7 @@ func (packet *packet124) toBytes() []byte {
 
 func (packet *packet203) toBytes() []byte{
 	//TODO
+	return nil
 }
 
 func ParseBytesTo123(rawData []byte) packet123 {
@@ -151,7 +152,7 @@ func ParseBytesTo123(rawData []byte) packet123 {
 	}
 	return resultPacket
 }
-
+/*
 func ParseBytesTo125(rawData []byte) packet125{
 	if len(rawData) != 2 {
 		panic(rawData)
@@ -165,7 +166,7 @@ func ParseBytesTo125(rawData []byte) packet125{
 	return resultPacket
 
 }
-
+*/
 //BytestoFloat32 Turns only a 4 byte slice into a float32 primitive
 func BytestoFloat32(input []byte) float32 {
 	if len(input) != 4 {
