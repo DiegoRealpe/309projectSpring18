@@ -2,14 +2,16 @@ package main
 
 import (
 	"fmt"
+	"sync"
 )
 
 //long lived struct that should always be its own goroutine, it is initialized as the entry point for new connections and, when
 //pairing is successful launches a game controller as a goroutine and sets the player connection to send packets there instead.
 type matchMakingModel struct {
+	playerChan chan *waitingPlayer
 
-	//key value is their connection id
-	waitingPlayers map[int]waitingPlayer //should only be modified by pairing routine
+	openSpaces int
+	openSpacesMut sync.Mutex
 }
 
 type waitingPlayer struct {
@@ -19,43 +21,12 @@ type waitingPlayer struct {
 func startMatchmakingModel() matchMakingModel {
 	fmt.Println("starting match making model")
 
-	mmm := matchMakingModel{}
-
-	mmm.waitingPlayers = make(map[int]waitingPlayer, 50)
+	mmm := matchMakingModel{openSpaces:0}
+	mmm.playerChan = make(chan *waitingPlayer, 50)
 
 	return mmm
 }
 
-//currently called whenever a player enters the lobby
-func (mmm *matchMakingModel) tryToPair() {
-
-	fmt.Println("trying to pair")
-	for len(mmm.waitingPlayers) >= NUMPLAYERS {
-
-		//split waiting players into a slice of players joining the game and a slice of those not
-		gamePlayers := mmm.separatePlayersIntoAGame()
-
-		mmm.startGame(gamePlayers)
-	}
-}
-
-func (mmm *matchMakingModel) separatePlayersIntoAGame() []waitingPlayer {
-	game := make([]waitingPlayer, NUMPLAYERS)
-
-	//copy NUMPLAYERS elements from map into a slice and remove them from the map
-	i := 0
-	for key, val := range mmm.waitingPlayers {
-		if i >= NUMPLAYERS {
-			break
-		}
-		i++
-
-		delete(mmm.waitingPlayers, key)
-		game[i-1] = val
-	}
-
-	return game
-}
 
 func (mmm *matchMakingModel) acceptPlayer(connection *playerConnection){
 
@@ -63,41 +34,31 @@ func (mmm *matchMakingModel) acceptPlayer(connection *playerConnection){
 
 	fmt.Println("added player to matchmaking pool with connection number",connection.client.clientNum)
 
-	mmm.waitingPlayers[connection.id] = waitingPlayer
-	mmm.tryToPair()
+	mmm.playerChan <- &waitingPlayer
+
+	mmm.openSpacesMut.Lock()
+	if mmm.openSpaces == 0{
+		go mmm.runNewLobby()
+		mmm.openSpaces = NUMPLAYERS
+	}
+	mmm.openSpacesMut.Unlock()
+}
+
+func (mmm *matchMakingModel) runNewLobby(){
+	go startLobby(mmm)
 }
 
 func (mmm *matchMakingModel) disconnectPlayer(id int) {
 
-	disconnectingPlayer, playerExisted := mmm.waitingPlayers[id]
-
-	//because we are disconnecting using 125 and connection being closed this sometimes is called twice per player
-	if playerExisted {
-		fmt.Println("Player", disconnectingPlayer.connection.id, "has left matchmaking")
-		disconnectingPlayer.connection.disconnect()
-
-		delete(mmm.waitingPlayers, disconnectingPlayer.connection.id)
-	}
-}
-
-func (mmm *matchMakingModel) startGame(players []waitingPlayer) {
-	fmt.Println("starting mock game with players:")
-	for _, val := range players {
-		fmt.Println("***", val.connection.client.clientNum)
-	}
-
-	gameOpts := GameOptions{numPlayers: NUMPLAYERS}
-	for i, p := range players {
-		gameOpts.players[i] = p.connection
-	}
-
-	gameOpts.connectionIDToPlayerNumberMap = makePlayerNumberMap(players)
-
-	packetOutChannel := startPacketOutDispersionWithPlayers(players)
-	packetInChannel := makePacketInChannelForAllPlayers(players)
-
-	go runGameController(gameOpts, packetInChannel, packetOutChannel)
-	send122PacketsToPlayers(players)
+	//disconnectingPlayer, playerExisted := mmm.waitingPlayers[id]
+	//
+	////because we are disconnecting using 125 and connection being closed this sometimes is called twice per player
+	//if playerExisted {
+	//	fmt.Println("Player", disconnectingPlayer.connection.id, "has left matchmaking")
+	//	disconnectingPlayer.connection.disconnect()
+	//
+	//	delete(mmm.waitingPlayers, disconnectingPlayer.connection.id)
+	//}
 }
 
 //assigned sequentially
@@ -171,4 +132,10 @@ func connectionToWaitingPlayer(connection *playerConnection) waitingPlayer {
 	rtn.connection = connection
 
 	return rtn
+}
+
+func (mmm *matchMakingModel) decrementOpenSpaces() {
+	mmm.openSpacesMut.Lock()
+	mmm.openSpaces -= 1
+	mmm.openSpacesMut.Unlock()
 }

@@ -19,6 +19,8 @@ func runGameController(gameOptions GameOptions, in <-chan PacketIn, out chan<- P
 
 	for p := range in {
 		controller.respondToSinglePacket(&p)
+
+		//TODO we need to make sure goroutine ends
 	}
 }
 
