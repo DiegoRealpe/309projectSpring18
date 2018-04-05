@@ -36,7 +36,7 @@
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <color key="sectionIndexBackgroundColor" white="1" alpha="0.60000002379999995" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <prototypes>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="remoteMessage" id="8I3-NK-R1b" customClass="RemoteChatMessageViewCell" customModule="chattest" customModuleProvider="target">
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="remoteMessage" id="8I3-NK-R1b" customClass="RemoteChatMessageViewCell" customModule="soccer_game" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="28" width="276" height="44"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" tag="2" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="8I3-NK-R1b" id="jjh-23-lQm">
@@ -65,7 +65,7 @@
                                                     <outlet property="usernameLabel" destination="VAv-Lz-0wB" id="sos-g8-fru"/>
                                                 </connections>
                                             </tableViewCell>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="localMessage" id="L8M-Ou-OVV" customClass="LocalChatMessageViewCell" customModule="chattest" customModuleProvider="target">
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="localMessage" id="L8M-Ou-OVV" customClass="LocalChatMessageViewCell" customModule="soccer_game" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="72" width="276" height="44"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" tag="2" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="L8M-Ou-OVV" id="Bdu-Uo-Qes" customClass="LocalChatMessageViewCell">
@@ -107,6 +107,11 @@
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="messageTable" destination="dhY-qa-JQu" id="Oq4-BY-xuw"/>
+                                    <outlet property="sendButton" destination="aGC-o6-cr9" id="6Zn-2c-MwG"/>
+                                    <outlet property="textInput" destination="5vx-4A-JQ5" id="RlG-YE-AOv"/>
+                                </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

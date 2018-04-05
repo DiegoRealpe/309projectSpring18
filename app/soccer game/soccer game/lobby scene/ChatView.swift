@@ -9,12 +9,12 @@
 import UIKit
 
 class ChatView: UIView, UITableViewDataSource {
-    
+
     var messages : [ChatMessage] = []
     
-    var messageTable : UITableView!
-    var textInput : UITextField!
-    var sendButton : UIButton!
+    @IBOutlet var messageTable : UITableView!
+    @IBOutlet var textInput : UITextField!
+    @IBOutlet var sendButton : UIButton!
     
     
     override init(frame: CGRect) {
@@ -29,9 +29,7 @@ class ChatView: UIView, UITableViewDataSource {
     
     
     func initCommon(){
-        self.messageTable = self.viewWithTag(1) as! UITableView
-        self.sendButton = self.viewWithTag(2) as! UIButton
-        self.textInput = self.viewWithTag(3) as! UITextField
+
     }
 
     

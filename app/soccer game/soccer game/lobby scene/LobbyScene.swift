@@ -16,6 +16,10 @@ class LobbyScene: SKScene {
 
     var quitLabel : SKLabelNode?
     
+    var mtcp : ManagedTCPConnection!
+    var spr : SocketPacketResponder!
+    var playerNumber : Int!
+    
     var pm : LobbyPlayerManager?
     var rm : ReadyManager?
     var viewController: UIViewController?
@@ -24,15 +28,14 @@ class LobbyScene: SKScene {
     
     override func didMove(to view: SKView) {
         
+        unpackTransitionDictionary()
+        
         self.pm = LobbyPlayerManager(scene : self)
         self.rm = ReadyManager(scene: self)
         
         self.quitLabel = self.childNode(withName: "Quit Label") as? SKLabelNode
         
-        self.pm!.addPlayer(playerNumber: 0, username: "NENENEHdhe")
-        self.pm!.addPlayer(playerNumber: 1, username: "POIHURHRHUR")
-        
-        self.pm!.removePlayer(playerNumber: 0)
+        self.pm!.addPlayer(playerNumber: playerNumber , username: "NENENEHdhe")
         
         startChatView()
     }
@@ -44,6 +47,12 @@ class LobbyScene: SKScene {
             chatView.loadChat()
             chatView.isHidden = false
         }
+    }
+    
+    private func unpackTransitionDictionary(){
+        self.mtcp = self.userData!.value(forKey: UserDataKeys.managedTCPConnection.rawValue) as! ManagedTCPConnection
+        self.spr = self.userData!.value(forKey: UserDataKeys.socketPacketResponder.rawValue) as! SocketPacketResponder
+        self.playerNumber = self.userData!.value(forKey: UserDataKeys.playerNumber.rawValue) as! Int
     }
     
     //no multitouch support
