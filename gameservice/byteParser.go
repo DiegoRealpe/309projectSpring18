@@ -42,13 +42,18 @@ type packet124 struct {
 	timestamp         float32
 }
 
+type packet206 struct {
+	playerNumber int
+	username string
+}
+
 type packet202 struct {//client sends a message in chat.
-	message						[100]byte
+	message					string
 }
 
 type packet203 struct {//server broadcasts a message to the rest of the clients
 	playerNumber			uint8
-	message						[100]byte
+	message					string
 }
 
 type packet204 struct {//server informs clients that one client is ready.
@@ -56,10 +61,6 @@ type packet204 struct {//server informs clients that one client is ready.
 }
 
 type packet205 struct {//server informs clients that one clinet is no longer ready.
-	playerNumber			uint8
-}
-
-type packet206 struct {//server informs clients that another client has disconnected.
 	playerNumber			uint8
 }
 
@@ -130,9 +131,15 @@ func (packet *packet124) toBytes() []byte {
 	return rawData
 }
 
-func (packet *packet203) toBytes() []byte{
-	//TODO
-	return []byte{}
+func (packet *packet206) toBytes() []byte {
+	rawData := make([]byte, 82)
+	rawData[0] = 206
+	rawData[1] = byte(packet.playerNumber)
+
+	messageBytes := stringToUtf8Slice(packet.username,80)
+	copy(rawData[2:81],messageBytes)
+
+	return rawData
 }
 
 func ParseBytesTo123(rawData []byte) packet123 {
@@ -153,6 +160,27 @@ func ParseBytesTo123(rawData []byte) packet123 {
 	return resultPacket
 }
 
+func ParseBytesTo202(rawData []byte) packet202 {
+	if len(rawData) != 401 {
+		panic(rawData)
+	}
+
+	return packet202{
+		message: utf8toString(rawData[1:401]),
+	}
+}
+
+func (p packet203) toBytes() []byte{
+	rawData := make([]byte, 402)
+	rawData[0] = 203
+	rawData[1] = p.playerNumber
+
+	messageBytes := stringToUtf8Slice(p.message,400)
+	copy(rawData[2:402],messageBytes)
+
+	return rawData
+}
+
 //BytestoFloat32 Turns only a 4 byte slice into a float32 primitive
 func BytestoFloat32(input []byte) float32 {
 	if len(input) != 4 {
@@ -169,4 +197,30 @@ func Float32toBytes(input float32) []byte {
 	binary.Write(&bytebuffer, binary.LittleEndian, input)
 
 	return bytebuffer.Bytes()
+}
+
+func stringToUtf8Slice(s string, length int) []byte{
+	if length < len(s){
+		return []byte{}
+	}
+
+	b := make([]byte,length)
+	for i:= 0 ; i < len(s); i++ {
+		b[i] = s[i]
+	}
+	return b
+}
+
+func utf8toString(slice []byte) string{
+	str := string(slice)
+
+
+	for i, v := range str{
+		if v == 0 {
+			str = string(str[:i])
+			break
+		}
+	}
+
+	return str
 }

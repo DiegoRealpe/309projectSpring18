@@ -95,31 +95,6 @@ func makeIDDispersionMap(players []waitingPlayer) map[int]chan<- PacketOut {
 	return m
 }
 
-func makePacketInChannelForAllPlayers(players []waitingPlayer) <-chan PacketIn {
-	packetInChannel := make(chan PacketIn, 50)
-
-	for _, player := range players {
-		player.connection.SetNewPacketInChannel(packetInChannel)
-	}
-
-	return packetInChannel
-}
-
-//should be in line with player numbers because both were assigned sequentially from the same slice
-func send122PacketsToPlayers(players []waitingPlayer) {
-	for num, player := range players {
-		send122PacketToPlayer(player, num)
-	}
-}
-
-func send122PacketToPlayer(player waitingPlayer, playerNum int) {
-	packet := PacketOut{}
-	packet.size = 2
-	packet.data = []byte{122, byte(playerNum)}
-
-	player.connection.packetOut <- packet
-}
-
 func (mmm *matchMakingModel) respondTo125(in *PacketIn) {
 	fmt.Println("recieved 125 packet...")
 

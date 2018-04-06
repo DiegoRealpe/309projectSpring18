@@ -96,7 +96,7 @@ func (pConn *playerConnection) startTransmitting() {
 			fmt.Println("sending packet", packet)
 		}
 		pConn.transmitPacket(packet)
-		if pConn.isActive {
+		if !pConn.isActive {
 			break
 		}
 	}
@@ -166,6 +166,8 @@ func (pConn *playerConnection) tryToReadPacket() {
 
 //this method is thread safe via blocking
 func (pConn *playerConnection) disconnect() {
+	fmt.Println("disconnect called")
+
 	pConn.disconnectionMut.Lock()
 
 	if pConn.portIsOpen {
@@ -188,5 +190,5 @@ var inputPacketLengths = map[byte]int{
 	125 : 1,
 	200 : 1,
 	201 : 1,
-	202 : 101,
+	202 : 401,
 }
