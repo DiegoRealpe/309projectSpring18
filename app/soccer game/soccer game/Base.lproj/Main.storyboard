@@ -100,9 +100,7 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="SEND"/>
                                         <connections>
-                                            <action selector="buttonWasTouched" destination="erC-Yj-HIh" eventType="touchUpInside" id="2UH-Cp-Zcc"/>
-                                            <action selector="buttonWasTouched" destination="xOL-Cg-Uti" eventType="touchUpInside" id="ld2-ch-XeC"/>
-                                            <action selector="buttonWasTouched:" destination="xOL-Cg-Uti" eventType="touchUpInside" id="v0O-FM-Wvg"/>
+                                            <action selector="buttonWasTouched" destination="erC-Yj-HIh" eventType="touchUpInside" id="B5Y-hx-EbS"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -122,7 +120,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
-                <exit id="xOL-Cg-Uti" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="35.532233883058474" y="53.600000000000001"/>
         </scene>

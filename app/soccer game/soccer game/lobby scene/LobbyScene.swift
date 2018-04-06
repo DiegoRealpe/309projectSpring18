@@ -19,6 +19,7 @@ class LobbyScene: SKScene {
     var mtcp : ManagedTCPConnection!
     var spr : SocketPacketResponder!
     var playerNumber : Int!
+    var packetTypeDict : [UInt8:PacketType] = [:]
     
     var pm : LobbyPlayerManager?
     var rm : ReadyManager?
@@ -35,7 +36,9 @@ class LobbyScene: SKScene {
         
         self.quitLabel = self.childNode(withName: "Quit Label") as? SKLabelNode
         
-        self.pm!.addPlayer(playerNumber: playerNumber , username: "NENENEHdhe")
+        self.pm!.addPlayer(playerNumber: playerNumber , username: "NENENEHdhe 🐥🇺🇸")
+        
+        populatePacketTypeDict()
         
         startChatView()
     }
@@ -46,7 +49,12 @@ class LobbyScene: SKScene {
             print(chatView)
             chatView.loadChat()
             chatView.isHidden = false
+            chatView.onNewMessage = self.newLocalMessage(text:)
         }
+    }
+    
+    private func hideChat(){
+        chatView.isHidden = true
     }
     
     private func unpackTransitionDictionary(){
@@ -71,9 +79,40 @@ class LobbyScene: SKScene {
     
     private func quitWasPressed() {
         print("back to main menu")
-        
-        
+        hideChat()
         self.moveToScene(.mainMenu)
+    }
+    
+    private func populatePacketTypeDict(){
+        self.packetTypeDict[206] = PacketType(dataSize: 82, handlerFunction: playerAddedHandler(data:))
+        self.packetTypeDict[203] = PacketType(dataSize: 402, handlerFunction: chatMessageHandler(data:))
+        
+        self.spr.packetTypeDict = self.packetTypeDict
+    }
+    
+    private func newLocalMessage(text : String){
+        let message = OutgoingChatMessagePacket(text)
+        
+        print("sending size",message.toByteArray().count)
+        
+        self.mtcp.sendTCP(packet: message)
+    }
+    
+    private func playerAddedHandler(data : [UInt8]){
+        let player = RemotePlayerJoinedLobbyPacket(data: data)
+        
+        print("player added",player.playerNumber,player.username,"size is",player.username.count)
+        
+        self.pm?.addPlayer(playerNumber: player.playerNumber, username: player.username)
+    }
+
+    private func chatMessageHandler (data: [UInt8]){
+        let message = IncommingChatMessagePacket(data: data)
+        
+        print("got message from",message.playerNumber,"it was",message.message)
+        
+        self.chatView.addRemoteMessage(message.message, from: "todo")
+        
     }
     
 }
