@@ -2,6 +2,7 @@ package main
 
 import(
 	"fmt"
+	"time"
 )
 
 type Lobby struct{
@@ -224,6 +225,8 @@ func (l *Lobby) respondTo125(in *PacketIn, out chan<- PacketOut){
 		targetIds: l.allConnectionIdsBut(in.connectionId),
 	}
 	out <-  packetOut
+
+	time.Sleep(time.Second)//so that the message actually gets sent, i don't care enough to handle this properly
 
 	for i := 0 ; i < l.size; i += 1 {
 		l.players[i].connection.disconnect()
