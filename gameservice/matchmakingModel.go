@@ -12,6 +12,9 @@ type matchMakingModel struct {
 
 	openSpaces int
 	openSpacesMut sync.Mutex
+
+	disconnected map[int]bool
+	disconnectedMut sync.Mutex
 }
 
 type waitingPlayer struct {
@@ -23,6 +26,7 @@ func startMatchmakingModel() matchMakingModel {
 
 	mmm := matchMakingModel{openSpaces:0}
 	mmm.playerChan = make(chan *waitingPlayer, 50)
+	mmm.disconnected = make(map[int]bool)
 
 	return mmm
 }
@@ -48,30 +52,21 @@ func (mmm *matchMakingModel) runNewLobby(){
 	go startLobby(mmm)
 }
 
+//method may be called twice due to concurrency setup, should have no functional difference
+//between one call and 2
 func (mmm *matchMakingModel) disconnectPlayer(id int) {
+	if debug {fmt.Println("connection with id",id,"quit from matchmaking")}
 
-	//disconnectingPlayer, playerExisted := mmm.waitingPlayers[id]
-	//
-	////because we are disconnecting using 125 and connection being closed this sometimes is called twice per player
-	//if playerExisted {
-	//	fmt.Println("Player", disconnectingPlayer.connection.id, "has left matchmaking")
-	//	disconnectingPlayer.connection.disconnect()
-	//
-	//	delete(mmm.waitingPlayers, disconnectingPlayer.connection.id)
-	//}
+	mmm.disconnectedMut.Lock()
+	mmm.disconnected[id] = true
+	mmm.disconnectedMut.Unlock()
 }
 
-//assigned sequentially
-func makePlayerNumberMap(players []waitingPlayer) map[int]byte {
-	m := make(map[int]byte)
-
-	for i, val := range players {
-		m[val.connection.id] = byte(i)
-	}
-
-	fmt.Println("map is", m)
-
-	return m
+func (mmm *matchMakingModel) connectionIdHasDisconnected(id int) bool{
+	mmm.disconnectedMut.Lock()
+	_ , existed := mmm.disconnected[id]
+	mmm.disconnectedMut.Unlock()
+	return existed
 }
 
 //builds a single channel which sends to all clients

@@ -47,7 +47,7 @@ func (l *Lobby) sendExistingLobbyData(newPlayer *waitingPlayer) {
 
 func (l *Lobby) sendAllChatMessagePackets(to chan<- PacketOut){
 
-	fmt.Println("messages are",l.messages)
+	if debug {fmt.Println("messages are",l.messages)}
 
 	for _ , m := range l.messages {
 		message := packet203{
@@ -68,7 +68,7 @@ func (l *Lobby) respondTo202(in *PacketIn, out chan<- PacketOut) {
 	messageIn := ParseBytesTo202(in.data)
 	playerNumber := l.playerNumberForConnectionID(in.connectionId)
 
-	fmt.Println("repeating message",messageIn.message)
+	if debug {fmt.Println("repeating message",messageIn.message)}
 
 
 	message := chatMessage{
@@ -95,7 +95,7 @@ func (l *Lobby) respondTo202(in *PacketIn, out chan<- PacketOut) {
 
 func (l *Lobby) respondTo200(in *PacketIn, out chan<- PacketOut){
 	playerNum := l.playerNumberForConnectionID(in.connectionId)
-	fmt.Println("player",playerNum,"is ready")
+	if debug {fmt.Println("player",playerNum,"is ready")}
 	l.players[playerNum].ready = true
 
 	packet := packet204{numReady:1}
@@ -107,13 +107,13 @@ func (l *Lobby) respondTo200(in *PacketIn, out chan<- PacketOut){
 	out <- packetOut
 
 	if l.areAllPlayersReadyForTheGame() {
-		fmt.Println("moving to game scene")
+		fmt.Println("moving to game controller")
 	}
 }
 
 func (l *Lobby) respondTo201(in *PacketIn, out chan<- PacketOut){
 	playerNum := l.playerNumberForConnectionID(in.connectionId)
-	fmt.Println("player",playerNum,"is unReady")
+	if debug{fmt.Println("player",playerNum,"is unReady")}
 	l.players[playerNum].ready = false
 
 	packet := packet205{numUnready:1}
@@ -127,7 +127,6 @@ func (l *Lobby) respondTo201(in *PacketIn, out chan<- PacketOut){
 }
 
 func (l *Lobby) playerNumberForConnectionID(id int) int{
-	fmt.Println(l.players,l.size)
 	for i := 0; i < l.size; i += 1{
 		if l.players[i].connection.id == id {
 			return i
@@ -171,7 +170,6 @@ func (l *Lobby) allConnectionIdsBut(id int) []int{
 	rtn := make([]int, l.size-1)
 	rtnIndex := 0
 
-	fmt.Println("id, players",id,l.players)
 	for i := 0; i < l.size ; i+= 1 {
 		player := l.players[i]
 		if player.connection.id != id{
@@ -180,7 +178,6 @@ func (l *Lobby) allConnectionIdsBut(id int) []int{
 		}
 	}
 
-	fmt.Println("sending to",rtn)
 	return rtn
 }
 

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"sync"
+	"time"
 )
 
 type LobbyController struct {
@@ -59,6 +60,12 @@ func startLobby(mmm *matchMakingModel) {
 }
 
 func (lc *LobbyController) addSinglePlayer(newPlayer *waitingPlayer) {
+
+	if lc.mmm.connectionIdHasDisconnected(newPlayer.connection.id){
+		newPlayer.connection.disconnect()
+		return
+	}
+
 	lc.mmm.decrementOpenSpaces()
 	fmt.Println("lobby added player with id", newPlayer.connection.id, ", current size is",lc.l.size+1)
 
@@ -70,7 +77,7 @@ func (lc *LobbyController) addSinglePlayer(newPlayer *waitingPlayer) {
 }
 
 func (lc *LobbyController) handleSinglePacket(packet PacketIn){
-	fmt.Println("lc got a packet", packet.data)
+	if debug {fmt.Println("lc got a packet", packet.data)}
 
 	packetByte := packet.data[0]
 	lc.packetRouterMap[packetByte](&packet,lc.packetOut)
@@ -79,8 +86,7 @@ func (lc *LobbyController) handleSinglePacket(packet PacketIn){
 func (lc *LobbyController) runLobbyDispersion() {
 	for packet := range lc.packetOut {
 		lc.disperser.mut.Lock()
-		fmt.Println("dispersion map is",lc.disperser.connections)
-		fmt.Println("sending to",packet.targetIds)
+
 		for _, id := range packet.targetIds{
 			lc.disperser.connections[id] <- packet
 		}
