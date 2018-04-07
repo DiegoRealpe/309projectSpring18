@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"sync"
-	"time"
 )
 
 type LobbyController struct {
@@ -53,7 +52,9 @@ func startLobby(mmm *matchMakingModel) {
 	for packet := range lc.packetIn { //just listen for players
 		lc.handleSinglePacket(packet)
 
-		//TODO make logic to break loop to end lobby and GORoutine if all players have disconnected
+		if packet.data[0] == 125{
+			break
+		}
 	}
 
 	fmt.Println("Lobby closing")
@@ -115,11 +116,8 @@ func (lc *LobbyController) buildPacketMap() {
 	packetMap[200] = lc.l.respondTo200
 	packetMap[201] = lc.l.respondTo201
 	packetMap[202] = lc.l.respondTo202
-	packetMap[125] = my125Stub
+	packetMap[125] = lc.l.respondTo125
 
 	lc.packetRouterMap = packetMap
 }
 
-func my125Stub(in *PacketIn, out chan<- PacketOut){
-	fmt.Println("125, AHHHHHHHHHH")
-}

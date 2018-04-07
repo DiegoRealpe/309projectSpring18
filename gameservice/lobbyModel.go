@@ -214,3 +214,18 @@ func (l *Lobby) sendExistingPlayersReady(out chan PacketOut) {
 
 	out <- packetOut
 }
+
+func (l *Lobby) respondTo125(in *PacketIn, out chan<- PacketOut){
+	fmt.Println("125, AHHHHHHHHHH")
+
+	packetOut := PacketOut{
+		size: 2,
+		data: []byte{207,byte(in.connectionId)},
+		targetIds: l.allConnectionIdsBut(in.connectionId),
+	}
+	out <-  packetOut
+
+	for i := 0 ; i < l.size; i += 1 {
+		l.players[i].connection.disconnect()
+	}
+}
