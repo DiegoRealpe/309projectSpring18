@@ -77,8 +77,19 @@ class LobbyScene: SKScene {
         self.rm?.acceptTouch(touch: touch)
     }
     
+    private func handle207(data: [UInt8]){
+        print("quitting player was",data[1])
+        
+        DispatchQueue.main.sync(execute: hideChat)
+        self.mtcp.stop()
+        self.moveToScene(.mainMenu)
+    }
+    
     private func quitWasPressed() {
         print("back to main menu")
+        self.mtcp.sendTCP(data : [125])
+        self.mtcp.stop()
+        
         hideChat()
         self.moveToScene(.mainMenu)
     }
@@ -88,6 +99,7 @@ class LobbyScene: SKScene {
         self.packetTypeDict[203] = PacketType(dataSize: 402, handlerFunction: chatMessageHandler(data:))
         self.packetTypeDict[204] = PacketType(dataSize: 2, handlerFunction: remotePlayerReadiedHandler(data:))
         self.packetTypeDict[205] = PacketType(dataSize: 2, handlerFunction: remotePlayerUnreadiedHandler(data:))
+        self.packetTypeDict[207] = PacketType(dataSize: 2, handlerFunction: handle207(data:))
         
         self.spr.packetTypeDict = self.packetTypeDict
     }
