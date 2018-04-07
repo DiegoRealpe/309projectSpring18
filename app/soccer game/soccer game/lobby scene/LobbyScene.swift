@@ -32,7 +32,7 @@ class LobbyScene: SKScene {
         unpackTransitionDictionary()
         
         self.pm = LobbyPlayerManager(scene : self)
-        self.rm = ReadyManager(scene: self)
+        self.rm = ReadyManager(scene: self, onReady: self.localPlayerReadied, onUnready: self.localPlayerUnreadied)
         
         self.quitLabel = self.childNode(withName: "Quit Label") as? SKLabelNode
         
@@ -86,6 +86,8 @@ class LobbyScene: SKScene {
     private func populatePacketTypeDict(){
         self.packetTypeDict[206] = PacketType(dataSize: 82, handlerFunction: playerAddedHandler(data:))
         self.packetTypeDict[203] = PacketType(dataSize: 402, handlerFunction: chatMessageHandler(data:))
+        self.packetTypeDict[204] = PacketType(dataSize: 2, handlerFunction: remotePlayerReadiedHandler(data:))
+        self.packetTypeDict[205] = PacketType(dataSize: 2, handlerFunction: remotePlayerUnreadiedHandler(data:))
         
         self.spr.packetTypeDict = self.packetTypeDict
     }
@@ -96,6 +98,26 @@ class LobbyScene: SKScene {
         print("sending size",message.toByteArray().count)
         
         self.mtcp.sendTCP(packet: message)
+    }
+    
+    func localPlayerReadied(){
+        print("local player readied")
+        self.mtcp.sendTCP(data: [200])
+    }
+    
+    func localPlayerUnreadied(){
+        print("local player unreadied")
+        self.mtcp.sendTCP(data: [201])
+    }
+    
+    func remotePlayerReadiedHandler(data : [UInt8]){
+        print("remote player readied",data)
+        self.rm?.readyRemote(num: Int(data[1]))
+    }
+    
+    func remotePlayerUnreadiedHandler(data : [UInt8]){
+        print("remote player unreadied",data)
+        self.rm?.unreadyRemote(num: Int(data[1]))
     }
     
     private func playerAddedHandler(data : [UInt8]){
