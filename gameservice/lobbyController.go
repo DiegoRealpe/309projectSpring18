@@ -49,12 +49,10 @@ func startLobby(mmm *matchMakingModel) {
 
 	fmt.Println("lobby is full")
 
-	for packet := range lc.packetIn { //just listen for players
+	for packet := range lc.packetIn { //just listen for packets
 		lc.handleSinglePacket(packet)
 
-		if packet.data[0] == 125{
-			break
-		}
+		//TODO make logic to break loop to end lobby and GORoutine if all players have disconnected
 	}
 
 	fmt.Println("Lobby closing")
@@ -116,8 +114,35 @@ func (lc *LobbyController) buildPacketMap() {
 	packetMap[200] = lc.l.respondTo200
 	packetMap[201] = lc.l.respondTo201
 	packetMap[202] = lc.l.respondTo202
-	packetMap[125] = lc.l.respondTo125
+	packetMap[125] = my125Stub
 
 	lc.packetRouterMap = packetMap
 }
 
+func my125Stub(in *PacketIn, out chan<- PacketOut){
+	fmt.Println("125, AHHHHHHHHHH")
+}
+
+func (lc *LobbyController) startGCFromLobby() {
+	options := GameOptions{
+		numPlayers: NUMPLAYERS,
+		connectionIDToPlayerNumberMap: lc.getConnIDToPlayerNumberMap(),
+	}
+	for i, p := range lc.l.players {
+		options.players[i] = p.connection
+	}
+
+	go runGameController(options, lc.packetIn, lc.packetOut)
+}
+
+func (lc *LobbyController) getConnIDToPlayerNumberMap() map[int]byte {
+	idmap := make(map[int]byte)
+	for i, p := range lc.l.players {
+		idmap[p.connection.id] = byte(i)
+	}
+	return idmap
+}
+
+func (lc *LobbyController) startReadyTimer() bool {
+	return true
+}
