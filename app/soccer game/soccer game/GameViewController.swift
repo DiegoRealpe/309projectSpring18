@@ -34,7 +34,7 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
             {
                
             }
-            print("LoggedInThroughFB")
+            
             
             sendCRUDServiceLoginRequest(FBToken : AccessToken.current!.authenticationToken)
         }
@@ -66,7 +66,7 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
         }
         
         print("token was",AccessToken.current)
-        sendCRUDServiceLoginRequest(FBToken: AccessToken.current!.authenticationToken)
+        //sendCRUDServiceLoginRequest(FBToken: AccessToken.current!.authenticationToken)
     }
     
     
@@ -84,15 +84,16 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
         {
            
             
-            let userID = AccessToken.current?.userId
+            let userToken = AccessToken.current.unsafelyUnwrapped.authenticationToken//?.userId
             let requestString = "http://localhost:8000/player/login"
             
-            let header:HTTPHeaders = ["FacebookToken": "\(userID!)"]
+            let header:HTTPHeaders = ["FacebookToken": "\(userToken)"]
             
-            print("UserID😎\(userID!)")
+            print("UserToken😎\(userToken)")
             Alamofire.request(requestString, method: .get, headers: header).responseString(completionHandler: loginRequestResponse(_:))
             
-            
+            print("\n")
+            print("\n")
            setGameScene(loginButton)
         }
         
@@ -102,7 +103,12 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
         let loginButton = FBSDKLoginButton()
         loginButton.center = view.center
         loginButton.delegate = self // Remember to set the delegate of the loginButton
+        
+            
+            
         view.addSubview(loginButton)
+            
+            
         }
         
     }
@@ -110,6 +116,7 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
     //function to do things with response from server to a login request by client
     func loginRequestResponse(_ response : DataResponse<String>)
     {
+        print("status code",response.response!.statusCode)
         print("🍆\(response)")
         
     }
