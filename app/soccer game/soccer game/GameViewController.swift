@@ -47,7 +47,7 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
         view.addSubview(loginButton)
     }
     
-    func setGameScene(_ loginButton: FBSDKLoginButton!)
+    func setGameScene(/*_ loginButton: FBSDKLoginButton!*/)
     {
         if let view = self.view as! SKView? {
             // Load the SKScene from 'GameScene.sks'
@@ -58,7 +58,7 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
                 // Present the scene
                 view.presentScene(scene)
             }
-            loginButton.removeFromSuperview()
+           // loginButton.removeFromSuperview()
             view.ignoresSiblingOrder = true
             
             view.showsFPS = true
@@ -80,7 +80,7 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
         // Do any additional setup after loading the view, typically from a nib.
         
         //if player logged in
-        if let accessToken = AccessToken.current
+        if let accessToken = AccessToken.current //stuff to do if not logged in at all
         {
            
             
@@ -94,7 +94,7 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
             
             print("\n")
             print("\n")
-           setGameScene(loginButton)
+          // setGameScene(loginButton)
         }
         
         else
@@ -117,7 +117,14 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
     func loginRequestResponse(_ response : DataResponse<String>)
     {
         print("status code",response.response!.statusCode)
-        print("🍆\(response)")
+        if(response.response!.statusCode == 202)
+        {
+            setGameScene()
+        }
+       // else if(response.response!.statusCode == 1)
+        {
+            
+        }
         
     }
 
