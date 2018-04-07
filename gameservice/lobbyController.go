@@ -106,8 +106,10 @@ func (lc *LobbyController) makeLobby() (l Lobby) {
 func (lc *LobbyController) buildPacketMap() {
 	packetMap := map[byte]func(*PacketIn, chan<- PacketOut){}
 
-	packetMap[125] = my125Stub
+	packetMap[200] = lc.l.respondTo200
+	packetMap[201] = lc.l.respondTo201
 	packetMap[202] = lc.l.respondTo202
+	packetMap[125] = my125Stub
 
 	lc.packetRouterMap = packetMap
 }

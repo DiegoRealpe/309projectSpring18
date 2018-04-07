@@ -12,6 +12,7 @@ type Lobby struct{
 }
 
 type lobbyPlayer struct{
+	ready bool
 	username string
 	connection *playerConnection
 }
@@ -30,6 +31,7 @@ func (l *Lobby) addPlayer(newPlayer *waitingPlayer, out chan<- PacketOut){
 	l.sendExistingLobbyData(newPlayer)
 
 	l.players[i] = lobbyPlayer{
+		ready: false,
 		username : "∆∆∆™∆∆∆∆🐥🇺🇸語",
 		connection: newPlayer.connection,
 	}
@@ -40,8 +42,8 @@ func (l *Lobby) addPlayer(newPlayer *waitingPlayer, out chan<- PacketOut){
 func (l *Lobby) sendExistingLobbyData(newPlayer *waitingPlayer) {
 	l.sendAllExistingPlayers(newPlayer.connection.packetOut)
 	l.sendAllChatMessagePackets(newPlayer.connection.packetOut)
+	l.sendExistingPlayersReady(newPlayer.connection.packetOut)
 }
-
 
 func (l *Lobby) sendAllChatMessagePackets(to chan<- PacketOut){
 
@@ -89,6 +91,39 @@ func (l *Lobby) respondTo202(in *PacketIn, out chan<- PacketOut) {
 	}
 
 	out <- packetOut
+}
+
+func (l *Lobby) respondTo200(in *PacketIn, out chan<- PacketOut){
+	playerNum := l.playerNumberForConnectionID(in.connectionId)
+	fmt.Println("player",playerNum,"is ready")
+	l.players[playerNum].ready = true
+
+	packet := packet204{numReady:1}
+	packetOut := PacketOut{
+		size: 2,
+		data: packet.toBytes(),
+		targetIds: l.allConnectionIdsBut(in.connectionId),
+	}
+	out <- packetOut
+
+	if l.areAllPlayersReadyForTheGame() {
+		fmt.Println("moving to game scene")
+	}
+}
+
+func (l *Lobby) respondTo201(in *PacketIn, out chan<- PacketOut){
+	playerNum := l.playerNumberForConnectionID(in.connectionId)
+	fmt.Println("player",playerNum,"is unReady")
+	l.players[playerNum].ready = false
+
+	packet := packet205{numUnready:1}
+	packetOut := PacketOut{
+		size: 2,
+		data: packet.toBytes(),
+		targetIds: l.allConnectionIdsBut(in.connectionId),
+	}
+	out <- packetOut
+
 }
 
 func (l *Lobby) playerNumberForConnectionID(id int) int{
@@ -147,4 +182,38 @@ func (l *Lobby) allConnectionIdsBut(id int) []int{
 
 	fmt.Println("sending to",rtn)
 	return rtn
+}
+
+
+func (l *Lobby) areAllPlayersReadyForTheGame() bool{
+	if l.size != NUMPLAYERS{
+		return false
+	}
+
+	for _, val := range l.players{
+		if !val.ready {
+			return false
+		}
+	}
+
+	return true
+}
+
+func (l *Lobby) sendExistingPlayersReady(out chan PacketOut) {
+	numReady := 0
+
+	//count players ready
+	for i := 0; i < l.size ; i+= 1 {
+		if l.players[i].ready {
+			numReady += 1
+		}
+	}
+
+	packet := packet204{numReady: byte(numReady)}
+	packetOut := PacketOut{
+		size: 2,
+		data: packet.toBytes(),
+	}
+
+	out <- packetOut
 }

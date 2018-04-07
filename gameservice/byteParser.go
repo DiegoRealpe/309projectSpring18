@@ -57,11 +57,11 @@ type packet203 struct {//server broadcasts a message to the rest of the clients
 }
 
 type packet204 struct {//server informs clients that one client is ready.
-	playerNumber			uint8
+	numReady				uint8
 }
 
 type packet205 struct {//server informs clients that one clinet is no longer ready.
-	playerNumber			uint8
+	numUnready				uint8
 }
 
 //ParseBytesTo120 Takes array of bytes and parses to a clientpacket struct
@@ -158,6 +158,14 @@ func ParseBytesTo123(rawData []byte) packet123 {
 		yVelocity:         BytestoFloat32(yVelByte),
 	}
 	return resultPacket
+}
+
+func (p packet204) toBytes() []byte{
+	return []byte{204,p.numReady}
+}
+
+func (p packet205) toBytes() []byte{
+	return []byte{205,p.numUnready}
 }
 
 func ParseBytesTo202(rawData []byte) packet202 {
