@@ -214,3 +214,27 @@ func (l *Lobby) sendExistingPlayersReady(out chan PacketOut) {
 
 	out <- packetOut
 }
+
+func (lc *LobbyController) startGCFromLobby() {
+	options := GameOptions{
+		numPlayers: NUMPLAYERS,
+		connectionIDToPlayerNumberMap: lc.getConnIDToPlayerNumberMap(),
+	}
+	for i, p := range lc.l.players {
+		options.players[i] = p.connection
+	}
+
+	go runGameController(options, lc.packetIn, lc.packetOut)
+}
+
+func (lc *LobbyController) getConnIDToPlayerNumberMap() map[int]byte {
+	idmap := make(map[int]byte)
+	for i, p := range lc.l.players {
+		idmap[p.connection.id] = byte(i)
+	}
+	return idmap
+}
+
+func (lc *LobbyController) startReadyTimer() bool {
+	return true
+}

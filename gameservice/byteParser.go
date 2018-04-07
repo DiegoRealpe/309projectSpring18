@@ -188,7 +188,15 @@ func (p packet203) toBytes() []byte{
 
 	return rawData
 }
+/*
+func ParseBytesTo125(rawData []byte) packet125 {
+	if len(rawData) != 2 {
+		panic(rawData)
+	}
 
+	playerNumberByte = rawData[1]
+}
+*/
 //BytestoFloat32 Turns only a 4 byte slice into a float32 primitive
 func BytestoFloat32(input []byte) float32 {
 	if len(input) != 4 {
