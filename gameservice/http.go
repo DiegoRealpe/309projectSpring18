@@ -10,6 +10,12 @@ import (
 type clientConnection struct {
 	connection net.Conn
 	port int
+
+	playerInfo connectionPlayerInfo
+}
+
+type connectionPlayerInfo struct {
+	username string
 }
 
 type portHttpController struct {
@@ -52,5 +58,15 @@ func (portHttpController *portHttpController) handlePortRequested(w http.Respons
 		portHttpController.connPasser <- connClient
 	}()
 
+}
+
+
+func checkTokenWithCrudService(internlToken int64) connectionPlayerInfo {
+	info := connectionPlayerInfo{}
+
+
+	//todo
+
+	return info
 }
 

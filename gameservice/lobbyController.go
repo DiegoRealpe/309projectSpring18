@@ -1,5 +1,12 @@
 package main
 
+/*
+	LobbyController.go contains all the higher-level and communication-related functionality for
+	the lobby. this includes grabbing players from the chan of waiting players and routing packets
+	to the correct handler.
+ */
+
+
 import (
 	"fmt"
 	"sync"
