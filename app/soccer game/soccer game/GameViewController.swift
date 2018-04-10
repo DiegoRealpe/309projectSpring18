@@ -84,12 +84,14 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
         {
            
             
-            let userToken = AccessToken.current.unsafelyUnwrapped.authenticationToken//?.userId
-            let requestString = "http://localhost:8000/player/login"
+            let userToken = AccessToken.current.unsafelyUnwrapped.authenticationToken//userId
+            let requestString = "http://\(CommunicationProperties.crudServiceHost):\(CommunicationProperties.crudServicePort)/player/login"
             
             let header:HTTPHeaders = ["FacebookToken": "\(userToken)"]
             
-            print("UserToken😎\(userToken)")
+            print("✉️✉️✉️RequestString-->\(requestString)\n")
+            print("✉️✉️✉️Header--> FacebookToken:\(userToken)\n")
+            
             Alamofire.request(requestString, method: .get, headers: header).responseString(completionHandler: loginRequestResponse(_:))
             
             print("\n")
@@ -113,18 +115,32 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
         
     }
     
+    
     //function to do things with response from server to a login request by client
     func loginRequestResponse(_ response : DataResponse<String>)
     {
-        print("status code",response.response!.statusCode)
+        
+        print("🍆🍆🍆status code",response.response!.statusCode)
+        
+        
+        
         if(response.response!.statusCode == 202)
         {
             setGameScene()
         }
-       // else if(response.response!.statusCode == 1)
+        else if(response.response!.statusCode == 404)//if player not found --> create account
         {
-            
+            createAccount()
         }
+        else if(response.response!.statusCode == 400)
+        {
+            print("SERVER MACHINE BROKE")
+        }
+        
+    }
+    
+    func createAccount()
+    {
         
     }
 
