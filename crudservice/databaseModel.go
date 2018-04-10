@@ -3,7 +3,7 @@ package main
 import (
 	"database/sql"
 	"errors"
-	"fmt"
+	"strconv"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -42,9 +42,8 @@ func QueryDeletePlayer(db *sql.DB, p *Player) error {
 
 //QueryCreatePlayer inserts new Player in database
 func QueryCreatePlayer(db *sql.DB, p *Player) error {
-	request := fmt.Sprintf(`INSERT INTO Players (Nickname, GamesPlayed, GamesWon, GoalsScored, Active)
-	VALUES ('%s', '0', '0', '0', '0')`, p.Nickname)
-	result, err := db.Exec(request)
+	result, err := db.Exec(`INSERT INTO Players (Nickname, GamesPlayed, GamesWon, GoalsScored, Active)
+	VALUES (?, 0, 0, 0, 0)`, p.Nickname)
 	if err != nil {
 		return err
 	}
@@ -82,8 +81,8 @@ func QuerySearchPlayer(db *sql.DB, p *Player) error {
 		}
 		results++
 		p.Nickname = Nickname
-		p.GamesPlayed = string(a)
-		p.GoalsScored = string(c)
+		p.GamesPlayed = strconv.Itoa(a)
+		p.GoalsScored = strconv.Itoa(c)
 	}
 	if results == 0 { //Diego from the future, you idiot, dont move this from here
 		return sql.ErrNoRows
@@ -99,7 +98,7 @@ func QueryUpdatePlayer(db *sql.DB, p *Player) error {
 	if p.ID == "" {
 		return errors.New("Invalid user ID")
 	}
-	var mods []string //Declaring slie of values to change
+	var mods []string //Declaring slice of values to change
 
 	//any value of the struct that is non nil is updated
 	if p.Nickname != "" {

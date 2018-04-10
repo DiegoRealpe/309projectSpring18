@@ -164,7 +164,9 @@ func TestRegisterUser(t *testing.T) {
 	response = executeRequest(req)
 	var m map[string]string
 	json.Unmarshal(response.Body.Bytes(), &m)
-	fmt.Println(m["error"])
+	if m["error"] != "" {
+		t.Errorf(m["error"])
+	}
 	checkResponseCode(t, http.StatusCreated, response.Code)
 
 }
@@ -183,7 +185,7 @@ func TestLoginUser(t *testing.T) {
 
 	req2, err := http.NewRequest("GET", "/player/login", nil)
 	if err != nil {
-		fmt.Println(err.Error())
+		t.Errorf(err.Error())
 	}
 	req2.Header.Set("FacebookToken", testUserToken)
 	response2 := executeRequest(req2)
