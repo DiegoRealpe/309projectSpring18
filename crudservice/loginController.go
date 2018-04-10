@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -63,20 +64,20 @@ func (a *App) loginPlayer(w http.ResponseWriter, r *http.Request) {
 	//3 query AppUser FBID in FBdatatable to get game id
 	dberr := QueryGetFBDataID(a.db, &user)
 	if dberr != nil {
-		handleDBErrors(w, dberr)
+		handleDBErrors(w, errors.New("Get FB Data ID Error"))
 		return
 	}
 	//4 use GET player model to get info
 	p := Player{ID: user.ID}
 	dberr = QuerySearchPlayer(a.db, &p)
 	if dberr != nil {
-		handleDBErrors(w, dberr)
+		handleDBErrors(w, errors.New("Query Search Player Error"))
 		return
 	}
 	//5 use GET token model to get apptoken (handle expired)
 	apptoken, dberr := QueryGetUpdateToken(a.db, user.ID)
 	if dberr != nil {
-		handleDBErrors(w, dberr)
+		handleDBErrors(w, errors.New("Get Apptoken Error"))
 		return
 	}
 	//6 answer with player struct and apptoken
