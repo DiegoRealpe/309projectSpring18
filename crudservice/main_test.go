@@ -137,8 +137,9 @@ func TestDeleteUser(t *testing.T) {
 	response = executeRequest(req)
 	var m map[string]string
 	json.Unmarshal(response.Body.Bytes(), &m)
-	fmt.Println(m["error"])
-
+	if m["error"] != "" {
+		fmt.Println(m["error"])
+	}
 	checkResponseCode(t, http.StatusAccepted, response.Code)
 	req, _ = http.NewRequest("GET", "/player/1", nil)
 	response = executeRequest(req)
@@ -188,7 +189,7 @@ func TestLoginUser(t *testing.T) {
 	response2 := executeRequest(req2)
 	var m map[string]string
 	json.Unmarshal(response2.Body.Bytes(), &m)
-	fmt.Println(m["ApplicationToken"])
+	//fmt.Println(m["ApplicationToken"])
 	checkResponseCode(t, http.StatusAccepted, response2.Code)
 
 }
