@@ -133,9 +133,8 @@ func QueryUpdatePlayer(db *sql.DB, p *Player) error {
 
 //QueryCreateFBData inserts player information obtained from graph API
 func QueryCreateFBData(db *sql.DB, u *AppUser) error {
-	request := fmt.Sprintf(`INSERT INTO FacebookData (FacebookID, PlayerID, FullName, Email)
-	VALUES ('%s', '%s', '%s', '%s')`, u.FacebookID, u.ID, u.FullName, u.Email)
-	result, err := db.Exec(request)
+	result, err := db.Exec(`INSERT INTO FacebookData (FacebookID, PlayerID, FullName, Email)
+	VALUES (?, ?, ?, ?)`, u.FacebookID, u.ID, u.FullName, u.Email)
 	if err != nil {
 		return err
 	}
