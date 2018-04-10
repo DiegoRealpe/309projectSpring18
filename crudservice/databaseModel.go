@@ -66,8 +66,7 @@ func QuerySearchPlayer(db *sql.DB, p *Player) error {
 	if p.ID == "" {
 		return errors.New("Invalid user ID")
 	}
-	request := fmt.Sprintf("SELECT * FROM Players WHERE ID = '%s'", p.ID)
-	rows, err := db.Query(request)
+	rows, err := db.Query(`SELECT * FROM Players WHERE ID = ?`, p.ID)
 	if err != nil {
 		return err
 	}
