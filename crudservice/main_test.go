@@ -1,4 +1,4 @@
-package crudservice
+package main
 
 import (
 	"bytes"
@@ -129,11 +129,16 @@ func TestDeleteUser(t *testing.T) {
 
 	clearTable()
 	addUsers(1)
+
 	req, _ := http.NewRequest("GET", "/player/1", nil)
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusOK, response.Code)
 	req, _ = http.NewRequest("DELETE", "/player/1", nil)
 	response = executeRequest(req)
+	var m map[string]string
+	json.Unmarshal(response.Body.Bytes(), &m)
+	fmt.Println(m["error"])
+
 	checkResponseCode(t, http.StatusAccepted, response.Code)
 	req, _ = http.NewRequest("GET", "/player/1", nil)
 	response = executeRequest(req)
@@ -233,8 +238,8 @@ func TestTokenQuery(t *testing.T) {
 }
 
 //to get a new token login to facebook and get one from one of our test user
-const testUserToken = "EAACqvTZC1964BAFS5e4ZBi6SrxeocFDZB3RBVfZAaagNYB6iSZC21nujLmpKDkPwaZB21phJrG1P4orrPharnrpvlvmJOZBQaZB2NmJBGNd22GlcPtcApdsU0LejyPRBDYqJ5H9XNXnBriWb8eqZAoQT2mrEWP3euMKudRTTUYGDmGZBqKZAU4maFdNG9mTCtU65bHLZCQbXMCVQTNi4vrw9biFXwvqifKrCUIIaZArZCuTunrTwZDZD"
-const testUserToken2 = "EAACqvTZC1964BAEwIK3G6zPMHoyrb46GH1tsQH2ZAYFd0ZCYjMyQFXmAvsOQjnlixoMa18qWEHB4tQjC7ZCf8rIAxqU80qMEj3v6ZBI5ZAyTWZCBZBNGoUQAxR7dzk7p37rPtZCpjWA6hzQbHvhjasaKB3XPhYUezhAy8ZC6TqMZAWBzZAfc4ZAGW1woZAMwvS4gwNpm11KF6v67IKdOLryzqQmJbNgC67fnmncBZA7VKzL01c7LgZDZD"
+const testUserToken = "EAACqvTZC1964BAJMkOjrct3NiMfg6D6wNT3sNlZCRLfb21lZBEldRwvBLZCkqOY3Wevr41UaP2NFrr7FJrG1Bh9FmeVGagZADaTN4lTO6T7ucLNgm3HMfIHsZApfWLdghfC5wch2vjFQXAQRlmQIkz2VpLtNFMMGeQs1rFPS4N7BZBIczFZCHsHVVdWbvkF0eb8ZBXaVdvSOylyCZCA4wz6imNMyVfsPxmg1FvwenJfhfn4QZDZD"
+const testUserToken2 = "EAACqvTZC1964BADSSdzQHly5ca1YHk263pNCWjUbB14PHAnNzFoPuOsteqgBjPESyduHppOL8x31uOCoCekmNTXMl1XcHixNoQwz7mJZB4yhrvevG1Szuv0aXDQVSumAQcRMyx7SOt7wx9fmZCHUm4wUNpqa4Lmvo8ZCnekW9D206QVpTLNNBJewZCNfhe5BMfZASQZAqIhv4auyRYMKiU4sAvoAcVLriaNvZAPbcTKakgZDZD"
 
 func TestFBApiAccess(t *testing.T) {
 	getFBUser(testUserToken)

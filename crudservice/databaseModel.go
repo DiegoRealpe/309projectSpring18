@@ -1,4 +1,4 @@
-package crudservice
+package main
 
 import (
 	"database/sql"
@@ -26,8 +26,7 @@ type PlayerProfile struct {
 
 //QueryDeletePlayer Clears Player in database
 func QueryDeletePlayer(db *sql.DB, p *Player) error {
-	request := fmt.Sprintf(`DELETE FROM Players WHERE ID = '%s'`, p.ID)
-	result, err := db.Exec(request)
+	result, err := db.Exec(`DELETE FROM Players WHERE ID = ?`, p.ID)
 	if err != nil {
 		return err
 	}

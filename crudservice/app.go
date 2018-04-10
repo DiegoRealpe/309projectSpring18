@@ -1,4 +1,4 @@
-package crudservice
+package main
 
 import (
 	"database/sql"

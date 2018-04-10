@@ -1,4 +1,4 @@
-package crudservice
+package main
 
 import (
 	"encoding/json"
@@ -85,7 +85,7 @@ func (a *App) loginPlayer(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) statsPlayer(w http.ResponseWriter, r *http.Request) {
-	//TODO
+
 }
 
 func (a *App) checkToken(w http.ResponseWriter, r *http.Request) {
