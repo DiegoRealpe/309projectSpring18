@@ -1,7 +1,16 @@
 package main
 
+/*
+	LobbyModel.go contains the literal lobby object with functionality for responding to
+	lobby-specific packets including sending any responses over a packet out channel.
+
+	Lobby and it's functions are not thread safe and should be run on a single goRoutine or
+	have external blockig set up.
+ */
+
 import(
 	"fmt"
+	"time"
 )
 
 type Lobby struct{
@@ -22,13 +31,14 @@ type chatMessage struct{
 	message string
 }
 
+//non-communication related logic for adding a player to a lobby
 func (l *Lobby) addPlayer(newPlayer *waitingPlayer, out chan<- PacketOut){
 	i := l.size
 	l.size += 1
 
 	newPlayer.connection.packetOut <- PacketOut{ data:[]byte{222,byte(l.size-1)},size:2 }
 
-	l.sendExistingLobbyData(newPlayer)
+	l.sendPlayerExistingLobbyInfo(newPlayer)
 
 	l.players[i] = lobbyPlayer{
 		ready: false,
@@ -39,7 +49,8 @@ func (l *Lobby) addPlayer(newPlayer *waitingPlayer, out chan<- PacketOut){
 	l.tellOtherPlayersYouJoined(newPlayer,out)
 }
 
-func (l *Lobby) sendExistingLobbyData(newPlayer *waitingPlayer) {
+//send everything to date about a lobby
+func (l *Lobby) sendPlayerExistingLobbyInfo(newPlayer *waitingPlayer) {
 	l.sendAllExistingPlayers(newPlayer.connection.packetOut)
 	l.sendAllChatMessagePackets(newPlayer.connection.packetOut)
 	l.sendExistingPlayersReady(newPlayer.connection.packetOut)
@@ -124,15 +135,6 @@ func (l *Lobby) respondTo201(in *PacketIn, out chan<- PacketOut){
 	}
 	out <- packetOut
 
-}
-
-func (l *Lobby) playerNumberForConnectionID(id int) int{
-	for i := 0; i < l.size; i += 1{
-		if l.players[i].connection.id == id {
-			return i
-		}
-	}
-	return -1
 }
 
 func (l *Lobby) sendAllExistingPlayers (to chan<- PacketOut){
@@ -225,7 +227,19 @@ func (l *Lobby) respondTo125(in *PacketIn, out chan<- PacketOut){
 	}
 	out <-  packetOut
 
+	time.Sleep(time.Second)//so that the message actually gets sent, i don't care enough to handle this properly
+
 	for i := 0 ; i < l.size; i += 1 {
 		l.players[i].connection.disconnect()
 	}
 }
+
+func (l *Lobby) playerNumberForConnectionID(id int) int{
+	for i := 0; i < l.size; i += 1{
+		if l.players[i].connection.id == id {
+			return i
+		}
+	}
+	return -1
+}
+
