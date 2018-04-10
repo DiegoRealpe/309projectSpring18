@@ -428,5 +428,9 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
             self.ballNode!.physicsBody!.velocity = vector
         }
     }
+    
+    func isPractice() -> Bool {
+        return self.managedTcpConnection == nil
+    }
 }
 
