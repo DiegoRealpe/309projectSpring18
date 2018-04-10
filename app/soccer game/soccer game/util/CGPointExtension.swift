@@ -20,5 +20,21 @@ extension CGPoint{
         return sqrt(xDiff*xDiff + yDiff*yDiff)
     }
     
+    func vectorTo(_ other : CGPoint, multipliedBy : Double) -> CGVector{
+        let xDiff = Double(other.x - self.x)
+        let yDiff = Double(other.y - self.y)
+        
+        return CGVector(dx: xDiff * multipliedBy, dy: yDiff * multipliedBy)
+    }
+    
+    func vectorTo(_ other : CGPoint, ofMagnitude : Double) -> CGVector{
+        let xDiff = Double(other.x - self.x)
+        let yDiff = Double(other.y - self.y)
+        
+        let naturalMagnitude = sqrt(xDiff*xDiff + yDiff*yDiff)
+        
+        return CGVector(dx: xDiff * ofMagnitude / naturalMagnitude, dy: yDiff * ofMagnitude / naturalMagnitude)
+    }
+    
 }
 

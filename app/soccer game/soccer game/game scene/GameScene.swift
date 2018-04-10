@@ -14,6 +14,8 @@ import GameplayKit
 class GameScene: SKScene , SKPhysicsContactDelegate {
     
     static let maxPlayers = 2
+    static let maxKickDistance : Float = 80.0
+    
     let movementSpeed = 100.0
     let packetUpdateIntervalSeconds = 0.05
     let joystickRadius = 50.0
@@ -413,7 +415,18 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     }
     
     func doKick(){
-        print("kick")
+        let playerPosition = self.pm!.selectPlayer(playerNum: self.pm!.playerNumber).position
+        
+        let distanceBetweenBallAndPlayer : Float = self.ballNode!.position.distanceTo(playerPosition)
+        
+        print("distnce was: \(distanceBetweenBallAndPlayer))")
+        
+        if distanceBetweenBallAndPlayer < GameScene.maxKickDistance {
+            let vector : CGVector =  playerPosition.vectorTo(self.ballNode!.position,ofMagnitude: 300)
+            
+            print("kick",vector)
+            self.ballNode!.physicsBody!.velocity = vector
+        }
     }
 }
 
