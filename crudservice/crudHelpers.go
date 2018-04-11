@@ -51,6 +51,11 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 }
 
 func verifyAccess(r *http.Request) error {
+	reqUser := r.Header.Get("AppUser")
+	reqSecret := r.Header.Get("AppSecret")
+	if reqUser != "MG_6" || reqSecret != "goingforthat#1bois" {
+		return errors.New("Invalid Credentials")
+	}
 	return nil
 }
 

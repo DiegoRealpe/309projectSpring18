@@ -90,6 +90,13 @@ func (a *App) statsPlayer(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) checkToken(w http.ResponseWriter, r *http.Request) {
+
+	//Veriy if the game service is accessing
+	if securityErr := verifyAccess(r); securityErr != nil {
+		respondWithError(w, http.StatusUnauthorized, securityErr.Error())
+		return
+	}
+
 	token := r.Header.Get("ApplicationToken")
 	nickname, dberr := QueryAssertToken(a.db, token)
 	if dberr != nil {
