@@ -185,7 +185,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     private func touchBegins(_ touch : UITouch) {
         let position = touch.location(in: self)
         
-        if self.joyStick == nil && isInBottomLeftQuadrant(_ : touch) {
+        if self.joyStick == nil && (isInBottomLeftQuadrant(_ : touch) || true) {
             self.joyStick = Joystick(parent : self, radius : self.joystickRadius, touch : touch)
         }
         
