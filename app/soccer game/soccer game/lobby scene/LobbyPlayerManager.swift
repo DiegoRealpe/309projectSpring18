@@ -11,7 +11,7 @@ import SpriteKit
 
 class LobbyPlayerManager{
 
-    var players : [LPMPlayer?] = Array(repeating: nil, count: GameScene.maxPlayers)
+    var players : [PlayerInfo?] = Array(repeating: nil, count: GameScene.maxPlayers)
     var scene : SKScene
     
     init(scene : SKScene){
@@ -23,7 +23,7 @@ class LobbyPlayerManager{
         label.text = username
         label.isHidden = false
         
-        let newPlayer = LPMPlayer(
+        let newPlayer = PlayerInfo(
             playerNumber : playerNumber,
             username : username,
             label : label
@@ -43,10 +43,22 @@ class LobbyPlayerManager{
         return players[playerNumber] != nil
     }
     
+    func export() -> PlayerExport {
+        return PlayerExport(players: self.players)
+    }
     
-    struct LPMPlayer{
-        var playerNumber : Int
-        var username : String
-        var label : SKLabelNode
+}
+
+struct PlayerInfo{
+    var playerNumber : Int
+    var username : String
+    var label : SKLabelNode
+}
+
+class PlayerExport {
+    var players : [PlayerInfo?] = Array(repeating: nil, count: GameScene.maxPlayers)
+    
+    init(players : [PlayerInfo?]){
+        self.players = players
     }
 }

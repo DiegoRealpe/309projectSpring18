@@ -17,9 +17,14 @@ class ReadyManager{
     var numReady = 0
     var currentPlayerReady = false
     
-    init(scene : SKScene){
+    var onReady : () -> ()
+    var onUnready : () -> ()
+    
+    init(scene : SKScene, onReady : @escaping () -> (), onUnready : @escaping () -> () ){
         self.scene = scene
         self.readyLabel = scene.childNode(withName: "Ready Label") as! SKLabelNode
+        self.onReady = onReady
+        self.onUnready = onUnready
         
         updateReadyLabel()
     }
@@ -42,9 +47,11 @@ class ReadyManager{
         if currentPlayerReady {
             numReady -= 1
             currentPlayerReady = false
+            self.onUnready()
         }else{
             numReady += 1
             currentPlayerReady = true
+            self.onReady()
         }
         
         updateReadyLabel()
@@ -52,6 +59,16 @@ class ReadyManager{
     
     func readyUserPlayer(){
         self.numReady += 1
+    }
+    
+    func readyRemote(num : Int){
+        numReady += num
+        updateReadyLabel()
+    }
+    
+    func unreadyRemote(num : Int){
+        numReady -= num
+        updateReadyLabel()
     }
     
 }

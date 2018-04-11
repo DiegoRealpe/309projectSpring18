@@ -88,14 +88,14 @@ class MatchMakingScene: SKScene {
     //for interfacing with the SocketPacketResponder
     private func makePacketTypeDict(spr : SocketPacketResponder) -> [UInt8:PacketType]{
         return [
-            122: PacketType(dataSize: 2, handlerFunction: { (data) in
-                self.recievePlayerNumberCode(data: data, spr: spr)
+            222: PacketType(dataSize: 2 , handlerFunction: { (data) in
+                self.toldToMoveToLobby(data: data, spr: spr)
             })
         ]
     }
     
     
-    private func recievePlayerNumberCode(data : [UInt8],spr : SocketPacketResponder){
+    private func toldToMoveToLobby(data : [UInt8],spr : SocketPacketResponder){
         guard data.count == 2 else {
             print("did not recieve correct player code size, expected 2, was",data.count)
             return
@@ -107,11 +107,11 @@ class MatchMakingScene: SKScene {
     }
     
     private func transitionToLobbySceneWithData(spr : SocketPacketResponder, playerNum : UInt8){
-        let transitionFunction = makeAddGameSceneDataFunction(spr : spr, playerNum : playerNum)
+        let transitionFunction = makeLobbySceneDataFunction(spr : spr, playerNum : playerNum)
         self.moveToScene(.lobbyScene, dataFunction : transitionFunction)
     }
     
-    private func makeAddGameSceneDataFunction(spr : SocketPacketResponder, playerNum : UInt8) -> (NSMutableDictionary) -> Void{
+    private func makeLobbySceneDataFunction(spr : SocketPacketResponder, playerNum : UInt8) -> (NSMutableDictionary) -> Void{
         
         return { (dict) -> Void in
             

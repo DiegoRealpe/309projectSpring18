@@ -38,7 +38,7 @@ class SocketPacketResponder{
         //loop, and not if statement to allow multiple packets to be executed
         while byteQueue.size >= bytesForPacket {
             guard let packetType = packetTypeDict[packetCode] else{ //todo improve handling for missing data
-                print("packet number missing from dictionary")
+                print("packet number missing from dictionary",packetCode)
                 break
             }
             

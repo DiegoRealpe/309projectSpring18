@@ -13,8 +13,13 @@ import FBSDKLoginKit
 import FacebookCore
 import FacebookLogin
 
-class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
+class GameViewController:
+
+
+UIViewController,FBSDKLoginButtonDelegate {
     
+    @IBOutlet weak var chatView: ChatView!
+    static var globalChatView: ChatView!
     
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!)
     {
@@ -50,6 +55,7 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
     
     func setGameScene(_ loginButton: FBSDKLoginButton!)
     {
+        
         if let view = self.view as! SKView? {
             // Load the SKScene from 'GameScene.sks'
             if let scene = MainMenu(fileNamed: "MainMenu") {
@@ -64,9 +70,13 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
             
             view.showsFPS = true
             view.showsNodeCount = true
+            
         }
         
-        print("token was",AccessToken.current)
+        hideChatView()
+        GameViewController.globalChatView = chatView
+        
+        print("token was",AccessToken.current!)
     }
     
     
@@ -76,8 +86,7 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
         let loginButton = FBSDKLoginButton()
         // Do any additional setup after loading the view, typically from a nib.
         
-        if let accessToken = AccessToken.current
-        {
+        if AccessToken.current != nil{
            setGameScene(loginButton)
         }
         
@@ -110,5 +119,14 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
 
     override var prefersStatusBarHidden: Bool {
         return true
+    }
+    
+    
+    func hideChatView(){
+        self.chatView.isHidden = true
+    }
+    
+    func unhideChatView(){
+        self.chatView.isHidden = false
     }
 }
