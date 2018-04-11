@@ -14,6 +14,11 @@ import (
 
 func (a *App) createPlayer(w http.ResponseWriter, r *http.Request) {
 
+	//Veriy if the game service is accessing
+	if securityErr := verifyAccess(r); securityErr != nil {
+		respondWithError(w, http.StatusUnauthorized, securityErr.Error())
+		return
+	}
 	//Obtaining specifications through json body
 	var p Player
 	decoder := json.NewDecoder(r.Body) //Passing credentials through http request body
@@ -32,6 +37,12 @@ func (a *App) createPlayer(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) getPlayer(w http.ResponseWriter, r *http.Request) {
+
+	//Veriy if the game service is accessing
+	if securityErr := verifyAccess(r); securityErr != nil {
+		respondWithError(w, http.StatusUnauthorized, securityErr.Error())
+		return
+	}
 	//Obtaining one value, ID from mux parameters to create player
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["ID"])
@@ -51,6 +62,12 @@ func (a *App) getPlayer(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) deletePlayer(w http.ResponseWriter, r *http.Request) {
+
+	//Veriy if the game service is accessing
+	if securityErr := verifyAccess(r); securityErr != nil {
+		respondWithError(w, http.StatusUnauthorized, securityErr.Error())
+		return
+	}
 
 	//Obtaining ID from mux variables
 	vars := mux.Vars(r)
@@ -72,6 +89,11 @@ func (a *App) deletePlayer(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) updatePlayer(w http.ResponseWriter, r *http.Request) {
 
+	//Veriy if the gameservice is accessing
+	if securityErr := verifyAccess(r); securityErr != nil {
+		respondWithError(w, http.StatusUnauthorized, securityErr.Error())
+		return
+	}
 	//Getting ID from mux parameter
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["ID"])

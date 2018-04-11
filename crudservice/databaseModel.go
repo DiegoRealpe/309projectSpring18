@@ -135,11 +135,11 @@ func QueryCreateFBData(db *sql.DB, u *AppUser) error {
 	result, err := db.Exec(`INSERT INTO FacebookData (FacebookID, PlayerID, FullName, Email)
 	VALUES (?, ?, ?, ?)`, u.FacebookID, u.ID, u.FullName, u.Email)
 	if err != nil {
-		return err
+		return errors.New("Get FB Data ID Error - Execution" + err.Error())
 	}
 	affected, err2 := result.RowsAffected()
 	if err2 != nil {
-		return err2
+		return errors.New("Get FB Data ID Error - Result" + err2.Error())
 	}
 	if affected == int64(0) {
 		return errors.New("Create Fail")

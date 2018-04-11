@@ -50,6 +50,10 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	w.Write(response)
 }
 
+func verifyAccess(r *http.Request) error {
+	return nil
+}
+
 func handleDBErrors(w http.ResponseWriter, dberr error) {
 	switch dberr {
 

@@ -64,7 +64,7 @@ func (a *App) loginPlayer(w http.ResponseWriter, r *http.Request) {
 	//3 query AppUser FBID in FBdatatable to get game id
 	dberr := QueryGetFBDataID(a.db, &user)
 	if dberr != nil {
-		handleDBErrors(w, errors.New("Get FB Data ID Error"))
+		handleDBErrors(w, dberr)
 		return
 	}
 	//4 use GET player model to get info
