@@ -71,7 +71,7 @@ func (a *App) loginPlayer(w http.ResponseWriter, r *http.Request) {
 	p := Player{ID: user.ID}
 	dberr = QuerySearchPlayer(a.db, &p)
 	if dberr != nil {
-		handleDBErrors(w, errors.New("Query Search Player Error"))
+		handleDBErrors(w, dberr)
 		return
 	}
 	//5 use GET token model to get apptoken (handle expired)
@@ -86,7 +86,17 @@ func (a *App) loginPlayer(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) statsPlayer(w http.ResponseWriter, r *http.Request) {
+	//1 assert the token sent in header
+	//token := r.Header.Get("ApplicationToken")
+	//nickname, dberr := QueryAssertToken(a.db, token)
+	//if dberr != nil {
+	//	handleDBErrors(w, dberr)
+	//	return
+	//}
 
+	//2 Look for the stats in the database
+
+	//3 prepare to
 }
 
 func (a *App) checkToken(w http.ResponseWriter, r *http.Request) {

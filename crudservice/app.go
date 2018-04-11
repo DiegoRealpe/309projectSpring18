@@ -42,7 +42,7 @@ func (a *App) initializeRoutes() {
 	//game methods
 	a.router.HandleFunc("/player/login", a.loginPlayer).Methods("GET")
 	a.router.HandleFunc("/player/register", a.registerPlayer).Methods("POST")
-	a.router.HandleFunc("/player/{ID}/stats", a.statsPlayer).Methods("GET") //TODO
+	a.router.HandleFunc("/player/stats", a.statsPlayer).Methods("GET") //TODO
 	a.router.HandleFunc("/internal/checkApplicationToken", a.checkToken).Methods("GET")
 	//crud methods
 	a.router.HandleFunc("/player/{ID}", a.getPlayer).Methods("GET")

@@ -14,7 +14,10 @@ type Player struct {
 	ID          string `json:"id,omitempty"`
 	Nickname    string `json:"nickname,omitempty"`
 	GamesPlayed string `json:"gamesplayed,omitempty"`
+	GamesWon    string `json:"gameswon,omitempty"`
 	GoalsScored string `json:"goalsscored,omitempty"`
+	RankWin     string `json:"rankwin,omitempty"`
+	RankScore   string `json:"rankscore,omitempty"`
 }
 
 //PlayerProfile contains a player struct with its respective apptoken
@@ -67,25 +70,28 @@ func QuerySearchPlayer(db *sql.DB, p *Player) error {
 	}
 	rows, err := db.Query(`SELECT * FROM Players WHERE ID = ?`, p.ID)
 	if err != nil {
-		return err
+		return errors.New("Select Failed" + err.Error())
 	}
 	defer rows.Close()
 
 	var ID, Nickname string
-	var results, a, b, c, d int
+	var results, nickname, gamesplayed, gameswon, goalsscored, rankwin, rankscore int
 
 	for rows.Next() {
-		err := rows.Scan(&ID, &Nickname, &a, &b, &c, &d)
-		if err != nil {
-			return sql.ErrNoRows
+		err2 := rows.Scan(&ID, &nickname, &gamesplayed, &gameswon, &goalsscored, &rankwin, &rankscore)
+		if err2 != nil {
+			return errors.New("Scan Rows Failed" + err2.Error())
 		}
 		results++
 		p.Nickname = Nickname
-		p.GamesPlayed = strconv.Itoa(a)
-		p.GoalsScored = strconv.Itoa(c)
+		p.GamesPlayed = strconv.Itoa(gamesplayed)
+		p.GamesWon = strconv.Itoa(gameswon)
+		p.GoalsScored = strconv.Itoa(goalsscored)
+		p.RankWin = strconv.Itoa(rankwin)
+		p.RankScore = strconv.Itoa(rankscore)
 	}
 	if results == 0 { //Diego from the future, you idiot, dont move this from here
-		return sql.ErrNoRows
+		return errors.New("Scan Rows Failed" + sql.ErrNoRows.Error())
 	}
 
 	return nil
