@@ -87,15 +87,7 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
             if((FBSDKAccessToken.current()) != nil)
             {
                 let userToken = AccessToken.current.unsafelyUnwrapped.authenticationToken//userId
-                /*let requestString = "http://\(CommunicationProperties.crudServiceHost):\(CommunicationProperties.crudServicePort)/player/login"
-                
-                let header:HTTPHeaders = ["FacebookToken": "\(userToken)"]
-                
-                print("✉️✉️✉️RequestString-->\(requestString)\n")
-                print("✉️✉️✉️Header--> FacebookToken:\(userToken)\n")
-                
-                Alamofire.request(requestString, method: .get, headers: header).responseString(completionHandler: loginRequestResponse(_:))*/
-                
+              
                 sendCRUDServiceLoginRequest(FBToken: userToken)
                 
                 print("\n")
@@ -158,7 +150,7 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
         }
         else if(response.response!.statusCode == 404)//if player not found --> create account
         {
-            createAccount()
+            createAccount(FBToken: AccessToken.current.unsafelyUnwrapped.authenticationToken)
         }
         else if(response.response!.statusCode == 400)
         {
@@ -169,12 +161,15 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
     
 
     
-    func createAccount()
+    func createAccount(FBToken : String)
     {
-        let requestURL = "http://\(CommunicationProperties.crudServiceHost):\(CommunicationProperties.crudServicePort)/player"
+        let requestURL = "http://\(CommunicationProperties.crudServiceHost):\(CommunicationProperties.crudServicePort)/player/register"
         
+        let headers: HTTPHeaders = [
+            "FacebookToken": FBToken,
+            ]
         
-        print("logging in with CRUD Service at URL",requestURL,"\nwith headers : \(headers)")
+        print("creating account with CRUD Service at URL",requestURL,"\nwith headers : \(headers)")
         
         Alamofire.request(requestURL , method : .get , headers : headers)
             .responseString(completionHandler: loginRequestResponse(_:))
