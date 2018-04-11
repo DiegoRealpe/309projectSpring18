@@ -32,11 +32,11 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
             // should check if specific permissions missing
             if result.grantedPermissions.contains("email")
             {
-               
+               sendCRUDServiceLoginRequest(FBToken : AccessToken.current.unsafelyUnwrapped.authenticationToken)
             }
             
             
-            sendCRUDServiceLoginRequest(FBToken : AccessToken.current!.authenticationToken)
+           // sendCRUDServiceLoginRequest(FBToken : AccessToken.current!.authenticationToken)
         }
     }
     
@@ -65,8 +65,8 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
             view.showsNodeCount = true
         }
         
-        print("token was",AccessToken.current)
-        //sendCRUDServiceLoginRequest(FBToken: AccessToken.current!.authenticationToken)
+        
+        
     }
     
     
@@ -79,27 +79,41 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
         let loginButton = FBSDKLoginButton()
         // Do any additional setup after loading the view, typically from a nib.
         
+        
         //if player logged in
-        if let accessToken = AccessToken.current //stuff to do if not logged in at all
+        if let accessToken = AccessToken.current
         {
            
+            if((FBSDKAccessToken.current()) != nil)
+            {
+                let userToken = AccessToken.current.unsafelyUnwrapped.authenticationToken//userId
+                /*let requestString = "http://\(CommunicationProperties.crudServiceHost):\(CommunicationProperties.crudServicePort)/player/login"
+                
+                let header:HTTPHeaders = ["FacebookToken": "\(userToken)"]
+                
+                print("✉️✉️✉️RequestString-->\(requestString)\n")
+                print("✉️✉️✉️Header--> FacebookToken:\(userToken)\n")
+                
+                Alamofire.request(requestString, method: .get, headers: header).responseString(completionHandler: loginRequestResponse(_:))*/
+                
+                sendCRUDServiceLoginRequest(FBToken: userToken)
+                
+                print("\n")
+                print("\n")
+            }
+            else
+            {
+                let loginButton = FBSDKLoginButton()
+                loginButton.center = view.center
+                loginButton.delegate = self // Remember to set the delegate of the loginButton
+                view.addSubview(loginButton)
+            }
             
-            let userToken = AccessToken.current.unsafelyUnwrapped.authenticationToken//userId
-            let requestString = "http://\(CommunicationProperties.crudServiceHost):\(CommunicationProperties.crudServicePort)/player/login"
             
-            let header:HTTPHeaders = ["FacebookToken": "\(userToken)"]
-            
-            print("✉️✉️✉️RequestString-->\(requestString)\n")
-            print("✉️✉️✉️Header--> FacebookToken:\(userToken)\n")
-            
-            Alamofire.request(requestString, method: .get, headers: header).responseString(completionHandler: loginRequestResponse(_:))
-            
-            print("\n")
-            print("\n")
-          // setGameScene(loginButton)
+        
         }
         
-        else
+        else//stuff to do if not logged in at all
         {
          
         let loginButton = FBSDKLoginButton()
@@ -115,6 +129,20 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
         
     }
     
+    //returns application token
+    func sendCRUDServiceLoginRequest(FBToken : String) {
+        
+        let requestURL = "http://\(CommunicationProperties.crudServiceHost):\(CommunicationProperties.crudServicePort)/player/login"
+        
+        let headers: HTTPHeaders = [
+            "FacebookToken": FBToken,
+            ]
+        
+        print("logging in with CRUD Service at URL",requestURL,"\nwith headers : \(headers)")
+        
+        Alamofire.request(requestURL , method : .get , headers : headers)
+            .responseString(completionHandler: loginRequestResponse(_:))
+    }
     
     //function to do things with response from server to a login request by client
     func loginRequestResponse(_ response : DataResponse<String>)
@@ -134,15 +162,25 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
         }
         else if(response.response!.statusCode == 400)
         {
-            print("SERVER MACHINE BROKE")
+            print("SERVER MACHINE 🅱️ROKE")
         }
         
     }
     
+
+    
     func createAccount()
     {
+        let requestURL = "http://\(CommunicationProperties.crudServiceHost):\(CommunicationProperties.crudServicePort)/player"
         
+        
+        print("logging in with CRUD Service at URL",requestURL,"\nwith headers : \(headers)")
+        
+        Alamofire.request(requestURL , method : .get , headers : headers)
+            .responseString(completionHandler: loginRequestResponse(_:))
     }
+    
+    
 
     override var shouldAutorotate: Bool {
         return true
@@ -183,20 +221,7 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
     }
     
     
-    //returns application token
-    func sendCRUDServiceLoginRequest(FBToken : String) {
-        
-        let requestURL = "\(CommunicationProperties.crudServiceHost):\(CommunicationProperties.crudServicePort)/player/login"
-        
-        let headers: HTTPHeaders = [
-            "FacebookToken": FBToken,
-            ]
-        
-        print("logging in with CRUD Service at URL",requestURL,"\nwith headers : \(headers)")
-        
-        Alamofire.request(requestURL , method : .get , headers : headers)
-            .responseString(completionHandler: loginResponse(_:))
-    }
+
     
     struct loginCompletion {
         var finished = false
