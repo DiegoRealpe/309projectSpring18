@@ -191,4 +191,5 @@ var inputPacketLengths = map[byte]int{
 	200 : 1,
 	201 : 1,
 	202 : 401,
+	208 : 25,
 }

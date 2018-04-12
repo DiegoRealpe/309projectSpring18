@@ -64,6 +64,15 @@ type packet205 struct {//server informs clients that one clinet is no longer rea
 	numUnready				uint8
 }
 
+type packet208 struct {//client changes Emojis
+	Emoji					string
+}
+
+type packet209 struct {//server sends emoji change
+	PlayerNumber			uint8
+	Emoji					string
+}
+
 //ParseBytesTo120 Takes array of bytes and parses to a clientpacket struct
 func ParseBytesTo120(rawData []byte) packet120 {
 	if len(rawData) != 17 {
@@ -160,6 +169,18 @@ func ParseBytesTo123(rawData []byte) packet123 {
 	return resultPacket
 }
 
+func ParseBytesTo208(rawData []byte) packet208{
+	if len(rawData) != 25 {
+		panic(rawData)
+	}
+
+	string := utf8toString(rawData[1:24])
+
+	return packet208{
+		Emoji: string,
+	}
+}
+
 func (p packet204) toBytes() []byte{
 	return []byte{204,p.numReady}
 }
@@ -188,15 +209,19 @@ func (p packet203) toBytes() []byte{
 
 	return rawData
 }
-/*
-func ParseBytesTo125(rawData []byte) packet125 {
-	if len(rawData) != 2 {
-		panic(rawData)
-	}
 
-	playerNumberByte = rawData[1]
+func (p packet209)  toBytes() []byte{
+	rawData := make([]byte, 26)
+	rawData[0] = 209
+	rawData[1] = p.PlayerNumber
+
+	emojiBytes := stringToUtf8Slice(p.Emoji,24)
+	copy(rawData[2:25],emojiBytes[0:23])
+
+	return rawData
 }
-*/
+
+
 //BytestoFloat32 Turns only a 4 byte slice into a float32 primitive
 func BytestoFloat32(input []byte) float32 {
 	if len(input) != 4 {
