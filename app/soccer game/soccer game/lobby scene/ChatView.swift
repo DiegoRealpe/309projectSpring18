@@ -193,7 +193,6 @@ class ChatView: UIView, UITableViewDataSource, UITextFieldDelegate {
     }
     
     func allowTextInput(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool{
-        print(string.count + textField.text!.count)
         if string.count + textField.text!.count <= 100 {
             
             return true
@@ -202,6 +201,10 @@ class ChatView: UIView, UITableViewDataSource, UITextFieldDelegate {
         }
         
         return false
+    }
+    
+    func changeEmoji(playerNumber: Int,emoji: String){
+        self.emojiForPlayer(playerNumber * 2)?.text = emoji
     }
     
     func allowEmojiInput(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool{

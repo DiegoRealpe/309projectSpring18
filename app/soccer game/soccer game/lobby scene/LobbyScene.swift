@@ -55,7 +55,7 @@ class LobbyScene: SKScene {
             chatView.player2Emoji.delegate = chatView
             chatView.player3Emoji.delegate = chatView
             chatView.onNewMessage = self.newLocalMessage(text:)
-            chatView.onEmojiChange = self.pm!.emojiChange(for:is:)
+            chatView.onEmojiChange = self.onLocalEmojiChange(for:is:)
             
             chatView.addPlayer(playerNum: self.playerNumber ,username: "NENENEHdhe 🐥🇺🇸")
         }
@@ -108,6 +108,7 @@ class LobbyScene: SKScene {
         self.packetTypeDict[204] = PacketType(dataSize: 2, handlerFunction: remotePlayerReadiedHandler(data:))
         self.packetTypeDict[205] = PacketType(dataSize: 2, handlerFunction: remotePlayerUnreadiedHandler(data:))
         self.packetTypeDict[207] = PacketType(dataSize: 2, handlerFunction: handle207(data:))
+        self.packetTypeDict[209] = PacketType(dataSize: 26, handlerFunction: remoteEmojiChanged(data:))
         
         self.spr.packetTypeDict = self.packetTypeDict
     }
@@ -153,13 +154,30 @@ class LobbyScene: SKScene {
         
     }
 
-    private func chatMessageHandler (data: [UInt8]){
+    private func chatMessageHandler(data: [UInt8]){
         let message = IncommingChatMessagePacket(data: data)
         
         print("got message from",message.playerNumber,"it was",message.message)
         
         self.chatView.addRemoteMessage(message.message, from: "todo")
         
+    }
+    
+    func remoteEmojiChanged(data: [UInt8]){
+        let emojiChange = IncomingEmojiChangedPacket(data)
+        
+        self.pm!.emojiChange(for: emojiChange.playerNumber, is: emojiChange.emoji)
+        
+        DispatchQueue.main.async {
+            self.chatView.changeEmoji(playerNumber: emojiChange.playerNumber, emoji: emojiChange.emoji)
+        }
+    }
+    
+    func onLocalEmojiChange(for player: Int, is emoji: String){
+        let emojiPacket = OutgoingEmojiChangedPacket(emoji: emoji)
+        self.mtcp.sendTCP(packet: emojiPacket)
+        
+        self.pm!.emojiChange(for: player, is: emoji)
     }
     
 }
