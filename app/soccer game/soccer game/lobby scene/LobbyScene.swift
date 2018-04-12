@@ -49,7 +49,15 @@ class LobbyScene: SKScene {
             print(chatView)
             chatView.loadChat()
             chatView.isHidden = false
+            chatView.textInput.delegate = chatView
+            chatView.player0Emoji.delegate = chatView
+            chatView.player1Emoji.delegate = chatView
+            chatView.player2Emoji.delegate = chatView
+            chatView.player3Emoji.delegate = chatView
             chatView.onNewMessage = self.newLocalMessage(text:)
+            chatView.onEmojiChange = self.pm!.emojiChange(for:is:)
+            
+            chatView.addPlayer(playerNum: self.playerNumber ,username: "NENENEHdhe 🐥🇺🇸")
         }
     }
     
@@ -138,6 +146,11 @@ class LobbyScene: SKScene {
         print("player added",player.playerNumber,player.username,"size is",player.username.count)
         
         self.pm?.addPlayer(playerNumber: player.playerNumber, username: player.username)
+        
+        DispatchQueue.main.sync {
+            self.chatView.addPlayer(playerNum: player.playerNumber, username: player.username)
+        }
+        
     }
 
     private func chatMessageHandler (data: [UInt8]){

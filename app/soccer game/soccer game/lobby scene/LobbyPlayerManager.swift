@@ -19,24 +19,14 @@ class LobbyPlayerManager{
     }
     
     func addPlayer(playerNumber: Int, username : String ){
-        let label = scene.childNode(withName: "Player \(playerNumber) Label") as! SKLabelNode
-        label.text = username
-        label.isHidden = false
-        
+       
         let newPlayer = PlayerInfo(
             playerNumber : playerNumber,
             username : username,
-            label : label
+            emoji : ChatView.defaultEmoji
         )
         
         players[playerNumber] = newPlayer
-    }
-    
-    func removePlayer(playerNumber : Int){
-        self.players[playerNumber]?.label.isHidden = true
-        self.players[playerNumber] = nil
-        
-        //TODO consolidate remaining players
     }
     
     func playerExists(playerNumber: Int) -> Bool{
@@ -47,12 +37,17 @@ class LobbyPlayerManager{
         return PlayerExport(players: self.players)
     }
     
+    func emojiChange(for player: Int, is emoji: String){
+        print("player \(player) changed emoji to \(emoji)")
+        players[player]?.emoji = emoji
+    }
+    
 }
 
 struct PlayerInfo{
     var playerNumber : Int
     var username : String
-    var label : SKLabelNode
+    var emoji : String
 }
 
 class PlayerExport {

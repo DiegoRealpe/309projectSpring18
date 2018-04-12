@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ChatView: UIView, UITableViewDataSource {
+class ChatView: UIView, UITableViewDataSource, UITextFieldDelegate {
 
     var messages : [ChatMessage] = []
     
@@ -16,22 +16,62 @@ class ChatView: UIView, UITableViewDataSource {
     @IBOutlet var textInput : UITextField!
     @IBOutlet var sendButton : UIButton!
     
-    var onNewMessage: ( (String) -> () )?
+    @IBOutlet var player0Label : UILabel!
+    @IBOutlet var player1Label : UILabel!
+    @IBOutlet var player2Label : UILabel!
+    @IBOutlet var player3Label : UILabel!
     
+    var playerLabelArray : [UILabel]!
+    
+    @IBOutlet var player0Emoji : EmojiTextField!
+    @IBOutlet var player1Emoji : EmojiTextField!
+    @IBOutlet var player2Emoji : EmojiTextField!
+    @IBOutlet var player3Emoji : EmojiTextField!
+    
+    var playerEmojiArray : [EmojiTextField]!
+    
+    var onNewMessage: ( (String) -> () )?
+    var onEmojiChange: ( (Int,String) -> () )?
+    
+    var size = 0
+    static let defaultEmoji = "😘"
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        initCommon()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        initCommon()
     }
     
+    func labelForPlayer(_ num : Int) -> UILabel?{
+        switch num {
+        case 0 :
+            return self.player0Label
+        case 1 :
+            return self.player1Label
+        case 2 :
+            return self.player2Label
+        case 3 :
+            return self.player3Label
+        default :
+            return nil
+        }
+    }
     
-    func initCommon(){
-
+    func emojiForPlayer(_ num : Int) -> EmojiTextField?{
+        switch num {
+        case 0 :
+            return self.player0Emoji
+        case 1 :
+            return self.player1Emoji
+        case 2 :
+            return self.player2Emoji
+        case 3 :
+            return self.player3Emoji
+        default :
+            return nil
+        }
     }
 
     
@@ -103,6 +143,12 @@ class ChatView: UIView, UITableViewDataSource {
         textInput.text = ""
         
         setTableToBottom(animated : false)//must be called after data is loaded
+        
+        for i in 0..<4{
+            self.emojiForPlayer(i)?.isHidden = true
+            self.labelForPlayer(i)?.isHidden = true
+        }
+        self.size = 0
     }
     
     fileprivate func setTableToBottom(animated : Bool) {
@@ -117,6 +163,66 @@ class ChatView: UIView, UITableViewDataSource {
             
             self.messageTable.scrollToRow(at: indexPath, at: .bottom, animated: true)
             
+        }
+    }
+    
+    func addPlayer(playerNum : Int, username : String){
+        self.size += 1
+        
+        let label = self.labelForPlayer(2 * playerNum)!//skip from 0 to 2 until we are ready for 4 players
+        let emoji = self.emojiForPlayer(2 * playerNum)!
+        
+        label.isHidden = false
+        label.text = username
+        
+        emoji.isHidden = false
+        emoji.text = ChatView.defaultEmoji
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.endEditing(true)
+        return false
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if textField == self.textInput{
+            return allowTextInput(textField, shouldChangeCharactersIn: range, replacementString: string)
+        }else{
+            return allowEmojiInput(textField, shouldChangeCharactersIn: range, replacementString: string)
+        }
+    }
+    
+    func allowTextInput(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool{
+        print(string.count + textField.text!.count)
+        if string.count + textField.text!.count <= 100 {
+            
+            return true
+        }else if string.utf8.count + textField.text!.utf8.count <= 400{
+            return false
+        }
+        
+        return false
+    }
+    
+    func allowEmojiInput(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool{
+        if string.count <= 1 {
+            if string.count == 1 {
+                self.endEditing(true)
+            }
+            tellLobbySceneAboutEmojiChange(textField: textField, string)
+            textField.text = string //we need to do this so we can close the keyboard and change text
+            return true
+        }
+        
+        return false
+    }
+    
+    func tellLobbySceneAboutEmojiChange(textField: UITextField,_ emoji : String){
+        for i in 0..<4{
+            if self.emojiForPlayer(i) == textField {
+                self.onEmojiChange?(i/2,emoji)
+                return
+            }
         }
     }
 }
