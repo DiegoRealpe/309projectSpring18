@@ -61,7 +61,17 @@ class MainMenu: SKScene {
     }
     
     private func assignUserDataForGameScene(_ dict : NSMutableDictionary){
+        let playerImport = makePracticePlayerImport()
+        
         dict.setValue(Int(0), forKey: UserDataKeys.playerNumber.rawValue)
+        dict.setValue(playerImport, forKey: UserDataKeys.gameSecnePlayerImport.rawValue)
+    }
+    
+    func makePracticePlayerImport() -> GameScenePlayerImport {
+        let player = GameScenePlayerImport.Player(username: "You", playerNumber: 0, emoji: "😀")
+        let players = [player]
+        
+        return GameScenePlayerImport(players: players)
     }
 
     

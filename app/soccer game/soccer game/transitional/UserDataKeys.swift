@@ -14,5 +14,6 @@ enum UserDataKeys : String{
     case socketPacketResponder = "socket packet responder"
     case managedTCPConnection = "managed tcp connection"
     case playerNumber = "player number"
+    case gameSecnePlayerImport = "game scene data import"
     
 }

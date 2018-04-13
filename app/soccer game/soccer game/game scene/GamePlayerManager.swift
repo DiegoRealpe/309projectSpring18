@@ -9,10 +9,11 @@
 import Foundation
 import SpriteKit
 
-class PlayerManager {
+class GamePlayerManager {
     
     var players : [SKSpriteNode] = []
     var playerNumber : Int
+    
     let playerLabelRelativePosition = CGPoint(x: 0, y: 30)
     let emojiLabelRelativePosition = CGPoint(x: 0, y: -24)
     
@@ -21,13 +22,14 @@ class PlayerManager {
     
     var scene : GameScene
     
-    init(playerNumber: Int,scene : GameScene){
+    init(playerNumber: Int,scene : GameScene, playerImport : GameScenePlayerImport){
         self.playerNumber = playerNumber
         self.scene = scene
+        self.playerNumber = playerNumber
         self.modelPlayer = SKScene(fileNamed : "Players")?.childNode(withName : "Player Node") as! SKSpriteNode
         self.modelEmojiLabel = SKScene(fileNamed : "Players")?.childNode(withName : "Emoji Label") as! SKLabelNode
         
-        configurePlayerNodes()
+        configurePlayerNodes(playerImport: playerImport)
     }
     
     //returns player node from players whith specified index
@@ -38,7 +40,9 @@ class PlayerManager {
     }
     
     //sets players and player num to values according to the user data passed into the scene
-    fileprivate func addPlayerByNumber(_ i: Int, _ modelPlayer: SKSpriteNode) {
+    fileprivate func addPlayer(importedPlayer : GameScenePlayerImport.Player) {
+        let i = importedPlayer.playerNumber
+        
         players[i] = modelPlayer.copy() as! SKSpriteNode
         players[i].physicsBody = modelPlayer.physicsBody?.copy() as? SKPhysicsBody
         players[i].physicsBody?.mass = modelPlayer.physicsBody!.mass //don't know why this is necesarry
@@ -51,36 +55,21 @@ class PlayerManager {
         
         let label = modelEmojiLabel.copy() as! SKLabelNode
         label.position = self.emojiLabelRelativePosition
-        label.text = "🤠"
+        label.text = importedPlayer.emoji != nil ? importedPlayer.emoji : ""
         players[i].addChild(label)
     }
     
-    private func configurePlayerNodes(){
-        //get player node from Players.sks
+    private func configurePlayerNodes(playerImport : GameScenePlayerImport){
         
         modelPlayer.physicsBody?.categoryBitMask = GameScene.playerCategory
-        
         modelPlayer.physicsBody?.contactTestBitMask = GameScene.ballCategory
         
         //set players to correct length with placeholders
         self.players = [SKSpriteNode](repeating : SKSpriteNode(), count: GameScene.maxPlayers)
         
-        if self.scene.isPractice() {
-            addPlayerByNumber(0, modelPlayer)
-        }else{
-            //copy model player into each index of self.players
-            for i in 0..<GameScene.maxPlayers {
-                addPlayerByNumber(i, modelPlayer)
-            }
+        for player in playerImport.players {
+            self.addPlayer(importedPlayer: player)
         }
-        
-        
-        addLabelToUserPlayer()
-    }
-    
-    func removePlayerFromGame(playerNumber : Int){
-        let playerToRemove = self.selectPlayer(playerNum : playerNumber)
-        playerToRemove.removeFromParent()
     }
     
     
@@ -95,4 +84,10 @@ class PlayerManager {
         
         player.addChild(copiedLabel)
     }
+    
+    func removePlayerFromGame(playerNumber : Int){
+        let playerToRemove = self.selectPlayer(playerNum : playerNumber)
+        playerToRemove.removeFromParent()
+    }
+
 }

@@ -40,7 +40,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
    
     
     //after didMove is called players is initialized with the exact size of maxPlayers
-    var pm : PlayerManager?
+    var pm : GamePlayerManager!
     var isHost = false
     
     var localPlayerStateWasUpdated = true
@@ -58,12 +58,11 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         print("moved to game scene")
         
         getNodesFromScene()
-        
-        let playerNumber = self.lookupPlayerNumber()
-        self.northBound = self.childNode(withName: "North Bound") as? SKSpriteNode
+    
         configureCollisions()
         
-        self.pm = PlayerManager(playerNumber : playerNumber,scene : self)
+        configurePlayerManager()
+        
         self.isHost = self.pm!.playerNumber == 0 //todo make more complex logic
         
         //give all children of the north bounds(all the bounds) the same physics category
@@ -85,6 +84,12 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         configurePacketResponder()
         
         kickButton = KickButton(scene: self)
+    }
+    
+    func configurePlayerManager(){
+        let playerImport = self.userData!.value(forKey: UserDataKeys.gameSecnePlayerImport.rawValue) as! GameScenePlayerImport
+        let playerNumber = self.userData!.value(forKey: UserDataKeys.playerNumber.rawValue) as! Int
+        self.pm = GamePlayerManager(playerNumber: playerNumber, scene: self, playerImport: playerImport)
     }
     
     fileprivate func configureCollisions() {
@@ -109,6 +114,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         self.ballNode = self.childNode(withName: "Ball") as? SKSpriteNode
         self.leftGoal = self.childNode(withName: "Left Goal") as? SKSpriteNode
         self.rightGoal = self.childNode(withName: "Right Goal") as? SKSpriteNode
+        self.northBound = self.childNode(withName: "North Bound") as? SKSpriteNode
     }
     
     
@@ -407,12 +413,9 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         }
         print("got player left game packet with data:",data)
         
-        self.pm!.removePlayerFromGame(playerNumber: Int(data[1]))
+        self.pm.removePlayerFromGame(playerNumber: Int(data[1]))
     }
     
-    func lookupPlayerNumber() -> Int {
-        return self.userData!.value(forKey: UserDataKeys.playerNumber.rawValue) as! Int
-    }
     
     func doKick(){
         let playerPosition = self.pm!.selectPlayer(playerNum: self.pm!.playerNumber).position
