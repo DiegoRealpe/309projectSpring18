@@ -32,11 +32,11 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
             // should check if specific permissions missing
             if result.grantedPermissions.contains("email")
             {
-               sendCRUDServiceLoginRequest(FBToken : AccessToken.current.unsafelyUnwrapped.authenticationToken)
+               //sendCRUDServiceLoginRequest(FBToken : AccessToken.current.unsafelyUnwrapped.authenticationToken)
             }
             
             
-           // sendCRUDServiceLoginRequest(FBToken : AccessToken.current!.authenticationToken)
+           sendCRUDServiceLoginRequest(FBToken : AccessToken.current!.authenticationToken)
         }
     }
     
