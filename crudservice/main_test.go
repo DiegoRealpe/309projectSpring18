@@ -200,11 +200,25 @@ func TestLoginUser(t *testing.T) {
 
 	clearTable()
 
+	req0, reqerr := http.NewRequest("GET", "/player/login", nil)
+	if reqerr != nil {
+		t.Errorf(reqerr.Error())
+	}
+	req0.Header.Set("FacebookToken", testUserToken)
+	response0 := executeRequest(req0)
+	var na map[string]string
+	json.Unmarshal(response0.Body.Bytes(), &na)
+	fmt.Println(na["error"])
+	if na["error"] == "" {
+		t.Errorf("Expected an error message and recieved none")
+	}
+	checkResponseCode(t, http.StatusNotFound, response0.Code)
+
 	payload := []byte(`{"Nickname":"dumdum1"}`)
-	req, _ := http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
-	req.Header.Set("FacebookToken", testUserToken)
-	response := executeRequest(req)
-	checkResponseCode(t, http.StatusCreated, response.Code)
+	req1, _ := http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
+	req1.Header.Set("FacebookToken", testUserToken)
+	response1 := executeRequest(req1)
+	checkResponseCode(t, http.StatusCreated, response1.Code)
 
 	req2, err := http.NewRequest("GET", "/player/login", nil)
 	if err != nil {
@@ -212,9 +226,12 @@ func TestLoginUser(t *testing.T) {
 	}
 	req2.Header.Set("FacebookToken", testUserToken)
 	response2 := executeRequest(req2)
+
 	var m map[string]string
 	json.Unmarshal(response2.Body.Bytes(), &m)
-	//fmt.Println(m["ApplicationToken"])
+	if m["ApplicationToken"] == "" {
+		t.Errorf("Expected an App Token and recieved none")
+	}
 	checkResponseCode(t, http.StatusAccepted, response2.Code)
 
 }
@@ -266,8 +283,8 @@ func TestTokenQuery(t *testing.T) {
 }
 
 //to get a new token login to facebook and get one from one of our test user
-const testUserToken = "EAACqvTZC1964BANMZBudUtxGtx4Hxny6ZBqD8gDRUgZC8FX6ZBFbFZBJ9B64IZBBKpn2vj6tbl1r6tH5H79ybWfBkp2PloCu1XVdtF6VX2aogkL1m8XO81JDNZAiHJc4Oqtze1ZBPZAxnSoKnh3bCqBbtgaist9VZBiwLkFULPwt5vCJNu5q5g5IZCfgUUk1b7OpTZAjHJyzimjPeDcts0fn3OaZBQLWO4SS6S6mSZAPZB2XXKrnhAAehAHpMfV1"
-const testUserToken2 = "EAACqvTZC1964BAAWdWGwb6nvZC9Izhi7T9dqTxA7laf2vVCckslpiI9AzfU5Vd6t0ksqwGRLohJVmLPEVQ6kjliV5J9SGS62jGwyNBTxA7n0rzK9qorIFu4PyDnrX3QlDRrL95oYkbCgflSu09iP8DPdfKBDZBJ7DfDuW3gElbpOX1gBWrsr9HLyFZCrtsbHkSaX4khvT4Imc37y1N5MWbZCGrdomObDowh4sfulAbgZDZD"
+const testUserToken = "EAACqvTZC1964BAPYWCUC1fz8CXcLZCZCUKHLm6UjXDKCekQsiJ5VDXyHAMyami19ZCBB13G2oSgGDishdQHVo6ZCvjv97e15jflxUqZBC5gSQsmWu2N0sEE3XPQTbwIsm9ktxfqZBHsbzNDpYkg1fudxcMLnEIUzSMM98ZBkhUYIVl29HEF0SMqoJYQg6nQSZCeltFVF1yNIZB7L1760axoDmqXCw4q0ZCTsUUHvHQHRGVnRQZDZD"
+const testUserToken2 = "EAACqvTZC1964BAFAfCzz9c5YSj4hzo20JZCV8GYZA3dEBC8nlpz9iSzYeTyY55fK6DU0Bs2uzzutjpfcg5OPNSNnWdF14P31a1hNZB6AUvoiZBJbaKPmx3RXYomdceq4tSVIzWQSvTouchqsudZCqlBh3SxeEebxbq4v5a6zejXXY3DYrxLKzTdRgVlCwHbvudukh9NnvVGHa6YlXET9Rl87qkGbmIBSMvic0roRxXJzeogK1INg1h"
 
 func TestFBApiAccess(t *testing.T) {
 	getFBUser(testUserToken)

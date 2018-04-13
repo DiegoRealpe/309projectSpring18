@@ -53,7 +53,6 @@ func (a *App) registerPlayer(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) loginPlayer(w http.ResponseWriter, r *http.Request) {
-
 	//1 get fb token
 	token := r.Header.Get("FacebookToken")
 	//2 check the graph api and get AppUser object
@@ -65,15 +64,14 @@ func (a *App) loginPlayer(w http.ResponseWriter, r *http.Request) {
 	//3 query AppUser FBID in FBdatatable to get game id
 	dberr := QueryGetFBDataID(a.db, &user)
 	if dberr != nil {
-		fmt.Println(dberr.Error())
-		handleDBErrors(w, dberr)
+		respondWithError(w, http.StatusNotFound, "Associated FaceBook ID"+
+			dberr.Error()+"not registered in DB records")
 		return
 	}
 	//4 use GET player model to get info
 	p := Player{ID: user.ID}
 	dberr = QuerySearchPlayer(a.db, &p)
 	if dberr != nil {
-		fmt.Println(dberr.Error())
 		handleDBErrors(w, dberr)
 		return
 	}

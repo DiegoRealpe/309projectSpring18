@@ -163,7 +163,7 @@ func QueryGetFBDataID(db *sql.DB, u *AppUser) error {
 	row.Next()
 	err2 := row.Scan(&u.ID)
 	if err2 != nil {
-		return errors.New(u.ID)
+		return errors.New(u.FacebookID)
 	}
 	return nil
 }
