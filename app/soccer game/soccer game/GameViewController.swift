@@ -37,6 +37,7 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
             
             
            sendCRUDServiceLoginRequest(FBToken : AccessToken.current!.authenticationToken)
+            loginButton.removeFromSuperview()
         }
     }
     
@@ -130,6 +131,9 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
             "FacebookToken": FBToken,
             ]
         
+        print("\n")
+        print("\n")
+        
         print("logging in with CRUD Service at URL",requestURL,"\nwith headers : \(headers)")
         
         Alamofire.request(requestURL , method : .get , headers : headers)
@@ -163,16 +167,36 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
     
     func createAccount(FBToken : String)
     {
+        print("\n")
+        print("\n")
+        
         let requestURL = "http://\(CommunicationProperties.crudServiceHost):\(CommunicationProperties.crudServicePort)/player/register"
         
         let headers: HTTPHeaders = [
             "FacebookToken": FBToken,
             ]
         
+        
+        let parameter:Parameters = ["Nickname":"oof"]
+        
         print("creating account with CRUD Service at URL",requestURL,"\nwith headers : \(headers)")
         
-        Alamofire.request(requestURL , method : .get , headers : headers)
-            .responseString(completionHandler: loginRequestResponse(_:))
+        Alamofire.request(requestURL, method: .post, parameters: parameter, encoding: JSONEncoding.default, headers: headers).responseString(completionHandler: createAccountResponse(_:))
+        
+    }
+    func createAccountResponse(_ response : DataResponse<String>)
+    {
+        print("💌💌💌status code",response.response!.statusCode)
+        
+        if(response.response!.statusCode == 201)
+        {
+            print("Account creation successful")
+            setGameScene()
+        }
+        else
+        {
+            print("Account creation machine 🅱️ROKE")
+        }
     }
     
     
@@ -224,9 +248,9 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
     }
     
     //currently not doing anything until crud service is sorted out
-    func loginResponse(_ response : DataResponse<String>){
+    /*func loginResponse(_ response : DataResponse<String>){
         print("login response was",String(describing : response.data))
         
-    }
+    }*/
 
 }
