@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -14,11 +15,13 @@ func (a *App) registerPlayer(w http.ResponseWriter, r *http.Request) {
 	//1 get token
 	token := r.Header.Get("FacebookToken")
 	//2 check token with fb and get AppUser struct
+	fmt.Println("1")
 	user := getFBUser(token)
 	if user.Valid == false {
 		respondWithError(w, http.StatusConflict, "Facebook Token Error")
 		return
 	}
+	fmt.Println("2")
 	//3 get nickname and create player
 	var p Player
 	decoder := json.NewDecoder(r.Body) //Passing credentials through http request body
@@ -26,12 +29,15 @@ func (a *App) registerPlayer(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusBadRequest, "Invalid request body")
 		return
 	}
+	fmt.Println("3")
 	defer r.Body.Close()
 	dberr := QueryCreatePlayer(a.db, &p)
 	if dberr != nil {
+		fmt.Println(dberr.Error())
 		handleDBErrors(w, dberr)
 		return
 	}
+	fmt.Println("4")
 	//4 create facebook data for player
 	user.ID = p.ID //giving appuser's info the id of the player it belongs to
 	dberr = QueryCreateFBData(a.db, &user)
@@ -39,6 +45,7 @@ func (a *App) registerPlayer(w http.ResponseWriter, r *http.Request) {
 		handleDBErrors(w, dberr)
 		return
 	}
+	fmt.Println("5")
 	//5 create application token and update table
 	apptoken := appTokenGen(p.ID)
 	dberr = QuerySetToken(a.db, p.ID, apptoken, 1)
@@ -46,7 +53,7 @@ func (a *App) registerPlayer(w http.ResponseWriter, r *http.Request) {
 		handleDBErrors(w, dberr)
 		return
 	}
-
+	fmt.Println("6")
 	profile := PlayerProfile{Profile: p, AppToken: apptoken}
 	respondWithJSON(w, http.StatusCreated, profile)
 }
@@ -64,19 +71,22 @@ func (a *App) loginPlayer(w http.ResponseWriter, r *http.Request) {
 	//3 query AppUser FBID in FBdatatable to get game id
 	dberr := QueryGetFBDataID(a.db, &user)
 	if dberr != nil {
+		fmt.Println(dberr.Error())
 		handleDBErrors(w, dberr)
 		return
 	}
 	//4 use GET player model to get info
 	p := Player{ID: user.ID}
 	dberr = QuerySearchPlayer(a.db, &p)
-	//if dberr != nil {
-	//	handleDBErrors(w, dberr)
-	//	return
-	//}
+	if dberr != nil {
+		fmt.Println(dberr.Error())
+		handleDBErrors(w, dberr)
+		return
+	}
 	//5 use GET token model to get apptoken (handle expired)
 	apptoken, dberr := QueryGetUpdateToken(a.db, user.ID)
 	if dberr != nil {
+		fmt.Println(dberr.Error())
 		handleDBErrors(w, errors.New("Get Apptoken Error"))
 		return
 	}

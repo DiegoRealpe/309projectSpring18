@@ -45,8 +45,8 @@ func QueryDeletePlayer(db *sql.DB, p *Player) error {
 
 //QueryCreatePlayer inserts new Player in database
 func QueryCreatePlayer(db *sql.DB, p *Player) error {
-	result, err := db.Exec(`INSERT INTO Players (Nickname, GamesPlayed, GamesWon, GoalsScored, Active)
-	VALUES (?, 0, 0, 0, 0)`, p.Nickname)
+	result, err := db.Exec(`INSERT INTO Players (Nickname)
+	VALUES (?)`, p.Nickname)
 	if err != nil {
 		return err
 	}
