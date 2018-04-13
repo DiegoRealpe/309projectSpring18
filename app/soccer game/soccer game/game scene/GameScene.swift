@@ -20,9 +20,6 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     let packetUpdateIntervalSeconds = 0.05
     let joystickRadius = 50.0
     
-    //label used for debugging, not part of final project
-    var mockPacketLabel : SKLabelNode?
-    
     var quitLabel : SKLabelNode?
     var joyStick : Joystick?
     var kickButton : KickButton!
@@ -58,9 +55,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         print("moved to game scene")
         
         getNodesFromScene()
-    
         configureCollisions()
-        
         configurePlayerManager()
         
         self.isHost = self.pm!.playerNumber == 0 //todo make more complex logic
@@ -71,8 +66,6 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
             child.physicsBody?.categoryBitMask = GameScene.boundsCategory
             child.physicsBody?.contactTestBitMask = GameScene.ballCategory
         }
-        
-        self.mockPacketLabel = self.childNode(withName: "Mock Packet") as? SKLabelNode
         
         //scoreboard stuff
         self.redTeamScore = self.childNode(withName: "Left Team Score") as? SKLabelNode
@@ -203,16 +196,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         if self.quitLabel?.contains(position) == true{
             self.quitWasPressed()
         }
-        if self.mockPacketLabel?.contains(position) == true{
         
-            print("mocking command")
-            let spr = SocketPacketResponder()
-            spr.packetTypeDict = self.packetTypeDict
-                
-            let bytes : [UInt8] = [124,0,0,0,0,0,0,0,0,152, 78, 154, 68, 152, 78, 154, 68,0,0,0,0]
-            spr.respond(data: bytes)
-            
-        }
     }
     
     private func setBallPositionAndVelocity(position : CGPoint, velocity : CGVector){
