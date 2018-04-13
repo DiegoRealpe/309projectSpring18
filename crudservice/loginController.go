@@ -64,8 +64,8 @@ func (a *App) loginPlayer(w http.ResponseWriter, r *http.Request) {
 	//3 query AppUser FBID in FBdatatable to get game id
 	dberr := QueryGetFBDataID(a.db, &user)
 	if dberr != nil {
-		respondWithError(w, http.StatusNotFound, "Associated FaceBook ID"+
-			dberr.Error()+"not registered in DB records")
+		respondWithError(w, http.StatusNotFound, "Associated FaceBook ID "+
+			dberr.Error()+" not registered in DB records")
 		return
 	}
 	//4 use GET player model to get info
