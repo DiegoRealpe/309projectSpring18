@@ -35,7 +35,7 @@ func QueryDeletePlayer(db *sql.DB, p *Player) error {
 	}
 	affected, err2 := result.RowsAffected()
 	if err2 != nil {
-		return err2
+		return errors.New("Rows Affected")
 	}
 	if affected != int64(1) {
 		return errors.New("Player Not Found")
@@ -93,7 +93,7 @@ func QuerySearchPlayer(db *sql.DB, p *Player) error {
 		p.RankScore = strconv.Itoa(rankscore)
 	}
 	if results == 0 { //Diego from the future, you idiot, dont move this from here
-		return errors.New("Scan Rows Failed" + sql.ErrNoRows.Error())
+		return sql.ErrNoRows
 	}
 	return nil
 }

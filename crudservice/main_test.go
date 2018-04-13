@@ -150,20 +150,22 @@ func TestDeleteUser(t *testing.T) {
 	req.Header.Set("AppSecret", "goingforthat#1bois")
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusOK, response.Code)
+
 	req, _ = http.NewRequest("DELETE", "/player/1", nil)
+	req.Header.Set("AppUser", "MG_6")
+	req.Header.Set("AppSecret", "goingforthat#1bois")
+	response = executeRequest(req)
+	checkResponseCode(t, http.StatusAccepted, response.Code)
+
+	req, _ = http.NewRequest("GET", "/player/1", nil)
 	req.Header.Set("AppUser", "MG_6")
 	req.Header.Set("AppSecret", "goingforthat#1bois")
 	response = executeRequest(req)
 	var m map[string]string
 	json.Unmarshal(response.Body.Bytes(), &m)
 	if m["error"] != "" {
-		fmt.Println(m["error"])
+		t.Errorf(m["error"])
 	}
-	checkResponseCode(t, http.StatusAccepted, response.Code)
-	req, _ = http.NewRequest("GET", "/player/1", nil)
-	req.Header.Set("AppUser", "MG_6")
-	req.Header.Set("AppSecret", "goingforthat#1bois")
-	response = executeRequest(req)
 	checkResponseCode(t, http.StatusNotFound, response.Code)
 }
 
