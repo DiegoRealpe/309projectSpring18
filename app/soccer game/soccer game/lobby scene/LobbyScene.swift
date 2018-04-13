@@ -57,7 +57,7 @@ class LobbyScene: SKScene {
             chatView.onNewMessage = self.newLocalMessage(text:)
             chatView.onEmojiChange = self.onLocalEmojiChange(for:is:)
             
-            chatView.addPlayer(playerNum: self.playerNumber ,username: "NENENEHdhe 🐥🇺🇸")
+            chatView.addPlayer(playerNum: self.playerNumber ,username: "NENENEHdhe 🐥🇺🇸",emojiEditable: true)
         }
     }
     
@@ -149,7 +149,7 @@ class LobbyScene: SKScene {
         self.pm?.addPlayer(playerNumber: player.playerNumber, username: player.username)
         
         DispatchQueue.main.sync {
-            self.chatView.addPlayer(playerNum: player.playerNumber, username: player.username)
+            self.chatView.addPlayer(playerNum: player.playerNumber, username: player.username,emojiEditable: false)
         }
         
     }

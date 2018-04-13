@@ -166,7 +166,7 @@ class ChatView: UIView, UITableViewDataSource, UITextFieldDelegate {
         }
     }
     
-    func addPlayer(playerNum : Int, username : String){
+    func addPlayer(playerNum : Int, username : String, emojiEditable : Bool){
         self.size += 1
         
         let label = self.labelForPlayer(2 * playerNum)!//skip from 0 to 2 until we are ready for 4 players
@@ -176,6 +176,7 @@ class ChatView: UIView, UITableViewDataSource, UITextFieldDelegate {
         label.text = username
         
         emoji.isHidden = false
+        emoji.isUserInteractionEnabled = emojiEditable
         emoji.text = ChatView.defaultEmoji
     }
     
