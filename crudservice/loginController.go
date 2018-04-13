@@ -70,10 +70,10 @@ func (a *App) loginPlayer(w http.ResponseWriter, r *http.Request) {
 	//4 use GET player model to get info
 	p := Player{ID: user.ID}
 	dberr = QuerySearchPlayer(a.db, &p)
-	if dberr != nil {
-		handleDBErrors(w, dberr)
-		return
-	}
+	//if dberr != nil {
+	//	handleDBErrors(w, dberr)
+	//	return
+	//}
 	//5 use GET token model to get apptoken (handle expired)
 	apptoken, dberr := QueryGetUpdateToken(a.db, user.ID)
 	if dberr != nil {

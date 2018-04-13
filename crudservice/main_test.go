@@ -41,6 +41,8 @@ func TestGetNonExistentUser(t *testing.T) {
 
 	clearTable()
 	req, _ := http.NewRequest("GET", "/player/45", nil)
+	req.Header.Set("AppUser", "MG_6")
+	req.Header.Set("AppSecret", "goingforthat#1bois")
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusNotFound, response.Code)
 	var m map[string]string
@@ -57,6 +59,8 @@ func TestCreateUser(t *testing.T) {
 	clearTable()
 	payload := []byte(`{"Nickname":"Knuckles"}`)
 	req, _ := http.NewRequest("POST", "/player", bytes.NewBuffer(payload))
+	req.Header.Set("AppUser", "MG_6")
+	req.Header.Set("AppSecret", "goingforthat#1bois")
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusCreated, response.Code)
 	var jsonPlayer Player
@@ -80,7 +84,14 @@ func TestGetUser(t *testing.T) {
 	clearTable()
 	addUsers(1)
 	req, _ := http.NewRequest("GET", "/player/1", nil)
+	req.Header.Set("AppUser", "MG_6")
+	req.Header.Set("AppSecret", "goingforthat#1bois")
 	response := executeRequest(req)
+	var m map[string]string
+	json.Unmarshal(response.Body.Bytes(), &m)
+	if m["error"] != "" {
+		t.Errorf(m["error"])
+	}
 	checkResponseCode(t, http.StatusOK, response.Code)
 
 }
@@ -94,6 +105,8 @@ func TestUpdateUser(t *testing.T) {
 
 	//Get player that was just added
 	req, _ := http.NewRequest("GET", "/player/1", nil)
+	req.Header.Set("AppUser", "MG_6")
+	req.Header.Set("AppSecret", "goingforthat#1bois")
 	response := executeRequest(req)
 	//Unmarshal the result
 	var jsonPlayer Player
@@ -102,6 +115,8 @@ func TestUpdateUser(t *testing.T) {
 	//Update Player
 	payload := []byte(`{"Nickname":"newname","GamesPlayed":"21"}`)
 	req, _ = http.NewRequest("PUT", "/player/1", bytes.NewBuffer(payload))
+	req.Header.Set("AppUser", "MG_6")
+	req.Header.Set("AppSecret", "goingforthat#1bois")
 	response = executeRequest(req)
 	checkResponseCode(t, http.StatusOK, response.Code)
 	//Modifying updated object
@@ -131,9 +146,13 @@ func TestDeleteUser(t *testing.T) {
 	addUsers(1)
 
 	req, _ := http.NewRequest("GET", "/player/1", nil)
+	req.Header.Set("AppUser", "MG_6")
+	req.Header.Set("AppSecret", "goingforthat#1bois")
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusOK, response.Code)
 	req, _ = http.NewRequest("DELETE", "/player/1", nil)
+	req.Header.Set("AppUser", "MG_6")
+	req.Header.Set("AppSecret", "goingforthat#1bois")
 	response = executeRequest(req)
 	var m map[string]string
 	json.Unmarshal(response.Body.Bytes(), &m)
@@ -142,6 +161,8 @@ func TestDeleteUser(t *testing.T) {
 	}
 	checkResponseCode(t, http.StatusAccepted, response.Code)
 	req, _ = http.NewRequest("GET", "/player/1", nil)
+	req.Header.Set("AppUser", "MG_6")
+	req.Header.Set("AppSecret", "goingforthat#1bois")
 	response = executeRequest(req)
 	checkResponseCode(t, http.StatusNotFound, response.Code)
 }
@@ -213,6 +234,8 @@ func TestCheckToken(t *testing.T) {
 	testAppToken := m["ApplicationToken"]
 
 	req, _ = http.NewRequest("GET", "/internal/checkApplicationToken", nil)
+	req.Header.Set("AppUser", "MG_6")
+	req.Header.Set("AppSecret", "goingforthat#1bois")
 	req.Header.Set("ApplicationToken", testAppToken)
 	response = executeRequest(req)
 	checkResponseCode(t, http.StatusOK, response.Code)
@@ -241,8 +264,8 @@ func TestTokenQuery(t *testing.T) {
 }
 
 //to get a new token login to facebook and get one from one of our test user
-const testUserToken = "EAACqvTZC1964BAE6YvGr303RBUW2ka00NuHDp2XLZBQAe0fQElstKOSijRT2K5UBZChUVlBO4owattUuATRi3cnKgGSEqvTKEoO8ewXbfXZA6yYznetpsN2UZCEXky8Yexw0I82ypD0nxdruzXEQpNwIS4dA0B2wvrBiDdzb9dHRitWhZC82jhVkZAHI0oXEEoZD"
-const testUserToken2 = "EAACqvTZC1964BAPjLrSktkZBpCBLs6lRiGI0f3ctabaZAkRDvXIEJanttMlpQRJ6XUOZBTY3AjcKfupZCPNY2UuwxDj1dyqWoZAIn5f6STnoYhL7bF1xjjtvOafrdw7Odtj8yy81R7d8uxnqdaljhmQewYJoydRPjmXcxBUDpc6D6UavlsWpvZAdXAFnEpnwdhQQpZB5de0OphrIRGTY2Q5OD2s5ZCTuPmnSdZBtYwBWGeRAZDZD"
+const testUserToken = "EAACqvTZC1964BANMZBudUtxGtx4Hxny6ZBqD8gDRUgZC8FX6ZBFbFZBJ9B64IZBBKpn2vj6tbl1r6tH5H79ybWfBkp2PloCu1XVdtF6VX2aogkL1m8XO81JDNZAiHJc4Oqtze1ZBPZAxnSoKnh3bCqBbtgaist9VZBiwLkFULPwt5vCJNu5q5g5IZCfgUUk1b7OpTZAjHJyzimjPeDcts0fn3OaZBQLWO4SS6S6mSZAPZB2XXKrnhAAehAHpMfV1"
+const testUserToken2 = "EAACqvTZC1964BAAWdWGwb6nvZC9Izhi7T9dqTxA7laf2vVCckslpiI9AzfU5Vd6t0ksqwGRLohJVmLPEVQ6kjliV5J9SGS62jGwyNBTxA7n0rzK9qorIFu4PyDnrX3QlDRrL95oYkbCgflSu09iP8DPdfKBDZBJ7DfDuW3gElbpOX1gBWrsr9HLyFZCrtsbHkSaX4khvT4Imc37y1N5MWbZCGrdomObDowh4sfulAbgZDZD"
 
 func TestFBApiAccess(t *testing.T) {
 	getFBUser(testUserToken)
@@ -255,7 +278,7 @@ func addUsers(count int) {
 		count = 1
 	}
 	for i := 0; i < count; i++ {
-		statement := fmt.Sprintf("INSERT INTO Players(Nickname, GamesPlayed, GamesWon, GoalsScored, Active) VALUES('%s', %d, 0,0,0)", ("User " + strconv.Itoa(i+1)), ((i + 1) * 10))
+		statement := fmt.Sprintf("INSERT INTO Players(Nickname, GamesPlayed, GamesWon, GoalsScored, RankMostWins, RankMostScored) VALUES('%s', %d, 0,0,0,0)", ("User " + strconv.Itoa(i+1)), ((i + 1) * 10))
 		testApp.db.Exec(statement)
 	}
 }

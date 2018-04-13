@@ -55,7 +55,7 @@ func (a *App) getPlayer(w http.ResponseWriter, r *http.Request) {
 	//Executing search query
 	err = QuerySearchPlayer(a.db, &p)
 	if err != nil {
-		handleDBErrors(w, err)
+		handleDBErrors(w, errors.New("Search Query Error"))
 	}
 
 	respondWithJSON(w, http.StatusOK, p)

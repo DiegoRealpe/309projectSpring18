@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -65,15 +66,17 @@ func QueryCreatePlayer(db *sql.DB, p *Player) error {
 
 //QuerySearchPlayer Looks for Player in database
 func QuerySearchPlayer(db *sql.DB, p *Player) error {
+	fmt.Println("Entered Search Player")
 	if p.ID == "" {
 		return errors.New("Invalid user ID")
 	}
+	fmt.Println("1")
 	rows, err := db.Query(`SELECT * FROM Players WHERE ID = ?`, p.ID)
 	if err != nil {
 		return errors.New("Select Failed" + err.Error())
 	}
 	defer rows.Close()
-
+	fmt.Println("2")
 	var ID, Nickname string
 	var results, nickname, gamesplayed, gameswon, goalsscored, rankwin, rankscore int
 
@@ -82,6 +85,7 @@ func QuerySearchPlayer(db *sql.DB, p *Player) error {
 		if err2 != nil {
 			return errors.New("Scan Rows Failed" + err2.Error())
 		}
+		fmt.Println("3")
 		results++
 		p.Nickname = Nickname
 		p.GamesPlayed = strconv.Itoa(gamesplayed)
@@ -93,7 +97,7 @@ func QuerySearchPlayer(db *sql.DB, p *Player) error {
 	if results == 0 { //Diego from the future, you idiot, dont move this from here
 		return errors.New("Scan Rows Failed" + sql.ErrNoRows.Error())
 	}
-
+	fmt.Println("4")
 	return nil
 }
 
