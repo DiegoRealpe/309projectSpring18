@@ -14,12 +14,18 @@ class PlayerManager {
     var players : [SKSpriteNode] = []
     var playerNumber : Int
     let playerLabelRelativePosition = CGPoint(x: 0, y: 30)
+    let emojiLabelRelativePosition = CGPoint(x: 0, y: -24)
     
-    var scene : SKScene
+    var modelEmojiLabel : SKLabelNode
+    var modelPlayer : SKSpriteNode
     
-    init(playerNumber: Int,scene : SKScene){
+    var scene : GameScene
+    
+    init(playerNumber: Int,scene : GameScene){
         self.playerNumber = playerNumber
         self.scene = scene
+        self.modelPlayer = SKScene(fileNamed : "Players")?.childNode(withName : "Player Node") as! SKSpriteNode
+        self.modelEmojiLabel = SKScene(fileNamed : "Players")?.childNode(withName : "Emoji Label") as! SKLabelNode
         
         configurePlayerNodes()
     }
@@ -32,28 +38,42 @@ class PlayerManager {
     }
     
     //sets players and player num to values according to the user data passed into the scene
+    fileprivate func addPlayerByNumber(_ i: Int, _ modelPlayer: SKSpriteNode) {
+        players[i] = modelPlayer.copy() as! SKSpriteNode
+        players[i].physicsBody = modelPlayer.physicsBody?.copy() as? SKPhysicsBody
+        players[i].physicsBody?.mass = modelPlayer.physicsBody!.mass //don't know why this is necesarry
+        
+        players[i].position = defaultPlayerStartingPositions[i]!
+        
+        print("mass of player is",players[i].physicsBody!.mass)
+        
+        scene.addChild(players[i])
+        
+        let label = modelEmojiLabel.copy() as! SKLabelNode
+        label.position = self.emojiLabelRelativePosition
+        label.text = "🤠"
+        players[i].addChild(label)
+    }
+    
     private func configurePlayerNodes(){
         //get player node from Players.sks
-        guard let modelPlayer = SKScene(fileNamed : "Players")?.childNode(withName : "Player Node") as? SKSpriteNode else{
-            return
-        }
+        
         modelPlayer.physicsBody?.categoryBitMask = GameScene.playerCategory
         
         modelPlayer.physicsBody?.contactTestBitMask = GameScene.ballCategory
         
-        
-        
         //set players to correct length with placeholders
         self.players = [SKSpriteNode](repeating : SKSpriteNode(), count: GameScene.maxPlayers)
         
-        //copy model player into each index of self.players
-        for i in 0..<GameScene.maxPlayers {
-            players[i] = modelPlayer.copy() as! SKSpriteNode
-            players[i].physicsBody = modelPlayer.physicsBody?.copy() as? SKPhysicsBody
-            
-            players[i].position = defaultPlayerStartingPositions[i]!
-            scene.addChild(players[i])
+        if self.scene.isPractice() {
+            addPlayerByNumber(0, modelPlayer)
+        }else{
+            //copy model player into each index of self.players
+            for i in 0..<GameScene.maxPlayers {
+                addPlayerByNumber(i, modelPlayer)
+            }
         }
+        
         
         addLabelToUserPlayer()
     }

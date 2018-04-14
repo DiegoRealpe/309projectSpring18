@@ -14,6 +14,8 @@ import GameplayKit
 class GameScene: SKScene , SKPhysicsContactDelegate {
     
     static let maxPlayers = 2
+    static let maxKickDistance : Float = 80.0
+    
     let movementSpeed = 100.0
     let packetUpdateIntervalSeconds = 0.05
     let joystickRadius = 50.0
@@ -23,6 +25,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     
     var quitLabel : SKLabelNode?
     var joyStick : Joystick?
+    var kickButton : KickButton!
     var ballNode : SKSpriteNode?
     var managedTcpConnection : ManagedTCPConnection?
     var leftGoal: SKSpriteNode?
@@ -69,6 +72,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
             child.physicsBody?.categoryBitMask = GameScene.boundsCategory
             child.physicsBody?.contactTestBitMask = GameScene.ballCategory
         }
+        
         self.mockPacketLabel = self.childNode(withName: "Mock Packet") as? SKLabelNode
         
         //scoreboard stuff
@@ -80,6 +84,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         configureManagedTCPConnection()
         configurePacketResponder()
         
+        kickButton = KickButton(scene: self)
     }
     
     fileprivate func configureCollisions() {
@@ -134,7 +139,6 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         }
         else if(otherCategory == GameScene.leftGoalCategory)
         {
-            
             scoreBoard?.redTeamScored()
             print("Left Goal Scored")
         }
@@ -184,13 +188,16 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     private func touchBegins(_ touch : UITouch) {
         let position = touch.location(in: self)
         
-        if self.joyStick == nil && isInBottomLeftQuadrant(_ : touch) {
+        if self.joyStick == nil && (isInBottomLeftQuadrant(_ : touch) || true) {
             self.joyStick = Joystick(parent : self, radius : self.joystickRadius, touch : touch)
         }
-        
+        if self.kickButton.contains(position){
+            doKick()
+        }
         if self.quitLabel?.contains(position) == true{
             self.quitWasPressed()
-        }else if self.mockPacketLabel?.contains(position) == true{
+        }
+        if self.mockPacketLabel?.contains(position) == true{
         
             print("mocking command")
             let spr = SocketPacketResponder()
@@ -405,6 +412,25 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     
     func lookupPlayerNumber() -> Int {
         return self.userData!.value(forKey: UserDataKeys.playerNumber.rawValue) as! Int
+    }
+    
+    func doKick(){
+        let playerPosition = self.pm!.selectPlayer(playerNum: self.pm!.playerNumber).position
+        
+        let distanceBetweenBallAndPlayer : Float = self.ballNode!.position.distanceTo(playerPosition)
+        
+        print("distnce was: \(distanceBetweenBallAndPlayer))")
+        
+        if distanceBetweenBallAndPlayer < GameScene.maxKickDistance {
+            let vector : CGVector =  playerPosition.vectorTo(self.ballNode!.position,ofMagnitude: 300)
+            
+            print("kick",vector)
+            self.ballNode!.physicsBody!.velocity = vector
+        }
+    }
+    
+    func isPractice() -> Bool {
+        return self.managedTcpConnection == nil
     }
 }
 

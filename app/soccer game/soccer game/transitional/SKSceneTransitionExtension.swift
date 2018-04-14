@@ -35,7 +35,7 @@ extension SKScene{
     func moveToScene(_ scene : Scene, dataFunction : (NSMutableDictionary) -> Void){
         let sceneName = sceneToFileDict[scene]!
         
-        if let skScene = GameScene(fileNamed: sceneName){
+        if let skScene = SKScene(fileNamed: sceneName){
             // Set the scale mode to scale to fit the window
             skScene.scaleMode = .aspectFill
             skScene.userData = NSMutableDictionary()

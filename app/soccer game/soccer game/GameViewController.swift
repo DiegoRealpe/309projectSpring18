@@ -14,8 +14,13 @@ import FacebookCore
 import FacebookLogin
 import Alamofire
 
-class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
+class GameViewController:
+
+
+UIViewController,FBSDKLoginButtonDelegate {
     
+    @IBOutlet weak var chatView: ChatView!
+    static var globalChatView: ChatView!
     
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!)
     {
@@ -50,6 +55,7 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
     
     func setGameScene(/*_ loginButton: FBSDKLoginButton!*/)
     {
+        
         if let view = self.view as! SKView? {
             // Load the SKScene from 'GameScene.sks'
             if let scene = MainMenu(fileNamed: "MainMenu") {
@@ -64,6 +70,7 @@ class GameViewController: UIViewController,FBSDKLoginButtonDelegate {
             
             view.showsFPS = true
             view.showsNodeCount = true
+            
         }
         
         

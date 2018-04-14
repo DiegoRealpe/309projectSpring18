@@ -1,14 +1,4 @@
 //
-//  GamePlayerInformationModel.swift
-//  soccer game
-//
-//  Created by rtoepfer on 3/1/18.
-//  Copyright © 2018 MG 6. All rights reserved.
-//
-
-import Foundation
-
-//
 //  PlayerInformation.swift
 //  soccer game
 //
@@ -18,9 +8,10 @@ import Foundation
 
 import Foundation
 
+
 struct RawPlayerInformation{
     var playerNumber:Int
-    var name:String = "no-name"
+    var Name:String = "no-name"
 }
 
 
@@ -43,9 +34,5 @@ class GamePlayerInformationModel {
             print("game player information model overwriting player number \(playerNumber)")
         }
         players[playerNumber] = player
-    }
-    
-    func getName(forPlayer num : Int) -> String? {
-        return players[num]?.name
     }
 }
