@@ -124,6 +124,7 @@ func (lc *LobbyController) buildPacketMap() {
 	packetMap[201] = lc.l.respondTo201
 	packetMap[202] = lc.l.respondTo202
 	packetMap[125] = lc.l.respondTo125
+	packetMap[208] = lc.l.respondTo208
 
 	lc.packetRouterMap = packetMap
 }

@@ -23,6 +23,7 @@ type Lobby struct{
 type lobbyPlayer struct{
 	ready bool
 	username string
+	emoji string
 	connection *playerConnection
 }
 
@@ -43,6 +44,7 @@ func (l *Lobby) addPlayer(newPlayer *waitingPlayer, out chan<- PacketOut){
 	l.players[i] = lobbyPlayer{
 		ready: false,
 		username : "∆∆∆™∆∆∆∆🐥🇺🇸語",
+		emoji: "🇺🇸",
 		connection: newPlayer.connection,
 	}
 
@@ -134,6 +136,28 @@ func (l *Lobby) respondTo201(in *PacketIn, out chan<- PacketOut){
 		targetIds: l.allConnectionIdsBut(in.connectionId),
 	}
 	out <- packetOut
+
+}
+
+func (l *Lobby) respondTo208(in *PacketIn, out chan<- PacketOut){
+	playerNum := l.playerNumberForConnectionID(in.connectionId)
+
+	packetIn := ParseBytesTo208(in.data)
+
+
+	if debug{fmt.Println("player",playerNum,"changed his emoji to",packetIn.Emoji)}
+
+	packet209 := packet209{
+		PlayerNumber: byte(playerNum),
+		Emoji: packetIn.Emoji,
+	}
+
+
+	out <- PacketOut{
+		size: 26,
+		data: packet209.toBytes(),
+		targetIds: l.allConnectionIdsBut(in.connectionId),
+	}
 
 }
 
