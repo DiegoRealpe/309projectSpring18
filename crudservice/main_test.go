@@ -14,6 +14,17 @@ import (
 
 var testApp App
 
+//to get a new token login to facebook and get one from one of our test user
+
+const tok = "EAACqvTZC1964BAL2gZCqzlzJNmvs0XDyFUnhMeGCqUB9afu8yFkmSgI5oLakRJWP8lZBq7z85pYz2SK4StQMZBFYk49cFmMglaBv9tuEQZBFTZCZBAN27RThzSezGOJYOieZCDn60fAKa01aWgdWd1xZCJtZBIlTciqdE8fdVomzTP9QZDZD"
+const tok2 = "EAACqvTZC1964BALisHQ82B9kyBWe6zjmbGKiTELZBA78AGRYKSjuRA4Sypl9KusV7E5ODibTm271Ad1mHki2rxUnVrhzEwDOF0YDTqKXtf8X2yQthBYrkzI6H3oGT4xKpyBOo7rySDZAxwZC6DjBC3hZA2eA8uSzNvYXJbYFHU3fNIrvuZBOZBL"
+const tok3 = "EAACqvTZC1964BAGTnB9Iu2Rq5MXxiwMqhJh5V6FoTy0e6Gwh0ZCdjYlt29hhZAYm11mwXYBdGJDnFMDxFr1Sm6oWCQWlUWlyoA09bIj7rQuSYob3QdKqB4zy7lHrexBpecHFbYeLQAZBRX8EOWyugNAfMIVYZBbdQWRWWyrdTbC0vTZCXj8OaT"
+const tok4 = "EAACqvTZC1964BAKjWuwNnziCBBDx5puhvU8yIlJyZBGMaJX6EzwzFb7lSZC4oo7w5O3c85QeFuZBYQn243fMgn9sJ2hNBlTH2ONGKBOXaZCXaESajcLc9U8RKOueNDRz18kCUThjpPzRBZCV1ZC1yISDTCg095lmK3HR7PGvzX6y57eZBuAlxYqX"
+const tok5 = "EAACqvTZC1964BAHQpHTwBk0L9Xhq8tsliKUHVENyGO8tFTohDIVAtFBHGA7i5FVIboF6juuV8mog0JfBT9xZBm8l5zoifUFGC33OdFHKE99EEbQfayX40uUw0WS76ZC63uHQaTNlZAUUkJhZC8Y8yCewPIvMPuTpPPjGzF9cECZCh5kWlacgU1"
+const tok6 = "EAACqvTZC1964BANFWVcg5mZAQRcZCJrfj1uLMz9uyxZA7BdEscEfyvDGU43pEYZCfrSgZAgthDJPofgEHlkUZAABtmDL6zj2zZAUC0s8MLJNzwrrZAwtCvsZCG3RBKDwCoOUuNvcb6kpGDgK6oBLjBlPptH1dEU8mJjc8gYOtRYgJVxu1NIbkMqYDJ"
+
+var tokens = []string{tok, tok2, tok3, tok4, tok5, tok6}
+
 var tableCreationQuery = `
 CREATE TABLE Players (
 ID INT PRIMARY KEY,
@@ -49,6 +60,27 @@ func TestGetNonExistentUser(t *testing.T) {
 	json.Unmarshal(response.Body.Bytes(), &m)
 	if m["error"] != "" {
 		t.Errorf("Expected the 'error' key of the response to be set to 'User not found'. Got '%s'", m["error"])
+	}
+}
+
+func TestFillUpTable(t *testing.T) {
+	testApp = App{}
+	testApp.Initialize()
+	clearTable()
+
+	for i, tokenAt := range tokens {
+		payload := []byte(`{"Nickname":"Dummy#` + strconv.Itoa(i) + `"}`)
+		req, _ := http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
+		req.Header.Set("FacebookToken", tokenAt)
+		response := executeRequest(req)
+
+		var m map[string]string
+		json.Unmarshal(response.Body.Bytes(), &m)
+		if m["error"] != "" {
+			t.Errorf(m["error"])
+		}
+
+		checkResponseCode(t, http.StatusCreated, response.Code)
 	}
 }
 
@@ -177,14 +209,14 @@ func TestRegisterUser(t *testing.T) {
 
 	payload := []byte(`{"Nickname":"dumdum1"}`)
 	req, _ := http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
-	req.Header.Set("FacebookToken", testUserToken)
+	req.Header.Set("FacebookToken", tok)
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusCreated, response.Code)
 
-	//payload = []byte(`{"Nickname":"dumdum2"}`)
-	//req, _ = http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
-	//req.Header.Set("FacebookToken", testUserToken2)
-	//response = executeRequest(req)
+	payload = []byte(`{"Nickname":"dumdum2"}`)
+	req, _ = http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
+	req.Header.Set("FacebookToken", tok2)
+	response = executeRequest(req)
 	var m map[string]string
 	json.Unmarshal(response.Body.Bytes(), &m)
 	if m["error"] != "" {
@@ -204,11 +236,10 @@ func TestLoginUser(t *testing.T) {
 	if reqerr != nil {
 		t.Errorf(reqerr.Error())
 	}
-	req0.Header.Set("FacebookToken", testUserToken)
+	req0.Header.Set("FacebookToken", tok)
 	response0 := executeRequest(req0)
 	var na map[string]string
 	json.Unmarshal(response0.Body.Bytes(), &na)
-	fmt.Println(na["error"])
 	if na["error"] == "" {
 		t.Errorf("Expected an error message and recieved none")
 	}
@@ -216,7 +247,7 @@ func TestLoginUser(t *testing.T) {
 
 	payload := []byte(`{"Nickname":"dumdum1"}`)
 	req1, _ := http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
-	req1.Header.Set("FacebookToken", testUserToken)
+	req1.Header.Set("FacebookToken", tok)
 	response1 := executeRequest(req1)
 	checkResponseCode(t, http.StatusCreated, response1.Code)
 
@@ -224,7 +255,7 @@ func TestLoginUser(t *testing.T) {
 	if err != nil {
 		t.Errorf(err.Error())
 	}
-	req2.Header.Set("FacebookToken", testUserToken)
+	req2.Header.Set("FacebookToken", tok)
 	response2 := executeRequest(req2)
 
 	var m map[string]string
@@ -244,7 +275,7 @@ func TestCheckToken(t *testing.T) {
 
 	payload := []byte(`{"Nickname":"User 1"}`)
 	req, _ := http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
-	req.Header.Set("FacebookToken", testUserToken)
+	req.Header.Set("FacebookToken", tok)
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusCreated, response.Code)
 
@@ -268,7 +299,7 @@ func TestTokenQuery(t *testing.T) {
 
 	payload := []byte(`{"Nickname":"dumdum1"}`)
 	req, _ := http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
-	req.Header.Set("FacebookToken", testUserToken)
+	req.Header.Set("FacebookToken", tok)
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusCreated, response.Code)
 
@@ -279,15 +310,9 @@ func TestTokenQuery(t *testing.T) {
 	if err != nil {
 		t.Errorf(err.Error())
 	}
-
 }
-
-//to get a new token login to facebook and get one from one of our test user
-const testUserToken = "EAACqvTZC1964BAPYWCUC1fz8CXcLZCZCUKHLm6UjXDKCekQsiJ5VDXyHAMyami19ZCBB13G2oSgGDishdQHVo6ZCvjv97e15jflxUqZBC5gSQsmWu2N0sEE3XPQTbwIsm9ktxfqZBHsbzNDpYkg1fudxcMLnEIUzSMM98ZBkhUYIVl29HEF0SMqoJYQg6nQSZCeltFVF1yNIZB7L1760axoDmqXCw4q0ZCTsUUHvHQHRGVnRQZDZD"
-const testUserToken2 = "EAACqvTZC1964BAFAfCzz9c5YSj4hzo20JZCV8GYZA3dEBC8nlpz9iSzYeTyY55fK6DU0Bs2uzzutjpfcg5OPNSNnWdF14P31a1hNZB6AUvoiZBJbaKPmx3RXYomdceq4tSVIzWQSvTouchqsudZCqlBh3SxeEebxbq4v5a6zejXXY3DYrxLKzTdRgVlCwHbvudukh9NnvVGHa6YlXET9Rl87qkGbmIBSMvic0roRxXJzeogK1INg1h"
-
 func TestFBApiAccess(t *testing.T) {
-	getFBUser(testUserToken)
+	getFBUser(tok)
 }
 
 /*********Test Helpers*********/

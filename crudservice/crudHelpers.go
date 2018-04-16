@@ -54,7 +54,9 @@ func verifyAccess(r *http.Request) error {
 	reqUser := r.Header.Get("AppUser")
 	reqSecret := r.Header.Get("AppSecret")
 	if reqUser != "MG_6" || reqSecret != "goingforthat#1bois" {
-		return errors.New("Invalid Credentials")
+
+		fmt.Println("This shouldnt be showing up")
+		return errors.New("Invalid Credentialss")
 	}
 	return nil
 }

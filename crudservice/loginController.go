@@ -27,10 +27,14 @@ func (a *App) registerPlayer(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusBadRequest, "Invalid request body")
 		return
 	}
+	nickLength := len(p.Nickname)
+	if nickLength > 15 || nickLength < 1 {
+		respondWithError(w, http.StatusNotImplemented, "Nickname Length Error")
+		return
+	}
 	defer r.Body.Close()
 	dberr := QueryCreatePlayer(a.db, &p)
 	if dberr != nil {
-		fmt.Println(dberr.Error())
 		handleDBErrors(w, dberr)
 		return
 	}

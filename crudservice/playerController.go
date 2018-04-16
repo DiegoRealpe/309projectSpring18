@@ -28,6 +28,12 @@ func (a *App) createPlayer(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
+	nickLength := len(p.Nickname)
+	if nickLength > 15 || nickLength < 1 {
+		respondWithError(w, http.StatusNotImplemented, "Nickname Length Error")
+		return
+	}
+
 	//Executing Create model
 	dberr := QueryCreatePlayer(a.db, &p)
 	if dberr != nil {
