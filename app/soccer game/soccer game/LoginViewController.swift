@@ -13,9 +13,6 @@ import FacebookLogin
 import Alamofire
 
 class LoginViewController: UIViewController, FBSDKLoginButtonDelegate{
-
-    var performSegueOnViewDidAppear = false
-    var viewDidAppearYet = false
     
     @IBOutlet weak var ChooseNicknameView: UIView!
     @IBOutlet weak var nicknameInput: UITextField!
@@ -36,12 +33,6 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate{
         }
 
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        self.viewDidAppearYet = true
-        print("view appeared")
-        //if
-    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -61,7 +52,7 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate{
         else {
             
             sendCRUDServiceLoginRequest(FBToken : AccessToken.current!.authenticationToken)
-            //loginButton.removeFromSuperview()
+            loginButton.removeFromSuperview()
         }
     }
     
@@ -115,8 +106,6 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate{
     
     func showCreateAccountView(){
         self.ChooseNicknameView.isHidden = false
-        let loginButton = FBSDKLoginButton()
-        loginButton.removeFromSuperview()
     }
     
     @IBAction func nicknameButtonPressed(){
