@@ -41,7 +41,7 @@ UIViewController,FBSDKLoginButtonDelegate {
             }
             
             
-           sendCRUDServiceLoginRequest(FBToken : AccessToken.current!.authenticationToken)
+           //sendCRUDServiceLoginRequest(FBToken : AccessToken.current!.authenticationToken)
             loginButton.removeFromSuperview()
         }
     }
@@ -73,6 +73,8 @@ UIViewController,FBSDKLoginButtonDelegate {
             
         }
         
+        hideChatView()
+        GameViewController.globalChatView = chatView
         
         
     }
@@ -82,128 +84,7 @@ UIViewController,FBSDKLoginButtonDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-        
-        let loginButton = FBSDKLoginButton()
-        // Do any additional setup after loading the view, typically from a nib.
-        
-        
-        //if player logged in
-        if let accessToken = AccessToken.current
-        {
-           
-            if((FBSDKAccessToken.current()) != nil)
-            {
-                let userToken = AccessToken.current.unsafelyUnwrapped.authenticationToken//userId
-              
-                sendCRUDServiceLoginRequest(FBToken: userToken)
-                
-                print("\n")
-                print("\n")
-            }
-            else
-            {
-                let loginButton = FBSDKLoginButton()
-                loginButton.center = view.center
-                loginButton.delegate = self // Remember to set the delegate of the loginButton
-                view.addSubview(loginButton)
-            }
-            
-            
-        
-        }
-        
-        else//stuff to do if not logged in at all
-        {
-         
-        let loginButton = FBSDKLoginButton()
-        loginButton.center = view.center
-        loginButton.delegate = self // Remember to set the delegate of the loginButton
-        
-            
-            
-        view.addSubview(loginButton)
-            
-            
-        }
-        
-    }
-    
-    //returns application token
-    func sendCRUDServiceLoginRequest(FBToken : String) {
-        
-        let requestURL = "http://\(CommunicationProperties.crudServiceHost):\(CommunicationProperties.crudServicePort)/player/login"
-        
-        let headers: HTTPHeaders = [
-            "FacebookToken": FBToken,
-            ]
-        
-        print("\n")
-        print("\n")
-        
-        print("logging in with CRUD Service at URL",requestURL,"\nwith headers : \(headers)")
-        
-        Alamofire.request(requestURL , method : .get , headers : headers)
-            .responseString(completionHandler: loginRequestResponse(_:))
-    }
-    
-    //function to do things with response from server to a login request by client
-    func loginRequestResponse(_ response : DataResponse<String>)
-    {
-        
-        print("🍆🍆🍆status code",response.response!.statusCode)
-        
-        
-        
-        if(response.response!.statusCode == 202)
-        {
-            setGameScene()
-        }
-        else if(response.response!.statusCode == 404)//if player not found --> create account
-        {
-            createAccount(FBToken: AccessToken.current.unsafelyUnwrapped.authenticationToken)
-        }
-        else if(response.response!.statusCode == 400)
-        {
-            print("SERVER MACHINE 🅱️ROKE")
-        }
-        
-    }
-    
-
-    
-    func createAccount(FBToken : String)
-    {
-        print("\n")
-        print("\n")
-        
-        let requestURL = "http://\(CommunicationProperties.crudServiceHost):\(CommunicationProperties.crudServicePort)/player/register"
-        
-        let headers: HTTPHeaders = [
-            "FacebookToken": FBToken,
-            ]
-        
-        
-        let parameter:Parameters = ["Nickname":"oof"]
-        
-        print("creating account with CRUD Service at URL",requestURL,"\nwith headers : \(headers)")
-        
-        Alamofire.request(requestURL, method: .post, parameters: parameter, encoding: JSONEncoding.default, headers: headers).responseString(completionHandler: createAccountResponse(_:))
-        
-    }
-    func createAccountResponse(_ response : DataResponse<String>)
-    {
-        print("💌💌💌status code",response.response!.statusCode)
-        
-        if(response.response!.statusCode == 201)
-        {
-            print("Account creation successful")
-            setGameScene()
-        }
-        else
-        {
-            print("Account creation machine 🅱️ROKE")
-        }
+        setGameScene()
     }
     
     
@@ -229,23 +110,6 @@ UIViewController,FBSDKLoginButtonDelegate {
         return true
     }
     
-    func loginIfNecesarry(){
-        //todo: remove this once we are asking game service for login
-        if let accessToken = AccessToken.current
-        {
-            sendCRUDServiceLoginRequest(FBToken: accessToken.authenticationToken)
-        }
-            
-        else
-        {
-            let loginButton = FBSDKLoginButton()
-            loginButton.center = view.center
-            loginButton.delegate = self // Remember to set the delegate of the loginButton
-            view.addSubview(loginButton)
-        }
-        
-    }
-    
     
 
     
@@ -254,6 +118,14 @@ UIViewController,FBSDKLoginButtonDelegate {
         var token: Int
     }
     
+    func hideChatView(){
+        self.chatView.isHidden = true
+    }
+
+    
+    func unhideChatView(){
+        self.chatView.isHidden = false
+    }
     //currently not doing anything until crud service is sorted out
     /*func loginResponse(_ response : DataResponse<String>){
         print("login response was",String(describing : response.data))

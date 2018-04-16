@@ -37,6 +37,7 @@
 		3A94062320699AEB0025D3B2 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A94062220699AEB0025D3B2 /* GameScene.sks */; };
 		3AB377DE2023B5980019E73E /* Joystick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB377DD2023B5980019E73E /* Joystick.swift */; };
 		3AB377E02023B5C50019E73E /* CGPointExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB377DF2023B5C50019E73E /* CGPointExtension.swift */; };
+		3AC8B6F62082B5420075C468 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC8B6F52082B5420075C468 /* LoginViewController.swift */; };
 		3ACF30282032ACF4009DC766 /* TCPResultExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACF30272032ACF4009DC766 /* TCPResultExtension.swift */; };
 		3ADAD6DA207E5354005C94C8 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADAD6D9207E5354005C94C8 /* ChatView.swift */; };
 		3ADAD6DE207E536B005C94C8 /* RemotePlayerJoinedLobbyPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADAD6DB207E536A005C94C8 /* RemotePlayerJoinedLobbyPacket.swift */; };
@@ -136,6 +137,7 @@
 		3A94062220699AEB0025D3B2 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
 		3AB377DD2023B5980019E73E /* Joystick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Joystick.swift; sourceTree = "<group>"; };
 		3AB377DF2023B5C50019E73E /* CGPointExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGPointExtension.swift; sourceTree = "<group>"; };
+		3AC8B6F52082B5420075C468 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		3ACF30272032ACF4009DC766 /* TCPResultExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCPResultExtension.swift; sourceTree = "<group>"; };
 		3ADAD6D9207E5354005C94C8 /* ChatView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		3ADAD6DB207E536A005C94C8 /* RemotePlayerJoinedLobbyPacket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemotePlayerJoinedLobbyPacket.swift; sourceTree = "<group>"; };
@@ -345,6 +347,7 @@
 				4C98FBC5201E658700378614 /* LaunchScreen.storyboard */,
 				4C98FBC8201E658700378614 /* Info.plist */,
 				3A74A608201FB90D00A1583F /* main menu */,
+				3AC8B6F52082B5420075C468 /* LoginViewController.swift */,
 			);
 			path = "soccer game";
 			sourceTree = "<group>";
@@ -363,7 +366,6 @@
 			children = (
 				3A31696D2037505900DA2DCC /* NewAccountOrLogin.sks */,
 				4CC91D9D20339BA700FB9236 /* NewAccountOrLogin.swift */,
-				3A73DC2120696D200029E300 /* UserInformation.swift */,
 			);
 			path = Accounts;
 			sourceTree = "<group>";
@@ -501,7 +503,6 @@
 				4C98FBBF201E658600378614 /* GameViewController.swift in Sources */,
 				3A2EFC63206D58D200C7E36B /* PlayerManager.swift in Sources */,
 				3A74A604201F86ED00A1583F /* SKSceneTransitionExtension.swift in Sources */,
-				3A73DC2220696D200029E300 /* UserInformation.swift in Sources */,
 				3A5475682034BEBB0082947E /* ManagedTCPConnection.swift in Sources */,
 				3A3A58242060281100E74D82 /* GameProperties.swift in Sources */,
 				3A3A5821205FFDB700E74D82 /* ServerPlayerStatePacket.swift in Sources */,
@@ -511,6 +512,7 @@
 				3A1987A520729FA000514B81 /* KickButton.swift in Sources */,
 				3ADAD6E0207E536B005C94C8 /* OutgoingChatMessagePacket.swift in Sources */,
 				3ADAD6DA207E5354005C94C8 /* ChatView.swift in Sources */,
+				3AC8B6F62082B5420075C468 /* LoginViewController.swift in Sources */,
 				3ACF30282032ACF4009DC766 /* TCPResultExtension.swift in Sources */,
 				3ADAD6DF207E536B005C94C8 /* IncommingChatMessagePacket.swift in Sources */,
 				3A3A58282063207100E74D82 /* AbstractClientPositionVelocityPacket.swift in Sources */,
