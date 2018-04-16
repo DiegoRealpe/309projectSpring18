@@ -10,7 +10,7 @@ import UIKit
 import FacebookCore
 import FacebookLogin
 import FBSDKLoginKit
-
+import Alamofire
 
 
 class NewAccountOrLogin: SKScene{
@@ -29,9 +29,14 @@ class NewAccountOrLogin: SKScene{
         //get scene subnodes
         self.back = self.childNode(withName: "Back Button")
         
-        
+        let screenSize:CGRect = UIScreen.main.bounds
+        let screenHeight = screenSize.height //real screen height
+        //let's suppose we want to have 10 points bottom margin
+        let newCenterY = screenHeight - loginButton.frame.height - 10
+        let newCenter = CGPoint(x: view.center.x,y:  newCenterY)
      
-        loginButton.center = view.center
+        
+        loginButton.center = newCenter//view.center
         
         view.addSubview(loginButton)
         
@@ -68,7 +73,36 @@ class NewAccountOrLogin: SKScene{
         }
     }
     
+    func sendCRUDServiceStatsRequest(FBToken : String) {
+        
+        let requestURL = "http://\(CommunicationProperties.crudServiceHost):\(CommunicationProperties.crudServicePort)/player/stats"
+        
+        let headers: HTTPHeaders = [
+            "FacebookToken": FBToken,
+            ]
+        
+        print("\n")
+        print("\n")
+        
+        print("logging in with CRUD Service at URL",requestURL,"\nwith headers : \(headers)")
+        
+        Alamofire.request(requestURL , method : .get , headers : headers)
+            .responseString(completionHandler: statsRequestResponse(_:))
+    }
 
+    func statsRequestResponse(_ response : DataResponse<String>)
+    {
+        
+        print("🍆🍆🍆status code",response.response!.statusCode) //todo handle 404 without it being a fatal error
+        
+        
+        if(response.response!.statusCode == 202)
+        {
+          //  buildStatsNodes();
+        }
+        
+        
+    }
     
 }
 
