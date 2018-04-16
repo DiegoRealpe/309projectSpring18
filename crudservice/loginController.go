@@ -92,8 +92,8 @@ func (a *App) loginPlayer(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) statsPlayer(w http.ResponseWriter, r *http.Request) {
-	//1 assert the token sent in header
-	//token := r.Header.Get("ApplicationToken")
+	//1 assert the ID sent in header
+	//token := r.Header.Get("FacebookID")
 	//nickname, dberr := QueryAssertToken(a.db, token)
 	//if dberr != nil {
 	//	handleDBErrors(w, dberr)
@@ -102,7 +102,7 @@ func (a *App) statsPlayer(w http.ResponseWriter, r *http.Request) {
 
 	//2 Look for the stats in the database
 
-	//3 prepare to
+	//3 send struct of stats
 }
 
 func (a *App) checkToken(w http.ResponseWriter, r *http.Request) {

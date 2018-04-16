@@ -18,6 +18,7 @@ type Player struct {
 	GoalsScored string `json:"goalsscored,omitempty"`
 	RankWin     string `json:"rankwin,omitempty"`
 	RankScore   string `json:"rankscore,omitempty"`
+	LastAvatar  string `json:"lastavatar,omitempty"`
 }
 
 //PlayerProfile contains a player struct with its respective apptoken
@@ -75,22 +76,23 @@ func QuerySearchPlayer(db *sql.DB, p *Player) error {
 	}
 	defer rows.Close()
 
-	var ID, Nickname string
+	var ID, nickname, lastAvatar string
 	var results, gamesplayed, gameswon, goalsscored, rankwin, rankscore int
 
 	for rows.Next() {
-		err2 := rows.Scan(&ID, &Nickname, &gamesplayed, &gameswon, &goalsscored, &rankwin, &rankscore)
+		err2 := rows.Scan(&ID, &nickname, &gamesplayed, &gameswon, &goalsscored, &rankwin, &rankscore, &lastAvatar)
 		if err2 != nil {
 			return errors.New("Scan Rows Failed" + err2.Error())
 		}
 
 		results++
-		p.Nickname = Nickname
+		p.Nickname = nickname
 		p.GamesPlayed = strconv.Itoa(gamesplayed)
 		p.GamesWon = strconv.Itoa(gameswon)
 		p.GoalsScored = strconv.Itoa(goalsscored)
 		p.RankWin = strconv.Itoa(rankwin)
 		p.RankScore = strconv.Itoa(rankscore)
+		p.LastAvatar = lastAvatar
 	}
 	if results == 0 { //Diego from the future, you idiot, dont move this from here
 		return sql.ErrNoRows
@@ -118,7 +120,17 @@ func QueryUpdatePlayer(db *sql.DB, p *Player) error {
 
 	if p.GoalsScored != "" {
 		mods = append(mods, "GoalsScored", p.GoalsScored)
-	} //Easily can add more
+	}
+
+	if p.GamesWon != "" {
+		mods = append(mods, "GamesWon", p.GamesWon)
+	}
+
+	if p.LastAvatar != "" {
+		mods = append(mods, "LastAvatar", p.LastAvatar)
+	}
+
+	//Easily can add more
 
 	mods = append(mods, p.ID) //Appending ID which is gonna be modified
 
