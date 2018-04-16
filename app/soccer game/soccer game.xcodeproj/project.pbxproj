@@ -38,6 +38,7 @@
 		3AB377DE2023B5980019E73E /* Joystick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB377DD2023B5980019E73E /* Joystick.swift */; };
 		3AB377E02023B5C50019E73E /* CGPointExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB377DF2023B5C50019E73E /* CGPointExtension.swift */; };
 		3AC8B6F62082B5420075C468 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC8B6F52082B5420075C468 /* LoginViewController.swift */; };
+		3AC8B6F820851C420075C468 /* LocalPlayerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC8B6F720851C420075C468 /* LocalPlayerInfo.swift */; };
 		3ACF30282032ACF4009DC766 /* TCPResultExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACF30272032ACF4009DC766 /* TCPResultExtension.swift */; };
 		3ADAD6DA207E5354005C94C8 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADAD6D9207E5354005C94C8 /* ChatView.swift */; };
 		3ADAD6DE207E536B005C94C8 /* RemotePlayerJoinedLobbyPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADAD6DB207E536A005C94C8 /* RemotePlayerJoinedLobbyPacket.swift */; };
@@ -138,6 +139,7 @@
 		3AB377DD2023B5980019E73E /* Joystick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Joystick.swift; sourceTree = "<group>"; };
 		3AB377DF2023B5C50019E73E /* CGPointExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGPointExtension.swift; sourceTree = "<group>"; };
 		3AC8B6F52082B5420075C468 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		3AC8B6F720851C420075C468 /* LocalPlayerInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPlayerInfo.swift; sourceTree = "<group>"; };
 		3ACF30272032ACF4009DC766 /* TCPResultExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCPResultExtension.swift; sourceTree = "<group>"; };
 		3ADAD6D9207E5354005C94C8 /* ChatView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		3ADAD6DB207E536A005C94C8 /* RemotePlayerJoinedLobbyPacket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemotePlayerJoinedLobbyPacket.swift; sourceTree = "<group>"; };
@@ -366,6 +368,7 @@
 			children = (
 				3A31696D2037505900DA2DCC /* NewAccountOrLogin.sks */,
 				4CC91D9D20339BA700FB9236 /* NewAccountOrLogin.swift */,
+				3AC8B6F720851C420075C468 /* LocalPlayerInfo.swift */,
 			);
 			path = Accounts;
 			sourceTree = "<group>";
@@ -514,6 +517,7 @@
 				3ADAD6DA207E5354005C94C8 /* ChatView.swift in Sources */,
 				3AC8B6F62082B5420075C468 /* LoginViewController.swift in Sources */,
 				3ACF30282032ACF4009DC766 /* TCPResultExtension.swift in Sources */,
+				3AC8B6F820851C420075C468 /* LocalPlayerInfo.swift in Sources */,
 				3ADAD6DF207E536B005C94C8 /* IncommingChatMessagePacket.swift in Sources */,
 				3A3A58282063207100E74D82 /* AbstractClientPositionVelocityPacket.swift in Sources */,
 				3ADFD62B202E263900AE586D /* CommTestScreen.swift in Sources */,

@@ -18,6 +18,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ZUCC" translatesAutoresizingMaskIntoConstraints="NO" id="J7C-Yh-6oz">
+                                <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                             <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yRv-sN-mrH" userLabel="Choose Nickname View">
                                 <rect key="frame" x="132" y="123" width="403" height="129"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
@@ -33,6 +37,9 @@
                                         <rect key="frame" x="305" y="77" width="70" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="Submit"/>
+                                        <connections>
+                                            <action selector="nicknameButtonPressed" destination="TaP-3j-VYY" eventType="touchUpInside" id="EA7-2x-m4v"/>
+                                        </connections>
                                     </button>
                                     <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="lD1-pD-ZfT">
                                         <rect key="frame" x="8" y="77" width="274" height="30"/>
@@ -44,14 +51,14 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ZUCC" translatesAutoresizingMaskIntoConstraints="NO" id="J7C-Yh-6oz">
-                                <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="0.92129996827411165" green="0.92129996827411165" blue="0.92129996827411165" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <viewLayoutGuide key="safeArea" id="xMy-cN-QN1"/>
                     </view>
+                    <connections>
+                        <outlet property="ChooseNicknameView" destination="yRv-sN-mrH" id="pwJ-E9-TNj"/>
+                        <outlet property="nicknameInput" destination="lD1-pD-ZfT" id="fz3-jp-ubr"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="98h-pn-R3Z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
