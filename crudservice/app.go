@@ -21,7 +21,7 @@ type App struct {
 func (a *App) Initialize() {
 	var err error
 	a.db, err = sql.Open("mysql",
-		"dbu309mg6:1XFA40wc@tcp(mysql.cs.iastate.edu:3306)/db309mg6")
+		"dbu309mg6:1XFA40wc@tcp(mysql.cs.iastate.edu:3306)/db309mg6?charset=utf8mb4")
 	if err != nil {
 		fmt.Println(err)
 	}
