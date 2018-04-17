@@ -19,27 +19,38 @@ type gameDisperser struct{
 }
 
 //should be a gorouting, but not start new goroutines
-func runGameController(gameOptions GameOptions, in <-chan PacketIn, out chan PacketOut) {
+func runGameController(gameOptions GameOptions, in <-chan PacketIn) {
 	fmt.Println("starting game controller")
 
 	controller := gameController{}
 	controller.g = gameOptions.buildGame()
 	controller.buildPacketMap()
-	controller.out = out
+	controller.out = make(chan PacketOut,50)
 
-	controller.disperser.connections = make(map[int]chan<- PacketOut)
-
+	controller.configureAndRunDispersion()
 	for _, player := range gameOptions.players {
 		controller.disperser.connections[player.id] = player.packetOut
 	}
 
-	go controller.runGameDispersion()
+	controller.g.send122ToEveryone(controller.out)
 
 	for p := range in {
 		controller.respondToSinglePacket(&p)
 
 		//TODO we need to make sure goroutine ends
 	}
+}
+
+func (gc *gameController) configureAndRunDispersion(){
+	gc.disperser.connections = make(map[int]chan<- PacketOut)
+
+	//populate map to disperse
+	for _, v := range gc.g.players {
+		gc.disperser.connections[v.id] = v.packetOut
+	}
+
+	//start dispersion
+	go gc.runGameDispersion()
 }
 
 func (gc *gameController) runGameDispersion() {

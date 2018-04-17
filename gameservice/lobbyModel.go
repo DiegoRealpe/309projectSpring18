@@ -13,9 +13,12 @@ import(
 	"time"
 )
 
+const DEFAULT_EMOJI = "😘"
+
 type Lobby struct{
 	players [NUMPLAYERS]lobbyPlayer
 	size int
+	readyToMoveToGameScene bool
 
 	messages []chatMessage
 }
@@ -44,7 +47,7 @@ func (l *Lobby) addPlayer(newPlayer *waitingPlayer, out chan<- PacketOut){
 	l.players[i] = lobbyPlayer{
 		ready: false,
 		username : "∆∆∆™∆∆∆∆🐥🇺🇸語",
-		emoji: "🇺🇸",
+		emoji: DEFAULT_EMOJI,
 		connection: newPlayer.connection,
 	}
 
@@ -56,6 +59,7 @@ func (l *Lobby) sendPlayerExistingLobbyInfo(newPlayer *waitingPlayer) {
 	l.sendAllExistingPlayers(newPlayer.connection.packetOut)
 	l.sendAllChatMessagePackets(newPlayer.connection.packetOut)
 	l.sendExistingPlayersReady(newPlayer.connection.packetOut)
+	l.sendAllCurrentEmojis(newPlayer.connection.packetOut)
 }
 
 func (l *Lobby) sendAllChatMessagePackets(to chan<- PacketOut){
@@ -120,7 +124,7 @@ func (l *Lobby) respondTo200(in *PacketIn, out chan<- PacketOut){
 	out <- packetOut
 
 	if l.areAllPlayersReadyForTheGame() {
-		fmt.Println("moving to game controller")
+		l.readyToMoveToGameScene = true
 	}
 }
 
@@ -174,6 +178,24 @@ func (l *Lobby) sendAllExistingPlayers (to chan<- PacketOut){
 
 		to <- PacketOut{
 			size: 82,
+			data: packet.toBytes(),
+		}
+	}
+}
+
+func (l *Lobby) sendAllCurrentEmojis(to chan<- PacketOut){
+	for i := 0 ; i < l.size; i++{
+		if i == l.size-1{
+			continue //don't send players their own emoji
+		}
+
+		packet := packet209{
+			PlayerNumber: byte(i),
+			Emoji: l.players[i].emoji,
+		}
+
+		to <- PacketOut{
+			size: 26,
 			data: packet.toBytes(),
 		}
 	}

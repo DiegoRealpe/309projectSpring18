@@ -61,6 +61,9 @@ func startLobby(mmm *matchMakingModel) {
 
 		if packet.data[0] == 125 {
 			break
+		}else if lc.l.readyToMoveToGameScene{
+			lc.startGCFromLobby()
+			return
 		}
 	}
 
@@ -138,7 +141,8 @@ func (lc *LobbyController) startGCFromLobby() {
 		options.players[i] = p.connection
 	}
 
-	go runGameController(options, lc.packetIn, lc.packetOut)
+	close(lc.packetOut) //so dispersion stops and is garbage collected
+	go runGameController(options, lc.packetIn)
 }
 
 func (lc *LobbyController) getConnIDToPlayerNumberMap() map[int]byte {

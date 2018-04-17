@@ -93,6 +93,15 @@ func (g *Game) respondTo125(in *PacketIn, out chan<- PacketOut){
 	out <- packet126
 }
 
+func (g *Game) send122ToEveryone(out chan<- PacketOut){
+	out <- PacketOut{
+		size: 1,
+		data: []byte{122},
+		targetIds: g.allConnectionIds(),
+	}
+
+}
+
 func (g *Game) allConnectionIDsBut(id int) []int {
 
 	slice := make([]int,NUMPLAYERS-1)
@@ -111,3 +120,13 @@ func (g *Game) allConnectionIDsBut(id int) []int {
 
 	return slice
 }
+
+func (g *Game) allConnectionIds() []int{
+	rtn := make([]int, g.numPlayers)
+
+	for i := 0; i < g.numPlayers ; i+= 1 {
+		rtn[i] = g.players[i].id
+	}
+	return rtn
+}
+
