@@ -74,10 +74,13 @@ class ManagedTCPConnection{
     
     fileprivate func respondToTCPDataSent() {
         
-        let data = self.client.read(50,timeout: 100)
+        let data = self.client.read(1000,timeout: 100)
 
         if let recieved = data{
             dataHandler(recieved)
+        }else{
+            print("data was nil, closing socket connection")
+            self.stop()
         }
     }
     
@@ -86,6 +89,7 @@ class ManagedTCPConnection{
             while !self.stopRunning{
                 self.respondToTCPDataSent()
             }
+            self.client.close()
         })
     }
     
