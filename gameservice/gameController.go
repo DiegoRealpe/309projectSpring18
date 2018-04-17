@@ -46,7 +46,7 @@ func (gc *gameController) configureAndRunDispersion(){
 
 	//populate map to disperse
 	for _, v := range gc.g.players {
-		gc.disperser.connections[v.id] = v.packetOut
+		gc.disperser.connections[v.connection.id] = v.connection.packetOut
 	}
 
 	//start dispersion

@@ -13,15 +13,23 @@ type GameOptions struct {
 type Game struct {
 	numPlayers int
 	connectionIDToPlayerNumberMap map[int]byte
-	players [NUMPLAYERS]*playerConnection
+	players [NUMPLAYERS]*gamePlayer
 }
 
+type gamePlayer struct{
+	connection *playerConnection
+	isConnected bool
+	isHost bool
+	username string
+	emoji string
+}
 
 func (gOpts GameOptions) buildGame() (g Game) {
 	g.numPlayers = gOpts.numPlayers
 	g.connectionIDToPlayerNumberMap = gOpts.connectionIDToPlayerNumberMap
 	for i := 0; i < NUMPLAYERS; i++ {
-		g.players[i] = gOpts.players[i]
+		g.players[i].connection = gOpts.players[i]
+		g.players[i].isConnected = true
 	}
 	//ext...
 
@@ -82,7 +90,7 @@ func (g *Game) respondTo125(in *PacketIn, out chan<- PacketOut){
 	disconnectingPlayer := g.connectionIDToPlayerNumberMap[in.connectionId]
 
 	fmt.Println("Player", disconnectingPlayer, "has disconnected")
-	g.players[disconnectingPlayer].disconnect()
+	g.players[disconnectingPlayer].connection.disconnect()
 
 	packet126 := PacketOut{
 		size : 2,
@@ -100,6 +108,12 @@ func (g *Game) send122ToEveryone(out chan<- PacketOut){
 		targetIds: g.allConnectionIds(),
 	}
 
+}
+
+func (g *Game) send127ToFirstAvaliablePlayer(out chan<- PacketOut){
+	//for p, _ := range g.players {
+
+	//}
 }
 
 func (g *Game) allConnectionIDsBut(id int) []int {
@@ -125,8 +139,7 @@ func (g *Game) allConnectionIds() []int{
 	rtn := make([]int, g.numPlayers)
 
 	for i := 0; i < g.numPlayers ; i+= 1 {
-		rtn[i] = g.players[i].id
+		rtn[i] = g.players[i].connection.id
 	}
 	return rtn
 }
-

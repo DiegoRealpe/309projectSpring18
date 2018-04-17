@@ -288,4 +288,3 @@ func (l *Lobby) playerNumberForConnectionID(id int) int{
 	}
 	return -1
 }
-
