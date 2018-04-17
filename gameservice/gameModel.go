@@ -91,6 +91,11 @@ func (g *Game) respondTo125(in *PacketIn, out chan<- PacketOut){
 
 	fmt.Println("Player", disconnectingPlayer, "has disconnected")
 	g.players[disconnectingPlayer].connection.disconnect()
+	g.players[disconnectingPlayer].isConnected = false
+	if(g.players[disconnectingPlayer].isHost){
+		g.players[disconnectingPlayer].isHost = false
+		g.send127ToFirstAvaliablePlayer(out);
+	}
 
 	packet126 := PacketOut{
 		size : 2,
@@ -111,9 +116,17 @@ func (g *Game) send122ToEveryone(out chan<- PacketOut){
 }
 
 func (g *Game) send127ToFirstAvaliablePlayer(out chan<- PacketOut){
-	//for p, _ := range g.players {
-
-	//}
+	for _, p := range g.players {
+		if(p.isConnected){
+			out <- PacketOut{
+				size: 1,
+				data: []byte{127},
+				targetIds: []int{p.connection.id},
+			}
+			p.isHost = true;
+			break;
+		}
+	}
 }
 
 func (g *Game) allConnectionIDsBut(id int) []int {

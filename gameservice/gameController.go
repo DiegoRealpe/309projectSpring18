@@ -33,6 +33,7 @@ func runGameController(gameOptions GameOptions, in <-chan PacketIn) {
 	}
 
 	controller.g.send122ToEveryone(controller.out)
+	controller.g.send127ToFirstAvaliablePlayer(controller.out)
 
 	for p := range in {
 		controller.respondToSinglePacket(&p)
