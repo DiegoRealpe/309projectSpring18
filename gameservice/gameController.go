@@ -18,22 +18,23 @@ type gameDisperser struct{
 	connections map[int]chan<- PacketOut
 }
 
-//should be a gorouting, but not start new goroutines
+//should be a goroutine, but not start new goroutines
 func runGameController(gameOptions GameOptions, in <-chan PacketIn) {
-	fmt.Println("starting game controller")
+	fmt.Println("starting game controller!")
 
 	controller := gameController{}
+
 	controller.g = gameOptions.buildGame()
+
+	fmt.Println("DELETEME")
+
 	controller.buildPacketMap()
 	controller.out = make(chan PacketOut,50)
 
 	controller.configureAndRunDispersion()
-	for _, player := range gameOptions.players {
-		controller.disperser.connections[player.id] = player.packetOut
-	}
 
 	controller.g.send122ToEveryone(controller.out)
-	controller.g.send127ToFirstAvaliablePlayer(controller.out)
+	//controller.g.send127ToFirstAvaliablePlayer(controller.out)
 
 	for p := range in {
 		controller.respondToSinglePacket(&p)
@@ -50,6 +51,8 @@ func (gc *gameController) configureAndRunDispersion(){
 		gc.disperser.connections[v.connection.id] = v.connection.packetOut
 	}
 
+	fmt.Println("disperser is",gc.disperser.connections)
+
 	//start dispersion
 	go gc.runGameDispersion()
 }
@@ -57,6 +60,8 @@ func (gc *gameController) configureAndRunDispersion(){
 func (gc *gameController) runGameDispersion() {
 	for packet := range gc.out {
 		gc.disperser.mut.Lock()
+
+		if debug {fmt.Println("dispersing packet",packet)}
 
 		for _, id := range packet.targetIds{
 			gc.disperser.connections[id] <- packet

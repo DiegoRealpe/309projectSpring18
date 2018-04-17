@@ -13,7 +13,7 @@ type GameOptions struct {
 type Game struct {
 	numPlayers int
 	connectionIDToPlayerNumberMap map[int]byte
-	players [NUMPLAYERS]*gamePlayer
+	players [NUMPLAYERS]gamePlayer
 }
 
 type gamePlayer struct{
@@ -27,6 +27,7 @@ type gamePlayer struct{
 func (gOpts GameOptions) buildGame() (g Game) {
 	g.numPlayers = gOpts.numPlayers
 	g.connectionIDToPlayerNumberMap = gOpts.connectionIDToPlayerNumberMap
+
 	for i := 0; i < NUMPLAYERS; i++ {
 		g.players[i].connection = gOpts.players[i]
 		g.players[i].isConnected = true
