@@ -17,7 +17,7 @@ var testApp App
 //to get a new token login to facebook and get one from one of our test user
 
 const tok = "EAACqvTZC1964BAL2gZCqzlzJNmvs0XDyFUnhMeGCqUB9afu8yFkmSgI5oLakRJWP8lZBq7z85pYz2SK4StQMZBFYk49cFmMglaBv9tuEQZBFTZCZBAN27RThzSezGOJYOieZCDn60fAKa01aWgdWd1xZCJtZBIlTciqdE8fdVomzTP9QZDZD"
-const tok2 = "EAACqvTZC1964BALisHQ82B9kyBWe6zjmbGKiTELZBA78AGRYKSjuRA4Sypl9KusV7E5ODibTm271Ad1mHki2rxUnVrhzEwDOF0YDTqKXtf8X2yQthBYrkzI6H3oGT4xKpyBOo7rySDZAxwZC6DjBC3hZA2eA8uSzNvYXJbYFHU3fNIrvuZBOZBL"
+const tok2 = "EAACqvTZC1964BAIrQcZAfscdEAebGdE5mWMheieBOObRMcZCAEjOXHCuCEqlttHpj8iZCPEcHqTQ7bfhJc8HWS9fmSrZCevqLwo2Un7wCoIeBx8ZCtpjKsRsC1vd9xoZA5cN3jVa9l1SKZButuOZBBh7M3j5FlfcCHFckEZC5nZBGOxg9xJGNFPCZA5A"
 const tok3 = "EAACqvTZC1964BAGTnB9Iu2Rq5MXxiwMqhJh5V6FoTy0e6Gwh0ZCdjYlt29hhZAYm11mwXYBdGJDnFMDxFr1Sm6oWCQWlUWlyoA09bIj7rQuSYob3QdKqB4zy7lHrexBpecHFbYeLQAZBRX8EOWyugNAfMIVYZBbdQWRWWyrdTbC0vTZCXj8OaT"
 const tok4 = "EAACqvTZC1964BAKjWuwNnziCBBDx5puhvU8yIlJyZBGMaJX6EzwzFb7lSZC4oo7w5O3c85QeFuZBYQn243fMgn9sJ2hNBlTH2ONGKBOXaZCXaESajcLc9U8RKOueNDRz18kCUThjpPzRBZCV1ZC1yISDTCg095lmK3HR7PGvzX6y57eZBuAlxYqX"
 const tok5 = "EAACqvTZC1964BAHQpHTwBk0L9Xhq8tsliKUHVENyGO8tFTohDIVAtFBHGA7i5FVIboF6juuV8mog0JfBT9xZBm8l5zoifUFGC33OdFHKE99EEbQfayX40uUw0WS76ZC63uHQaTNlZAUUkJhZC8Y8yCewPIvMPuTpPPjGzF9cECZCh5kWlacgU1"
@@ -26,7 +26,7 @@ const tok6 = "EAACqvTZC1964BANFWVcg5mZAQRcZCJrfj1uLMz9uyxZA7BdEscEfyvDGU43pEYZCf
 var tokens = []string{tok, tok2, tok3, tok4, tok5, tok6}
 
 var tableCreationQuery = `
-CREATE TABLE Players (
+CREATE TABLE Players1 (
 ID INT PRIMARY KEY,
 Nickname VARCHAR(50) NOT NULL,
 GamesPlayed INT NOT NULL,
@@ -79,7 +79,7 @@ func TestFillUpTable(t *testing.T) {
 		if m["error"] != "" {
 			t.Errorf(m["error"])
 		}
-
+		fmt.Println(m["Nickname"])
 		checkResponseCode(t, http.StatusCreated, response.Code)
 	}
 }

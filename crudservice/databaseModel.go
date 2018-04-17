@@ -28,6 +28,33 @@ type PlayerProfile struct {
 	Error    string `json:"error-message,omitempty"`
 }
 
+const rankTrigger = `
+UPDATE Players AS MainT
+JOIN 
+(SELECT @rownum := @rownum+1 as Rank, ID
+ FROM (  
+		SELECT * 
+		FROM Players
+		ORDER BY Players.GamesWon DESC) AS P2, (
+		SELECT @rownum := 0 
+	   ) r
+) AS Ranked
+ON MainT.ID = Ranked.ID
+SET MainT.RankMostWins = Ranked.Rank;
+
+UPDATE Players AS MainT
+JOIN 
+(SELECT @rownum := @rownum+1 as Rank, ID
+ FROM (  
+		SELECT * 
+		FROM Players
+		ORDER BY Players.GoalsScored DESC) AS P2, (
+		SELECT @rownum := 0 
+	  ) r
+) AS Ranked
+ON MainT.ID = Ranked.ID
+SET MainT.RankMostScored = Ranked.Rank;`
+
 //QueryDeletePlayer Clears Player in database
 func QueryDeletePlayer(db *sql.DB, p *Player) error {
 	result, err := db.Exec(`DELETE FROM Players WHERE ID = ?`, p.ID)
@@ -145,6 +172,11 @@ func QueryUpdatePlayer(db *sql.DB, p *Player) error {
 	if int(i) == 0 {
 		return errors.New("Not Modified")
 	}
+
+	/*_, rankErr := db.Exec(rankTrigger)
+	if rankErr != nil {
+		return errors.New("Ranking Error" + rankErr.Error())
+	}*/
 
 	return nil
 }
