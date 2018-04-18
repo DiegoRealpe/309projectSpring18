@@ -20,6 +20,13 @@ class NewAccountOrLogin: SKScene{
     var logout: SKNode?
     var viewController: UIViewController?
     var logOutLabel: SKLabelNode?
+    
+    var GamesPlayedLabel : SKLabelNode?
+    var GamesWonLabel : SKLabelNode?
+    var GoalsScoredLabel : SKLabelNode?
+    var GoalRankLabel : SKLabelNode?
+    var WinRankLabel : SKLabelNode?
+    
     var isLoggedIn = AccessToken.current != nil
     var loginButton = LoginButton(readPermissions: [ .publicProfile ])
     
@@ -28,6 +35,12 @@ class NewAccountOrLogin: SKScene{
         
         //get scene subnodes
         self.back = self.childNode(withName: "Back Button")
+        self.GamesPlayedLabel = self.childNode(withName: "GamesPlayedLabel") as? SKLabelNode
+        self.GamesWonLabel = self.childNode(withName: "GamesWonLabel") as? SKLabelNode
+        self.GoalsScoredLabel = self.childNode(withName: "GoalsScoredLabel") as? SKLabelNode
+        self.GoalRankLabel = self.childNode(withName: "GoalRankLabel") as? SKLabelNode
+        self.WinRankLabel = self.childNode(withName: "WinRankLabel") as? SKLabelNode
+        
         
         let screenSize:CGRect = UIScreen.main.bounds
         let screenHeight = screenSize.height //real screen height
@@ -78,29 +91,31 @@ class NewAccountOrLogin: SKScene{
         let requestURL = "http://\(CommunicationProperties.crudServiceHost):\(CommunicationProperties.crudServicePort)/player/stats"
         
         let headers: HTTPHeaders = [
-            "FacebookToken": FBToken,
+            "FacebookID": (AccessToken.current?.userId)!,
             ]
         
         print("\n")
         print("\n")
         
-        print("logging in with CRUD Service at URL",requestURL,"\nwith headers : \(headers)")
+        print("Getting stats with CRUD Service at URL",requestURL,"\nwith headers : \(headers)")
         
         Alamofire.request(requestURL , method : .get , headers : headers)
-            .responseString(completionHandler: statsRequestResponse(_:))
+            .responseJSON(completionHandler: statsRequestResponse(_:))
     }
 
-    func statsRequestResponse(_ response : DataResponse<String>)
+    func statsRequestResponse(_ response : DataResponse<Any>)
     {
         
-        print("🍆🍆🍆status code",response.response!.statusCode) //todo handle 404 without it being a fatal error
+        print("Account status code",response.response!.statusCode)
         
-        
+        let result = response.result.value
         if(response.response!.statusCode == 202)
         {
-          //  buildStatsNodes();
+            buildStatsNodes(JSONResponse: result as! NSDictionary);
         }
-        
+    }
+    func buildStatsNodes(JSONResponse: NSDictionary)
+    {
         
     }
     
