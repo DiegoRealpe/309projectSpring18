@@ -290,3 +290,45 @@ func QueryAssertToken(db *sql.DB, AppToken string) (string, error) {
 	}
 	return Nickname, nil
 }
+
+//QueryRankTrigger trigger for score and win rank
+func QueryRankTrigger(db *sql.DB) error {
+
+	var rankTrigger = `
+	UPDATE Players AS MainT
+	JOIN 
+	(SELECT @rownum := @rownum+1 as Rank, ID
+	 FROM (  
+			SELECT * 
+			FROM Players
+			ORDER BY Players.GamesWon DESC) AS P2, (
+			SELECT @rownum := 0 
+		   ) r
+	) AS Ranked
+	ON MainT.ID = Ranked.ID
+	SET MainT.RankMostWins = Ranked.Rank`
+
+	var rankTrigger2 = `
+	UPDATE Players AS MainT
+	JOIN 
+	(SELECT @rownum := @rownum+1 as Rank, ID
+	 FROM (  
+			SELECT * 
+			FROM Players
+			ORDER BY Players.GoalsScored DESC) AS P2, (
+			SELECT @rownum := 0 
+		  ) r
+	) AS Ranked
+	ON MainT.ID = Ranked.ID
+	SET MainT.RankMostScored = Ranked.Rank`
+
+	_, rankErr := db.Exec(rankTrigger)
+	if rankErr != nil {
+		return rankErr
+	}
+	_, rankErr = db.Exec(rankTrigger2)
+	if rankErr != nil {
+		return rankErr
+	}
+	return nil
+}

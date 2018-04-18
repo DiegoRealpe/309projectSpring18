@@ -52,6 +52,14 @@ func (a *App) registerPlayer(w http.ResponseWriter, r *http.Request) {
 		handleDBErrors(w, dberr)
 		return
 	}
+
+	//Updating table to reflect rank
+	rankErr := QueryRankTrigger(a.db)
+	if rankErr != nil {
+		handleDBErrors(w, rankErr)
+		return
+	}
+
 	profile := PlayerProfile{Profile: p, AppToken: apptoken}
 	respondWithJSON(w, http.StatusCreated, profile)
 }
