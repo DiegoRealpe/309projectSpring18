@@ -31,8 +31,7 @@ ID INT PRIMARY KEY,
 Nickname VARCHAR(50) NOT NULL,
 GamesPlayed INT NOT NULL,
 GamesWon INT NOT NULL,
-GoalsScored INT NOT NULL,
-Active INT NOT NULL)`
+GoalsScored INT NOT NULL)`
 
 //Main Testing
 func Testmain(t *testing.M) {
@@ -124,7 +123,6 @@ func TestUpdateUser(t *testing.T) {
 	if pro.Error != "" {
 		t.Errorf(pro.Error)
 	}
-	fmt.Println(pro.AppToken)
 	checkResponseCode(t, http.StatusCreated, response.Code)
 
 	//Get player that was just added
@@ -143,7 +141,6 @@ func TestUpdateUser(t *testing.T) {
 	req.Header.Set("AppSecret", "goingforthat#1bois")
 	response = executeRequest(req)
 	checkResponseCode(t, http.StatusOK, response.Code)
-	fmt.Println("Hey")
 	var m map[string]string
 	json.Unmarshal(response.Body.Bytes(), &m)
 	if m["error"] != "" {
@@ -197,11 +194,6 @@ func TestDeleteUser(t *testing.T) {
 	req.Header.Set("AppUser", "MG_6")
 	req.Header.Set("AppSecret", "goingforthat#1bois")
 	response = executeRequest(req)
-	var m map[string]string
-	json.Unmarshal(response.Body.Bytes(), &m)
-	if m["error"] != "" {
-		t.Errorf(m["error"])
-	}
 	checkResponseCode(t, http.StatusNotFound, response.Code)
 }
 
@@ -327,8 +319,6 @@ func ensureTableExists() {
 }
 
 func clearTable() {
-	testApp.db.Exec("DELETE FROM TokenTable")
-	testApp.db.Exec("DELETE FROM FacebookData")
 	testApp.db.Exec("DELETE FROM Players")
 	testApp.db.Exec("ALTER TABLE Players AUTO_INCREMENT = 1")
 }
