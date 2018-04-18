@@ -28,6 +28,7 @@ class GamePlayerManager {
         self.playerNumber = playerNumber
         self.modelPlayer = SKScene(fileNamed : "Players")?.childNode(withName : "Player Node") as! SKSpriteNode
         self.modelEmojiLabel = SKScene(fileNamed : "Players")?.childNode(withName : "Emoji Label") as! SKLabelNode
+        self.players = Array(repeating: SKSpriteNode(), count: 2)
         
         configurePlayerNodes(playerImport: playerImport)
     }

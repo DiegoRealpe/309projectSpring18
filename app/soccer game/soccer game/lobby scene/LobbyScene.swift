@@ -21,8 +21,8 @@ class LobbyScene: SKScene {
     var playerNumber : Int!
     var packetTypeDict : [UInt8:PacketType] = [:]
     
-    var pm : LobbyPlayerManager?
-    var rm : ReadyManager?
+    var pm : LobbyPlayerManager!
+    var rm : ReadyManager!
     var viewController: UIViewController?
     
     var chatView : ChatView!
@@ -109,6 +109,7 @@ class LobbyScene: SKScene {
         self.packetTypeDict[205] = PacketType(dataSize: 2, handlerFunction: remotePlayerUnreadiedHandler(data:))
         self.packetTypeDict[207] = PacketType(dataSize: 2, handlerFunction: handle207(data:))
         self.packetTypeDict[209] = PacketType(dataSize: 26, handlerFunction: remoteEmojiChanged(data:))
+        self.packetTypeDict[122] = PacketType(dataSize: 1, handlerFunction: movingToGameHandler(data:))
         
         self.spr.packetTypeDict = self.packetTypeDict
     }
@@ -180,4 +181,25 @@ class LobbyScene: SKScene {
         self.pm!.emojiChange(for: player, is: emoji)
     }
     
+    func movingToGameHandler(data : [UInt8]){
+        print("moving to game scene")
+        
+        DispatchQueue.main.sync(execute: self.hideChat)
+        
+        self.moveToScene(.gameScene, dataFunction: makeGameSceneTransitionDisctionary(dict:))
+    }
+    
+    func makeGameSceneTransitionDisctionary(dict: NSMutableDictionary){
+        var playerImport = GameScenePlayerImport(players: [])
+        for i in 0..<2 {
+            let player = self.pm.export(playerNum: i)
+            playerImport.players.append(player)
+        }
+        
+        dict.setValue(playerImport, forKey: UserDataKeys.gameSecnePlayerImport.rawValue)
+        dict.setValue(self.playerNumber, forKey: UserDataKeys.playerNumber.rawValue)
+        dict.setValue(self.mtcp, forKey: UserDataKeys.managedTCPConnection.rawValue)
+        dict.setValue(self.spr, forKey: UserDataKeys.socketPacketResponder.rawValue)
+        
+    }
 }

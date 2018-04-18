@@ -19,8 +19,6 @@ class ClientBallStatePacket : AbstractClientPositionVelocityPacket {
         
         array.append(contentsOf: positionAndVeocityBytes)
         
-        print(array)
-        
         return array
     }
     

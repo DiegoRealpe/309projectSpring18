@@ -33,8 +33,9 @@ class LobbyPlayerManager{
         return players[playerNumber] != nil
     }
     
-    func export() -> PlayerExport {
-        return PlayerExport(players: self.players)
+    func export(playerNum : Int) -> GameScenePlayerImport.Player {
+        let p = players[playerNum]!
+        return GameScenePlayerImport.Player(username: p.username, playerNumber: p.playerNumber, emoji: p.emoji)
     }
     
     func emojiChange(for player: Int, is emoji: String){

@@ -34,7 +34,7 @@ class ChatView: UIView, UITableViewDataSource, UITextFieldDelegate {
     var onEmojiChange: ( (Int,String) -> () )?
     
     var size = 0
-    static let defaultEmoji = "😘"
+    static let defaultEmoji = "🐱"
     
     override init(frame: CGRect) {
         super.init(frame: frame)

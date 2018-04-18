@@ -58,8 +58,6 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         configureCollisions()
         configurePlayerManager()
         
-        self.isHost = self.pm!.playerNumber == 0 //todo make more complex logic
-        
         //give all children of the north bounds(all the bounds) the same physics category
         for child in (northBound?.children)!
         {
@@ -167,6 +165,8 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
             
             //run update action forever
             self.run(makeUpdateAndSendSKAction())
+        }else{
+            print("🐝🐝🐝 game is in practice mode as no ManagedTCP connection was passed into the scene")
         }
         
     }
@@ -316,6 +316,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
                 
                 if let tcp = self.managedTcpConnection {
                     let packet = self.makePlayerStatePacket(playerNumber : playerNum)
+                    print("sending",packet)
                     tcp.sendTCP(packet: packet)
                 }
                 
@@ -348,6 +349,8 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         self.packetTypeDict[121] = PacketType(dataSize: 22, handlerFunction: executePlayerPositionPacket(data:))
         self.packetTypeDict[124] = PacketType(dataSize: 21, handlerFunction: executeBallPositionPacket(data:))
         self.packetTypeDict[126] = PacketType(dataSize: 2, handlerFunction: executePlayerLeftGamePacket(data:))
+        self.packetTypeDict[204] = PacketType(dataSize: 2, handlerFunction: stub(_:))
+        self.packetTypeDict[127] = PacketType(dataSize: 1, handlerFunction: executeHostAssignmentPacket(data:))
     }
     
     func executePlayerPositionPacket(data : [UInt8]){
@@ -359,6 +362,8 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         print("got player position packet with data:",data)
         
         let spsp = ServerPlayerStatePacket(rawData: data)
+        
+        print("player: \(spsp.playerNumber), i am \(pm.playerNumber) x: \(spsp.position.x) y: \(spsp.position.y)")
         
         let player:SKSpriteNode = self.pm!.selectPlayer(playerNum : spsp.playerNumber)
         
@@ -400,8 +405,14 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         self.pm.removePlayerFromGame(playerNumber: Int(data[1]))
     }
     
+    func executeHostAssignmentPacket(data : [UInt8]){
+        self.isHost = true
+        print("got host assignment packet 😎")
+    }
+    
     
     func doKick(){
+        
         let playerPosition = self.pm!.selectPlayer(playerNum: self.pm!.playerNumber).position
         
         let distanceBetweenBallAndPlayer : Float = self.ballNode!.position.distanceTo(playerPosition)
@@ -418,6 +429,10 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     
     func isPractice() -> Bool {
         return self.managedTcpConnection == nil
+    }
+    
+    private func stub(_: [UInt8]) {
+        return
     }
 }
 
