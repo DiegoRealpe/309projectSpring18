@@ -29,7 +29,7 @@ func runGameController(gameOptions GameOptions, in <-chan PacketIn) {
 	controller.configureDisperser()
 
 	controller.g.send122ToEveryone(controller.disperser.send)
-	//controller.g.send127ToFirstAvaliablePlayer(controller.out)
+	controller.g.send127ToFirstAvaliablePlayer(controller.disperser.send)
 
 	for p := range in {
 		controller.respondToSinglePacket(&p)

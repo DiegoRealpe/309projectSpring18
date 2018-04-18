@@ -90,11 +90,12 @@ func (g *Game) respondTo125(in *PacketIn, sendOut func(PacketOut)){
 	fmt.Println("recieved 125 packet...")
 	disconnectingPlayer := g.connectionIDToPlayerNumberMap[in.connectionId]
 
-	fmt.Println("Player", disconnectingPlayer, "has disconnected")
+	fmt.Println("Player", disconnectingPlayer, "has disconnected",)
 	g.players[disconnectingPlayer].connection.disconnect()
 	g.players[disconnectingPlayer].isConnected = false
 	if(g.players[disconnectingPlayer].isHost){
 		g.players[disconnectingPlayer].isHost = false
+		fmt.Println("reassigning host")
 		g.send127ToFirstAvaliablePlayer(sendOut);
 	}
 
@@ -121,16 +122,18 @@ func (g *Game) send127ToFirstAvaliablePlayer(sendOut func(PacketOut)){
 	/*
 		algorithm: assign next host sequentially by iterating through players and choosing first active player
 	 */
-	for _, p := range g.players {
+	 fmt.Print("reassigning hosts!!!!!!")
+	for i, p := range g.players {
 		if(p.isConnected){
 			out := PacketOut{
 				size: 1,
 				data: []byte{127},
 				targetIds: []int{p.connection.id},
 			}
+			fmt.Println("new host is",i)
 
 			sendOut(out)
-			p.isHost = true;
+			g.players[i].isHost = true;
 			break;
 		}
 	}
