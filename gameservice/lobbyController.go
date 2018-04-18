@@ -9,7 +9,6 @@ package main
 
 import (
 	"fmt"
-	"sync"
 )
 
 type LobbyController struct {
@@ -17,15 +16,13 @@ type LobbyController struct {
 
 	mmm *matchMakingModel
 	packetIn chan PacketIn
-	packetOut chan PacketOut
 
 	disperser lobbyDisperser
 
-	packetRouterMap map[byte]func(*PacketIn, chan<- PacketOut)
+	packetRouterMap map[byte]func(*PacketIn,func(PacketOut))
 }
 
 type lobbyDisperser struct{
-	mut sync.Mutex
 	connections map[int]chan<- PacketOut
 }
 
@@ -35,13 +32,11 @@ func startLobby(mmm *matchMakingModel) {
 	lc := LobbyController{}
 	lc.mmm = mmm
 	lc.packetIn = make(chan PacketIn, 50)
-	lc.packetOut = make(chan PacketOut, 50)
 
 	lc.l = lc.makeLobby()
 	lc.buildPacketMap()
 
 	lc.disperser.connections = make(map[int]chan<- PacketOut)
-	go lc.runLobbyDispersion()
 
 	lobbyFull := false
 	for !lobbyFull { //listen for players and packets
@@ -84,31 +79,22 @@ func (lc *LobbyController) addSinglePlayer(newPlayer *waitingPlayer) {
 
 	lc.startDispersingToConnection(newPlayer.connection)
 
-	lc.l.addPlayer(newPlayer,lc.packetOut)
+	lc.l.addPlayer(newPlayer,lc.disperser.send)
 }
 
 func (lc *LobbyController) handleSinglePacket(packet PacketIn){
 	if debug {fmt.Println("lc got a packet", packet.data)}
 
 	packetByte := packet.data[0]
-	lc.packetRouterMap[packetByte](&packet,lc.packetOut)
+
+	//call handler function based on value from map
+	handlerFunction := lc.packetRouterMap[packetByte]
+	handlerFunction(&packet,lc.disperser.send)
 }
 
-func (lc *LobbyController) runLobbyDispersion() {
-	for packet := range lc.packetOut {
-		lc.disperser.mut.Lock()
-
-		for _, id := range packet.targetIds{
-			lc.disperser.connections[id] <- packet
-		}
-		lc.disperser.mut.Unlock()
-	}
-}
 
 func (lc *LobbyController) startDispersingToConnection(connection *playerConnection){
-	lc.disperser.mut.Lock()
 	lc.disperser.connections[connection.id] = connection.packetOut
-	lc.disperser.mut.Unlock()
 }
 
 func (lc *LobbyController) makeLobby() (l Lobby) {
@@ -121,7 +107,7 @@ func (lc *LobbyController) makeLobby() (l Lobby) {
 
 //builds a map of packet types to handler functions
 func (lc *LobbyController) buildPacketMap() {
-	packetMap := map[byte]func(*PacketIn, chan<- PacketOut){}
+	packetMap := map[byte]func(*PacketIn, func(PacketOut)){}
 
 	packetMap[200] = lc.l.respondTo200
 	packetMap[201] = lc.l.respondTo201
@@ -141,7 +127,6 @@ func (lc *LobbyController) startGCFromLobby() {
 		options.players[i] = p.connection
 	}
 
-	close(lc.packetOut) //so dispersion stops and is garbage collected
 	go runGameController(options, lc.packetIn)
 }
 
@@ -155,4 +140,10 @@ func (lc *LobbyController) getConnIDToPlayerNumberMap() map[int]byte {
 
 func (lc *LobbyController) startReadyTimer() bool {
 	return true
+}
+
+func (d *lobbyDisperser) send(packet PacketOut){
+	for _, id := range packet.targetIds{
+		d.connections[id] <- packet
+	}
 }

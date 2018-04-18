@@ -36,7 +36,7 @@ type chatMessage struct{
 }
 
 //non-communication related logic for adding a player to a lobby
-func (l *Lobby) addPlayer(newPlayer *waitingPlayer, out chan<- PacketOut){
+func (l *Lobby) addPlayer(newPlayer *waitingPlayer, sendOut func(PacketOut)){
 	i := l.size
 	l.size += 1
 
@@ -51,7 +51,7 @@ func (l *Lobby) addPlayer(newPlayer *waitingPlayer, out chan<- PacketOut){
 		connection: newPlayer.connection,
 	}
 
-	l.tellOtherPlayersYouJoined(newPlayer,out)
+	l.tellOtherPlayersYouJoined(newPlayer,sendOut)
 }
 
 //send everything to date about a lobby
@@ -81,7 +81,7 @@ func (l *Lobby) sendAllChatMessagePackets(to chan<- PacketOut){
 	}
 }
 
-func (l *Lobby) respondTo202(in *PacketIn, out chan<- PacketOut) {
+func (l *Lobby) respondTo202(in *PacketIn, sendOut func(PacketOut)) {
 	messageIn := ParseBytesTo202(in.data)
 	playerNumber := l.playerNumberForConnectionID(in.connectionId)
 
@@ -107,10 +107,10 @@ func (l *Lobby) respondTo202(in *PacketIn, out chan<- PacketOut) {
 		targetIds: l.allConnectionIdsBut(in.connectionId),
 	}
 
-	out <- packetOut
+	sendOut(packetOut)
 }
 
-func (l *Lobby) respondTo200(in *PacketIn, out chan<- PacketOut){
+func (l *Lobby) respondTo200(in *PacketIn, sendOut func(PacketOut) ){
 	playerNum := l.playerNumberForConnectionID(in.connectionId)
 	if debug {fmt.Println("player",playerNum,"is ready")}
 	l.players[playerNum].ready = true
@@ -121,14 +121,14 @@ func (l *Lobby) respondTo200(in *PacketIn, out chan<- PacketOut){
 		data: packet.toBytes(),
 		targetIds: l.allConnectionIdsBut(in.connectionId),
 	}
-	out <- packetOut
+	sendOut(packetOut)
 
 	if l.areAllPlayersReadyForTheGame() {
 		l.readyToMoveToGameScene = true
 	}
 }
 
-func (l *Lobby) respondTo201(in *PacketIn, out chan<- PacketOut){
+func (l *Lobby) respondTo201(in *PacketIn, sendOut func(PacketOut) ){
 	playerNum := l.playerNumberForConnectionID(in.connectionId)
 	if debug{fmt.Println("player",playerNum,"is unReady")}
 	l.players[playerNum].ready = false
@@ -139,11 +139,11 @@ func (l *Lobby) respondTo201(in *PacketIn, out chan<- PacketOut){
 		data: packet.toBytes(),
 		targetIds: l.allConnectionIdsBut(in.connectionId),
 	}
-	out <- packetOut
+	sendOut(packetOut)
 
 }
 
-func (l *Lobby) respondTo208(in *PacketIn, out chan<- PacketOut){
+func (l *Lobby) respondTo208(in *PacketIn,sendOut func(packetOut PacketOut)){
 	playerNum := l.playerNumberForConnectionID(in.connectionId)
 
 	packetIn := ParseBytesTo208(in.data)
@@ -157,12 +157,13 @@ func (l *Lobby) respondTo208(in *PacketIn, out chan<- PacketOut){
 	}
 
 
-	out <- PacketOut{
+	packetOut := PacketOut{
 		size: 26,
 		data: packet209.toBytes(),
 		targetIds: l.allConnectionIdsBut(in.connectionId),
 	}
 
+	sendOut(packetOut)
 }
 
 func (l *Lobby) sendAllExistingPlayers (to chan<- PacketOut){
@@ -201,17 +202,18 @@ func (l *Lobby) sendAllCurrentEmojis(to chan<- PacketOut){
 	}
 }
 
-func (l *Lobby) tellOtherPlayersYouJoined(player *waitingPlayer, out chan<- PacketOut){
+func (l *Lobby) tellOtherPlayersYouJoined(player *waitingPlayer, sendOut func(PacketOut)){
 	packet := packet206{
 		playerNumber: l.playerNumberForConnectionID(player.connection.id),
 		username: "temp",
 	}
 
-	out <- PacketOut{
+	packetOut := PacketOut{
 		size: 82,
 		data: packet.toBytes(),
 		targetIds: l.allConnectionIdsBut(player.connection.id),
 	}
+	sendOut(packetOut)
 }
 
 func (l *Lobby) allConnectionIdsBut(id int) []int{
@@ -263,7 +265,7 @@ func (l *Lobby) sendExistingPlayersReady(out chan PacketOut) {
 	out <- packetOut
 }
 
-func (l *Lobby) respondTo125(in *PacketIn, out chan<- PacketOut){
+func (l *Lobby) respondTo125(in *PacketIn, sendOut func(PacketOut) ){
 	fmt.Println("125, AHHHHHHHHHH")
 
 	packetOut := PacketOut{
@@ -271,9 +273,10 @@ func (l *Lobby) respondTo125(in *PacketIn, out chan<- PacketOut){
 		data: []byte{207,byte(in.connectionId)},
 		targetIds: l.allConnectionIdsBut(in.connectionId),
 	}
-	out <-  packetOut
+	sendOut(packetOut)
 
-	time.Sleep(time.Second)//so that the message actually gets sent, i don't care enough to handle this properly
+	time.Sleep(time.Second)//so that the message actually gets sent, i don't care enough to handle this properly,
+	// because there aren't really any bad repercussions unless the server is running extremely slowly
 
 	for i := 0 ; i < l.size; i += 1 {
 		l.players[i].connection.disconnect()
