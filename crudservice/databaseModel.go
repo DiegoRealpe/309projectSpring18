@@ -273,22 +273,21 @@ func QueryGetToken(db *sql.DB, ID string) (string, error) {
 
 //QueryAssertToken returns the nickname of the given apptoken or 404
 func QueryAssertToken(db *sql.DB, AppToken string) (string, error) {
-	row, err := db.Query(`SELECT Nickname, expiration FROM TokenTable 
+	row, err := db.Query(`SELECT ID, expiration FROM TokenTable 
 	JOIN Players ON TokenTable.playerID = Players.ID WHERE applicationToken = ?`, AppToken)
 	if err != nil {
 		return "", err
 	}
-	var Nickname string
-	var exp int64
+	var ID, exp int64
 	row.Next()
-	err = row.Scan(&Nickname, &exp)
+	err = row.Scan(&ID, &exp)
 	if err != nil {
 		return "", errors.New("Player Not Found")
 	}
 	if exp < time.Now().Unix() {
 		return "", errors.New("Application Token Expired")
 	}
-	return Nickname, nil
+	return strconv.Itoa(int(ID)), nil
 }
 
 //QueryRankTrigger trigger for score and win rank

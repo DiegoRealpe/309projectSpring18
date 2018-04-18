@@ -39,6 +39,13 @@ func (a *App) createPlayer(w http.ResponseWriter, r *http.Request) {
 	if dberr != nil {
 		handleDBErrors(w, dberr)
 	}
+	//Updating table to reflect rank
+	rankErr := QueryRankTrigger(a.db)
+	if rankErr != nil {
+		handleDBErrors(w, rankErr)
+		return
+	}
+
 	respondWithJSON(w, http.StatusCreated, p)
 }
 
@@ -90,6 +97,13 @@ func (a *App) deletePlayer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//Updating table to reflect rank
+	rankErr := QueryRankTrigger(a.db)
+	if rankErr != nil {
+		handleDBErrors(w, rankErr)
+		return
+	}
+
 	respondWithJSON(w, http.StatusAccepted, nil)
 }
 
@@ -121,6 +135,13 @@ func (a *App) updatePlayer(w http.ResponseWriter, r *http.Request) {
 	dberr := QueryUpdatePlayer(a.db, &p)
 	if dberr != nil {
 		handleDBErrors(w, errors.New("Update Error"))
+		return
+	}
+
+	//Updating table to reflect rank
+	rankErr := QueryRankTrigger(a.db)
+	if rankErr != nil {
+		handleDBErrors(w, rankErr)
 		return
 	}
 
