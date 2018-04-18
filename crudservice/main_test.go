@@ -74,12 +74,12 @@ func TestFillUpTable(t *testing.T) {
 		req.Header.Set("FacebookToken", tokenAt)
 		response := executeRequest(req)
 
-		var m map[string]string
+		var m PlayerProfile
 		json.Unmarshal(response.Body.Bytes(), &m)
-		if m["error"] != "" {
-			t.Errorf(m["error"])
+		if m.Error != "" {
+			t.Errorf(m.Error)
 		}
-		fmt.Println(m["Nickname"])
+		fmt.Println(m.Profile.Nickname)
 		checkResponseCode(t, http.StatusCreated, response.Code)
 	}
 }
@@ -118,6 +118,13 @@ func TestUpdateUser(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
 	req.Header.Set("FacebookToken", tok)
 	response := executeRequest(req)
+
+	var pro PlayerProfile
+	json.Unmarshal(response.Body.Bytes(), &pro)
+	if pro.Error != "" {
+		t.Errorf(pro.Error)
+	}
+	fmt.Println(pro.AppToken)
 	checkResponseCode(t, http.StatusCreated, response.Code)
 
 	//Get player that was just added
@@ -136,6 +143,13 @@ func TestUpdateUser(t *testing.T) {
 	req.Header.Set("AppSecret", "goingforthat#1bois")
 	response = executeRequest(req)
 	checkResponseCode(t, http.StatusOK, response.Code)
+	fmt.Println("Hey")
+	var m map[string]string
+	json.Unmarshal(response.Body.Bytes(), &m)
+	if m["error"] != "" {
+		t.Errorf(m["error"])
+	}
+
 	//Modifying updated object
 	jsonPlayer.Nickname = "newname"
 	jsonPlayer.GamesPlayed = "21"
@@ -148,10 +162,10 @@ func TestUpdateUser(t *testing.T) {
 		t.Errorf("Expected the id to remain the same (%s). Got %s", jsonPlayer.ID, jsonPlayerR.ID)
 	}
 	if jsonPlayer.GamesPlayed != jsonPlayerR.GamesPlayed {
-		t.Errorf("Expected the name to change from '%v' to '%v'. Got '%v'", jsonPlayer.GamesPlayed, "21", jsonPlayerR.GamesPlayed)
+		t.Errorf("Expected the played games to change from '%v' to '%v'. Got '%v'", jsonPlayer.GamesPlayed, "21", jsonPlayerR.GamesPlayed)
 	}
 	if jsonPlayer.Nickname != jsonPlayerR.Nickname {
-		t.Errorf("Expected the age to change from '%v' to '%v'. Got '%v'", jsonPlayer.Nickname, "newname", jsonPlayerR.Nickname)
+		t.Errorf("Expected the name to change from '%v' to '%v'. Got '%v'", jsonPlayer.Nickname, "newname", jsonPlayerR.Nickname)
 	}
 }
 
@@ -293,8 +307,8 @@ func TestTokenQuery(t *testing.T) {
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusCreated, response.Code)
 	s, err := QueryAssertToken(testApp.db, "486074")
-	if s != "dumdum1" {
-		t.Errorf("returning nickname expected to be 'dumdum1'. Got '%s'", s)
+	if s != "1" {
+		t.Errorf("returning ID expected to be '1'. Got '%s'", s)
 	}
 	if err != nil {
 		t.Errorf(err.Error())

@@ -83,7 +83,7 @@ func (a *App) updatePlayer(w http.ResponseWriter, r *http.Request) {
 	token := vars["AppToken"]
 	id, assertErr := QueryAssertToken(a.db, token)
 	if assertErr != nil {
-		handleDBErrors(w, errors.New("Invalid User Token"))
+		handleDBErrors(w, assertErr) //errors.New("Invalid User Token"))
 		return
 	}
 
@@ -109,8 +109,9 @@ func (a *App) updatePlayer(w http.ResponseWriter, r *http.Request) {
 		handleDBErrors(w, rankErr)
 		return
 	}
+	pro := p
 
 	//Returning modified object
-	respondWithJSON(w, http.StatusOK, p)
+	respondWithJSON(w, http.StatusOK, pro)
 
 }

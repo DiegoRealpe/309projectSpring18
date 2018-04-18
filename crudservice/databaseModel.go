@@ -105,7 +105,7 @@ func QuerySearchPlayer(db *sql.DB, p *Player) error {
 //MODIFIES Player object to overrwrite
 func QueryUpdatePlayer(db *sql.DB, p *Player) error {
 	if p.ID == "" {
-		return errors.New("Invalid user ID")
+		return errors.New("Invalid User ID")
 	}
 	var mods []string //Declaring slice of values to change
 
@@ -246,6 +246,9 @@ func QueryGetToken(db *sql.DB, ID string) (string, error) {
 
 //QueryAssertToken returns the nickname of the given apptoken or 404
 func QueryAssertToken(db *sql.DB, AppToken string) (string, error) {
+	if AppToken == "" {
+		return "", errors.New("Empty AppToken")
+	}
 	row, err := db.Query(`SELECT ID, expiration FROM TokenTable 
 	JOIN Players ON TokenTable.playerID = Players.ID WHERE applicationToken = ?`, AppToken)
 	if err != nil {
@@ -258,7 +261,7 @@ func QueryAssertToken(db *sql.DB, AppToken string) (string, error) {
 		return "", errors.New("Player Not Found")
 	}
 	if exp < time.Now().Unix() {
-		return "", errors.New("Application Token Expired")
+		return "", errors.New("Application Token Expired" + err.Error())
 	}
 	return strconv.Itoa(int(ID)), nil
 }
