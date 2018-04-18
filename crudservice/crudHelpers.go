@@ -71,7 +71,7 @@ func handleDBErrors(w http.ResponseWriter, dberr error) {
 	case errors.New("Invalid user ID"):
 		respondWithError(w, http.StatusBadRequest, dberr.Error())
 	case errors.New("Invalid User Token"):
-		respondWithError(w, http.StatusBadRequest, dberr.Error())
+		respondWithError(w, http.StatusNotFound, dberr.Error())
 	case sql.ErrNoRows:
 		respondWithError(w, http.StatusNotFound, dberr.Error())
 	case errors.New("Player Not Found"):
@@ -79,7 +79,7 @@ func handleDBErrors(w http.ResponseWriter, dberr error) {
 	case errors.New("Application Token Expired"):
 		respondWithError(w, http.StatusUnauthorized, dberr.Error())
 	default:
-		respondWithError(w, http.StatusBadRequest, "idk "+dberr.Error()+" lol")
+		respondWithError(w, http.StatusBadRequest, dberr.Error())
 	}
 	return
 }

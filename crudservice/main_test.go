@@ -51,14 +51,14 @@ func TestGetNonExistentUser(t *testing.T) {
 	testApp.Initialize()
 
 	clearTable()
-	req, _ := http.NewRequest("GET", "/player/45", nil)
+	req, _ := http.NewRequest("GET", "/player/486074", nil)
 	req.Header.Set("AppUser", "MG_6")
 	req.Header.Set("AppSecret", "goingforthat#1bois")
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusNotFound, response.Code)
 	var m map[string]string
 	json.Unmarshal(response.Body.Bytes(), &m)
-	if m["error"] != "" {
+	if m["error"] != "Invalid User Token" {
 		t.Errorf("Expected the 'error' key of the response to be set to 'User not found'. Got '%s'", m["error"])
 	}
 }
@@ -115,7 +115,7 @@ func TestGetUser(t *testing.T) {
 
 	clearTable()
 	addUsers(1)
-	req, _ := http.NewRequest("GET", "/player/1", nil)
+	req, _ := http.NewRequest("GET", "/player/486074", nil)
 	req.Header.Set("AppUser", "MG_6")
 	req.Header.Set("AppSecret", "goingforthat#1bois")
 	response := executeRequest(req)
@@ -136,7 +136,7 @@ func TestUpdateUser(t *testing.T) {
 	addUsers(1)
 
 	//Get player that was just added
-	req, _ := http.NewRequest("GET", "/player/1", nil)
+	req, _ := http.NewRequest("GET", "/player/486074", nil)
 	req.Header.Set("AppUser", "MG_6")
 	req.Header.Set("AppSecret", "goingforthat#1bois")
 	response := executeRequest(req)
@@ -146,7 +146,7 @@ func TestUpdateUser(t *testing.T) {
 
 	//Update Player
 	payload := []byte(`{"Nickname":"newname","GamesPlayed":"21"}`)
-	req, _ = http.NewRequest("PUT", "/player/1", bytes.NewBuffer(payload))
+	req, _ = http.NewRequest("PUT", "/player/486074", bytes.NewBuffer(payload))
 	req.Header.Set("AppUser", "MG_6")
 	req.Header.Set("AppSecret", "goingforthat#1bois")
 	response = executeRequest(req)
@@ -177,19 +177,19 @@ func TestDeleteUser(t *testing.T) {
 	clearTable()
 	addUsers(1)
 
-	req, _ := http.NewRequest("GET", "/player/1", nil)
+	req, _ := http.NewRequest("GET", "/player/486074", nil)
 	req.Header.Set("AppUser", "MG_6")
 	req.Header.Set("AppSecret", "goingforthat#1bois")
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusOK, response.Code)
 
-	req, _ = http.NewRequest("DELETE", "/player/1", nil)
+	req, _ = http.NewRequest("DELETE", "/player/486074", nil)
 	req.Header.Set("AppUser", "MG_6")
 	req.Header.Set("AppSecret", "goingforthat#1bois")
 	response = executeRequest(req)
 	checkResponseCode(t, http.StatusAccepted, response.Code)
 
-	req, _ = http.NewRequest("GET", "/player/1", nil)
+	req, _ = http.NewRequest("GET", "/player/486074", nil)
 	req.Header.Set("AppUser", "MG_6")
 	req.Header.Set("AppSecret", "goingforthat#1bois")
 	response = executeRequest(req)
@@ -302,7 +302,6 @@ func TestTokenQuery(t *testing.T) {
 	req.Header.Set("FacebookToken", tok)
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusCreated, response.Code)
-
 	s, err := QueryAssertToken(testApp.db, "486074")
 	if s != "dumdum1" {
 		t.Errorf("returning nickname expected to be 'dumdum1'. Got '%s'", s)
