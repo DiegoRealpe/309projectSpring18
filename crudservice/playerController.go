@@ -58,15 +58,16 @@ func (a *App) getPlayer(w http.ResponseWriter, r *http.Request) {
 	}
 	//Obtaining one value, ID from mux parameters to create player
 	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["ID"])
-	if err != nil {
-		handleDBErrors(w, errors.New("Invalid user ID"))
+	token := vars["AppToken"]
+	id, assertErr := QueryAssertToken(a.db, token)
+	if assertErr != nil {
+		handleDBErrors(w, errors.New("Invalid User Token"))
 		return
 	}
-	p := Player{ID: strconv.Itoa(id)}
+	p := Player{ID: id}
 
 	//Executing search query
-	err = QuerySearchPlayer(a.db, &p)
+	err := QuerySearchPlayer(a.db, &p)
 	if err != nil {
 		handleDBErrors(w, err)
 	}
