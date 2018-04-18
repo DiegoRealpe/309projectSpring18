@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	"strconv"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
@@ -85,12 +84,13 @@ func (a *App) deletePlayer(w http.ResponseWriter, r *http.Request) {
 
 	//Obtaining ID from mux variables
 	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["ID"])
-	if err != nil || id == 0 {
-		handleDBErrors(w, errors.New("Invalid user ID"))
+	token := vars["AppToken"]
+	id, assertErr := QueryAssertToken(a.db, token)
+	if assertErr != nil {
+		handleDBErrors(w, errors.New("Invalid User Token"))
 		return
 	}
-	p := Player{ID: strconv.Itoa(id)}
+	p := Player{ID: id}
 
 	//Executing delete query model
 	if err := QueryDeletePlayer(a.db, &p); err != nil {
@@ -117,9 +117,10 @@ func (a *App) updatePlayer(w http.ResponseWriter, r *http.Request) {
 	}
 	//Getting ID from mux parameter
 	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["ID"])
-	if err != nil || id == 0 {
-		respondWithError(w, http.StatusBadRequest, "Invalid User ID")
+	token := vars["AppToken"]
+	id, assertErr := QueryAssertToken(a.db, token)
+	if assertErr != nil {
+		handleDBErrors(w, errors.New("Invalid User Token"))
 		return
 	}
 
@@ -130,7 +131,7 @@ func (a *App) updatePlayer(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
-	p.ID = strconv.Itoa(id)
+	p.ID = id
 
 	//Executing Query model
 	dberr := QueryUpdatePlayer(a.db, &p)
