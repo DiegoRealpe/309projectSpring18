@@ -50,8 +50,9 @@ class NewAccountOrLogin: SKScene{
      
         
         loginButton.center = newCenter//view.center
-        
         view.addSubview(loginButton)
+        
+        sendCRUDServiceStatsRequest(FBToken: AccessToken.current!.userId!)
         
     }
     
@@ -86,7 +87,8 @@ class NewAccountOrLogin: SKScene{
         }
     }
     
-    func sendCRUDServiceStatsRequest(FBToken : String) {
+    func sendCRUDServiceStatsRequest(FBToken : String)
+    {
         
         let requestURL = "http://\(CommunicationProperties.crudServiceHost):\(CommunicationProperties.crudServicePort)/player/stats"
         
@@ -99,24 +101,30 @@ class NewAccountOrLogin: SKScene{
         
         print("Getting stats with CRUD Service at URL",requestURL,"\nwith headers : \(headers)")
         
-        Alamofire.request(requestURL , method : .get , headers : headers)
-            .responseJSON(completionHandler: statsRequestResponse(_:))
+        //.responseJSON(completionHandler: statsRequestResponse(_:))
+        Alamofire.request(requestURL , method : .get , headers : headers).responseJSON
+        {
+            response in switch response.result
+        {
+            case .success(let JSON):
+                print("Success with JSON: \(JSON)")
+                
+                let response = JSON as! NSDictionary
+                
+                
+                self.buildStatsNodes(JSONResponse: response)
+                
+            case .failure(let error):
+                print("Request failed with error: \(error)")
+                }
+        }
+        
     }
 
-    func statsRequestResponse(_ response : DataResponse<Any>)
-    {
-        
-        print("Account status code",response.response!.statusCode)
-        
-        let result = response.result.value
-        if(response.response!.statusCode == 202)
-        {
-            buildStatsNodes(JSONResponse: result as! NSDictionary);
-        }
-    }
     func buildStatsNodes(JSONResponse: NSDictionary)
     {
-        
+        print(JSONResponse);
+       
     }
     
 }
