@@ -62,21 +62,18 @@ func verifyAccess(r *http.Request) error {
 }
 
 func handleDBErrors(w http.ResponseWriter, dberr error) {
-	switch dberr {
 
-	case errors.New("Not Modified"):
+	switch dberr.Error() {
+
+	case "Not Modified":
 		respondWithError(w, http.StatusNotModified, dberr.Error())
-	case errors.New("Create Fail"):
+	case "Create Fail":
 		respondWithError(w, http.StatusNotImplemented, dberr.Error())
-	case errors.New("Invalid user ID"):
-		respondWithError(w, http.StatusBadRequest, dberr.Error())
-	case errors.New("Invalid User Token"):
+	case sql.ErrNoRows.Error():
 		respondWithError(w, http.StatusNotFound, dberr.Error())
-	case sql.ErrNoRows:
+	case "Player Not Found":
 		respondWithError(w, http.StatusNotFound, dberr.Error())
-	case errors.New("Player Not Found"):
-		respondWithError(w, http.StatusNotFound, dberr.Error())
-	case errors.New("Application Token Expired"):
+	case "Application Token Expired":
 		respondWithError(w, http.StatusUnauthorized, dberr.Error())
 	default:
 		respondWithError(w, http.StatusBadRequest, dberr.Error())

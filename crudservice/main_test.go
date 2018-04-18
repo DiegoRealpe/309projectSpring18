@@ -58,7 +58,7 @@ func TestGetNonExistentUser(t *testing.T) {
 	checkResponseCode(t, http.StatusNotFound, response.Code)
 	var m map[string]string
 	json.Unmarshal(response.Body.Bytes(), &m)
-	if m["error"] != "Invalid User Token" {
+	if m["error"] != "Player Not Found" {
 		t.Errorf("Expected the 'error' key of the response to be set to 'User not found'. Got '%s'", m["error"])
 	}
 }
@@ -114,11 +114,16 @@ func TestGetUser(t *testing.T) {
 	testApp.Initialize()
 
 	clearTable()
-	addUsers(1)
-	req, _ := http.NewRequest("GET", "/player/486074", nil)
+	payload := []byte(`{"Nickname":"dumdum1"}`)
+	req, _ := http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
+	req.Header.Set("FacebookToken", tok)
+	response := executeRequest(req)
+	checkResponseCode(t, http.StatusCreated, response.Code)
+
+	req, _ = http.NewRequest("GET", "/player/486074", nil)
 	req.Header.Set("AppUser", "MG_6")
 	req.Header.Set("AppSecret", "goingforthat#1bois")
-	response := executeRequest(req)
+	response = executeRequest(req)
 	var m map[string]string
 	json.Unmarshal(response.Body.Bytes(), &m)
 	if m["error"] != "" {

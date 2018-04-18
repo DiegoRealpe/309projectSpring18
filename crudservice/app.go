@@ -46,7 +46,6 @@ func (a *App) initializeRoutes() {
 	a.router.HandleFunc("/internal/checkApplicationToken", a.checkToken).Methods("GET")
 	//crud methods
 	a.router.HandleFunc("/player/{AppToken}", a.getPlayer).Methods("GET")
-	a.router.HandleFunc("/player", a.createPlayer).Methods("POST")
 	a.router.HandleFunc("/player/{AppToken}", a.deletePlayer).Methods("DELETE")
 	a.router.HandleFunc("/player/{ID}", a.updatePlayer).Methods("PUT")
 }

@@ -11,43 +11,6 @@ import (
 
 /*********CRUD Routes*********/
 
-func (a *App) createPlayer(w http.ResponseWriter, r *http.Request) {
-
-	//Veriy if the game service is accessing
-	if securityErr := verifyAccess(r); securityErr != nil {
-		respondWithError(w, http.StatusUnauthorized, securityErr.Error())
-		return
-	}
-	//Obtaining specifications through json body
-	var p Player
-	decoder := json.NewDecoder(r.Body) //Passing credentials through http request body
-	if err := decoder.Decode(&p); err != nil {
-		respondWithError(w, http.StatusBadRequest, "Invalid request body")
-		return
-	}
-	defer r.Body.Close()
-
-	nickLength := len(p.Nickname)
-	if nickLength > 15 || nickLength < 1 {
-		respondWithError(w, http.StatusNotImplemented, "Nickname Length Error")
-		return
-	}
-
-	//Executing Create model
-	dberr := QueryCreatePlayer(a.db, &p)
-	if dberr != nil {
-		handleDBErrors(w, dberr)
-	}
-	//Updating table to reflect rank
-	rankErr := QueryRankTrigger(a.db)
-	if rankErr != nil {
-		handleDBErrors(w, rankErr)
-		return
-	}
-
-	respondWithJSON(w, http.StatusCreated, p)
-}
-
 func (a *App) getPlayer(w http.ResponseWriter, r *http.Request) {
 
 	//Veriy if the game service is accessing
@@ -60,7 +23,7 @@ func (a *App) getPlayer(w http.ResponseWriter, r *http.Request) {
 	token := vars["AppToken"]
 	id, assertErr := QueryAssertToken(a.db, token)
 	if assertErr != nil {
-		handleDBErrors(w, errors.New("Invalid User Token"))
+		handleDBErrors(w, assertErr)
 		return
 	}
 	p := Player{ID: id}
