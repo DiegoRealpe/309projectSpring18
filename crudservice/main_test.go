@@ -84,31 +84,6 @@ func TestFillUpTable(t *testing.T) {
 	}
 }
 
-func TestCreateUser(t *testing.T) {
-	testApp = App{}
-	testApp.Initialize()
-
-	clearTable()
-	payload := []byte(`{"Nickname":"Knuckles"}`)
-	req, _ := http.NewRequest("POST", "/player", bytes.NewBuffer(payload))
-	req.Header.Set("AppUser", "MG_6")
-	req.Header.Set("AppSecret", "goingforthat#1bois")
-	response := executeRequest(req)
-	checkResponseCode(t, http.StatusCreated, response.Code)
-	var jsonPlayer Player
-	json.Unmarshal(response.Body.Bytes(), &jsonPlayer)
-
-	if jsonPlayer.Nickname != "Knuckles" {
-		t.Errorf("Expected user name to be 'Knuckles'. Got '%v', this user doesn't know de wey", jsonPlayer.Nickname)
-	}
-	if jsonPlayer.GamesPlayed != "0" {
-		t.Errorf("Expected games won in new user to be to be '0'. Got '%v'", jsonPlayer.GamesPlayed)
-	}
-	if jsonPlayer.GoalsScored != "0" {
-		t.Errorf("Expected goals scored to be '0'. Got '%v'", jsonPlayer.GoalsScored)
-	}
-}
-
 func TestGetUser(t *testing.T) {
 	testApp = App{}
 	testApp.Initialize()
@@ -138,19 +113,24 @@ func TestUpdateUser(t *testing.T) {
 	testApp = App{}
 	testApp.Initialize()
 	clearTable()
-	addUsers(1)
+
+	payload := []byte(`{"Nickname":"User 1"}`)
+	req, _ := http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
+	req.Header.Set("FacebookToken", tok)
+	response := executeRequest(req)
+	checkResponseCode(t, http.StatusCreated, response.Code)
 
 	//Get player that was just added
-	req, _ := http.NewRequest("GET", "/player/486074", nil)
+	req, _ = http.NewRequest("GET", "/player/486074", nil)
 	req.Header.Set("AppUser", "MG_6")
 	req.Header.Set("AppSecret", "goingforthat#1bois")
-	response := executeRequest(req)
+	response = executeRequest(req)
 	//Unmarshal the result
 	var jsonPlayer Player
 	json.Unmarshal(response.Body.Bytes(), &jsonPlayer)
 
 	//Update Player
-	payload := []byte(`{"Nickname":"newname","GamesPlayed":"21"}`)
+	payload = []byte(`{"Nickname":"newname","GamesPlayed":"21"}`)
 	req, _ = http.NewRequest("PUT", "/player/486074", bytes.NewBuffer(payload))
 	req.Header.Set("AppUser", "MG_6")
 	req.Header.Set("AppSecret", "goingforthat#1bois")
@@ -180,12 +160,17 @@ func TestDeleteUser(t *testing.T) {
 	testApp.Initialize()
 
 	clearTable()
-	addUsers(1)
 
-	req, _ := http.NewRequest("GET", "/player/486074", nil)
+	payload := []byte(`{"Nickname":"User 1"}`)
+	req, _ := http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
+	req.Header.Set("FacebookToken", tok)
+	response := executeRequest(req)
+	checkResponseCode(t, http.StatusCreated, response.Code)
+
+	req, _ = http.NewRequest("GET", "/player/486074", nil)
 	req.Header.Set("AppUser", "MG_6")
 	req.Header.Set("AppSecret", "goingforthat#1bois")
-	response := executeRequest(req)
+	response = executeRequest(req)
 	checkResponseCode(t, http.StatusOK, response.Code)
 
 	req, _ = http.NewRequest("DELETE", "/player/486074", nil)
@@ -320,16 +305,6 @@ func TestFBApiAccess(t *testing.T) {
 }
 
 /*********Test Helpers*********/
-
-func addUsers(count int) {
-	if count < 1 {
-		count = 1
-	}
-	for i := 0; i < count; i++ {
-		statement := fmt.Sprintf("INSERT INTO Players(Nickname, GamesPlayed, GamesWon, GoalsScored, RankMostWins, RankMostScored) VALUES('%s', %d, 0,0,0,0)", ("User " + strconv.Itoa(i+1)), ((i + 1) * 10))
-		testApp.db.Exec(statement)
-	}
-}
 
 func ensureTableExists() {
 	if _, err := testApp.db.Exec(tableCreationQuery); err != nil {
