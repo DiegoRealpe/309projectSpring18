@@ -69,26 +69,6 @@ func (mmm *matchMakingModel) connectionIdHasDisconnected(id int) bool{
 	return existed
 }
 
-//builds a single channel which sends to all clients
-func startPacketOutDispersionWithPlayers(players []waitingPlayer) chan<- PacketOut {
-
-	idDispersionMap := makeIDDispersionMap(players)
-
-	toDisperse := make(chan PacketOut, 50)
-	go listenAndDispersePackets(idDispersionMap, toDisperse)
-
-	return toDisperse
-}
-
-func makeIDDispersionMap(players []waitingPlayer) map[int]chan<- PacketOut {
-	m := make(map[int]chan<- PacketOut)
-
-	for _, val := range players {
-		m[val.connection.id] = val.connection.packetOut
-	}
-
-	return m
-}
 
 func (mmm *matchMakingModel) respondTo125(in *PacketIn) {
 	fmt.Println("recieved 125 packet...")

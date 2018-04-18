@@ -17,13 +17,9 @@ type LobbyController struct {
 	mmm *matchMakingModel
 	packetIn chan PacketIn
 
-	disperser lobbyDisperser
+	disperser packetDisperser
 
 	packetRouterMap map[byte]func(*PacketIn,func(PacketOut))
-}
-
-type lobbyDisperser struct{
-	connections map[int]chan<- PacketOut
 }
 
 func startLobby(mmm *matchMakingModel) {
@@ -140,10 +136,4 @@ func (lc *LobbyController) getConnIDToPlayerNumberMap() map[int]byte {
 
 func (lc *LobbyController) startReadyTimer() bool {
 	return true
-}
-
-func (d *lobbyDisperser) send(packet PacketOut){
-	for _, id := range packet.targetIds{
-		d.connections[id] <- packet
-	}
 }

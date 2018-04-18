@@ -2,19 +2,17 @@ package main
 
 import (
 	"fmt"
-	"sync")
+	)
 
 type gameController struct {
-	out             chan PacketOut
 	g               Game
 
 	disperser gameDisperser
 
-	packetRouterMap map[byte]func(*PacketIn, chan<- PacketOut)
+	packetRouterMap map[byte]func(*PacketIn, func(PacketOut))
 }
 
 type gameDisperser struct{
-	mut sync.Mutex
 	connections map[int]chan<- PacketOut
 }
 
@@ -26,14 +24,11 @@ func runGameController(gameOptions GameOptions, in <-chan PacketIn) {
 
 	controller.g = gameOptions.buildGame()
 
-	fmt.Println("DELETEME")
-
 	controller.buildPacketMap()
-	controller.out = make(chan PacketOut,50)
 
-	controller.configureAndRunDispersion()
+	controller.configureDisperser()
 
-	controller.g.send122ToEveryone(controller.out)
+	controller.g.send122ToEveryone(controller.disperser.send)
 	//controller.g.send127ToFirstAvaliablePlayer(controller.out)
 
 	for p := range in {
@@ -43,30 +38,12 @@ func runGameController(gameOptions GameOptions, in <-chan PacketIn) {
 	}
 }
 
-func (gc *gameController) configureAndRunDispersion(){
+func (gc *gameController) configureDisperser(){
 	gc.disperser.connections = make(map[int]chan<- PacketOut)
 
 	//populate map to disperse
 	for _, v := range gc.g.players {
 		gc.disperser.connections[v.connection.id] = v.connection.packetOut
-	}
-
-	fmt.Println("disperser is",gc.disperser.connections)
-
-	//start dispersion
-	go gc.runGameDispersion()
-}
-
-func (gc *gameController) runGameDispersion() {
-	for packet := range gc.out {
-		gc.disperser.mut.Lock()
-
-		if debug {fmt.Println("dispersing packet",packet)}
-
-		for _, id := range packet.targetIds{
-			gc.disperser.connections[id] <- packet
-		}
-		gc.disperser.mut.Unlock()
 	}
 }
 
@@ -78,7 +55,7 @@ func (controller *gameController) respondToSinglePacket(in *PacketIn) {
 
 //builds a map of packet types to handler functions
 func (controller *gameController) buildPacketMap() {
-	packetMap := map[byte]func(*PacketIn, chan<- PacketOut){}
+	packetMap := map[byte]func(*PacketIn, func(PacketOut) ){}
 
 	packetMap[120] = controller.g.respondTo120
 	packetMap[123] = controller.g.respondTo123
@@ -95,7 +72,14 @@ func (controller *gameController) callHandlerFor(packetType byte, in *PacketIn) 
 	if handlerFunc == nil {
 		fmt.Println("ERROR : Packet did not have recognized type. type was", packetType)
 	} else {
-		handlerFunc(in, controller.out)
+		handlerFunc(in, controller.disperser.send)
 	}
 }
-//autolayout
+
+func (d gameDisperser) send(packet PacketOut){
+	if debug {fmt.Println("dispersing packet",packet)}
+
+	for _, id := range packet.targetIds{
+		d.connections[id] <- packet
+	}
+}

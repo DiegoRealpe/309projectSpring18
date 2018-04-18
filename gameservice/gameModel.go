@@ -37,7 +37,7 @@ func (gOpts GameOptions) buildGame() (g Game) {
 	return
 }
 
-func (g *Game) respondTo120(in *PacketIn, out chan<- PacketOut) {
+func (g *Game) respondTo120(in *PacketIn, sendOut func(PacketOut) ) {
 	if debug {fmt.Println("recieved 120 packet")}
 
 	playerNumber := g.connectionIDToPlayerNumberMap[in.connectionId]
@@ -60,10 +60,10 @@ func (g *Game) respondTo120(in *PacketIn, out chan<- PacketOut) {
 		targetIds: g.allConnectionIDsBut(in.connectionId),
 	}
 
-	out <- packetOut
+	sendOut(packetOut)
 }
 
-func (g *Game) respondTo123(in *PacketIn, out chan<- PacketOut) {
+func (g *Game) respondTo123(in *PacketIn, sendOut func(PacketOut)) {
 	if debug {fmt.Println("recieved 123 packet")}
 
 
@@ -83,10 +83,10 @@ func (g *Game) respondTo123(in *PacketIn, out chan<- PacketOut) {
 		targetIds: g.allConnectionIDsBut(in.connectionId),
 	}
 
-	out <- packetOut
+	sendOut(packetOut)
 }
 
-func (g *Game) respondTo125(in *PacketIn, out chan<- PacketOut){
+func (g *Game) respondTo125(in *PacketIn, sendOut func(PacketOut)){
 	fmt.Println("recieved 125 packet...")
 	disconnectingPlayer := g.connectionIDToPlayerNumberMap[in.connectionId]
 
@@ -95,7 +95,7 @@ func (g *Game) respondTo125(in *PacketIn, out chan<- PacketOut){
 	g.players[disconnectingPlayer].isConnected = false
 	if(g.players[disconnectingPlayer].isHost){
 		g.players[disconnectingPlayer].isHost = false
-		g.send127ToFirstAvaliablePlayer(out);
+		g.send127ToFirstAvaliablePlayer(sendOut);
 	}
 
 	packet126 := PacketOut{
@@ -104,26 +104,32 @@ func (g *Game) respondTo125(in *PacketIn, out chan<- PacketOut){
 		targetIds: g.allConnectionIDsBut(in.connectionId),
 	}
 
-	out <- packet126
+	sendOut(packet126)
 }
 
-func (g *Game) send122ToEveryone(out chan<- PacketOut){
-	out <- PacketOut{
+func (g *Game) send122ToEveryone(sendOut func(PacketOut)) {
+	packet122 := PacketOut{
 		size: 1,
 		data: []byte{122},
 		targetIds: g.allConnectionIds(),
 	}
-
+	sendOut(packet122)
 }
 
-func (g *Game) send127ToFirstAvaliablePlayer(out chan<- PacketOut){
+func (g *Game) send127ToFirstAvaliablePlayer(sendOut func(PacketOut)){
+
+	/*
+		algorithm: assign next host sequentially by iterating through players and choosing first active player
+	 */
 	for _, p := range g.players {
 		if(p.isConnected){
-			out <- PacketOut{
+			out := PacketOut{
 				size: 1,
 				data: []byte{127},
 				targetIds: []int{p.connection.id},
 			}
+
+			sendOut(out)
 			p.isHost = true;
 			break;
 		}
