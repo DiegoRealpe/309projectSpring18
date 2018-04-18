@@ -74,12 +74,12 @@ func TestFillUpTable(t *testing.T) {
 		req.Header.Set("FacebookToken", tokenAt)
 		response := executeRequest(req)
 
-		var m map[string]string
+		var m PlayerProfile
 		json.Unmarshal(response.Body.Bytes(), &m)
-		if m["error"] != "" {
-			t.Errorf(m["error"])
+		if m.Error != "" {
+			t.Errorf(m.Error)
 		}
-		fmt.Println(m["Nickname"])
+		fmt.Println(m.Profile.Nickname)
 		checkResponseCode(t, http.StatusCreated, response.Code)
 	}
 }

@@ -28,33 +28,6 @@ type PlayerProfile struct {
 	Error    string `json:"error-message,omitempty"`
 }
 
-const rankTrigger = `
-UPDATE Players AS MainT
-JOIN 
-(SELECT @rownum := @rownum+1 as Rank, ID
- FROM (  
-		SELECT * 
-		FROM Players
-		ORDER BY Players.GamesWon DESC) AS P2, (
-		SELECT @rownum := 0 
-	   ) r
-) AS Ranked
-ON MainT.ID = Ranked.ID
-SET MainT.RankMostWins = Ranked.Rank;
-
-UPDATE Players AS MainT
-JOIN 
-(SELECT @rownum := @rownum+1 as Rank, ID
- FROM (  
-		SELECT * 
-		FROM Players
-		ORDER BY Players.GoalsScored DESC) AS P2, (
-		SELECT @rownum := 0 
-	  ) r
-) AS Ranked
-ON MainT.ID = Ranked.ID
-SET MainT.RankMostScored = Ranked.Rank;`
-
 //QueryDeletePlayer Clears Player in database
 func QueryDeletePlayer(db *sql.DB, p *Player) error {
 	result, err := db.Exec(`DELETE FROM Players WHERE ID = ?`, p.ID)
@@ -172,12 +145,6 @@ func QueryUpdatePlayer(db *sql.DB, p *Player) error {
 	if int(i) == 0 {
 		return errors.New("Not Modified")
 	}
-
-	/*_, rankErr := db.Exec(rankTrigger)
-	if rankErr != nil {
-		return errors.New("Ranking Error" + rankErr.Error())
-	}*/
-
 	return nil
 }
 
@@ -272,21 +239,62 @@ func QueryGetToken(db *sql.DB, ID string) (string, error) {
 }
 
 //QueryAssertToken returns the nickname of the given apptoken or 404
-func QueryAssertToken(db *sql.DB, AppToken string) (string, error) {
-	row, err := db.Query(`SELECT Nickname, expiration FROM TokenTable 
+func QueryAssertToken(db *sql.DB, AppToken string) (int, error) {
+	row, err := db.Query(`SELECT playerID, expiration FROM TokenTable 
 	JOIN Players ON TokenTable.playerID = Players.ID WHERE applicationToken = ?`, AppToken)
 	if err != nil {
-		return "", err
+		return 0, err
 	}
-	var Nickname string
-	var exp int64
+	var ID, exp int64
 	row.Next()
-	err = row.Scan(&Nickname, &exp)
+	err = row.Scan(&ID, &exp)
 	if err != nil {
-		return "", errors.New("Player Not Found")
+		return 0, errors.New("Player Not Found")
 	}
 	if exp < time.Now().Unix() {
-		return "", errors.New("Application Token Expired")
+		return 0, errors.New("Application Token Expired")
 	}
-	return Nickname, nil
+	return int(ID), nil
+}
+
+//QueryRankTrigger trigger for score and win rank
+func QueryRankTrigger(db *sql.DB) error {
+
+	var rankTrigger = `
+	UPDATE Players AS MainT
+	JOIN 
+	(SELECT @rownum := @rownum+1 as Rank, ID
+	 FROM (  
+			SELECT * 
+			FROM Players
+			ORDER BY Players.GamesWon DESC) AS P2, (
+			SELECT @rownum := 0 
+		   ) r
+	) AS Ranked
+	ON MainT.ID = Ranked.ID
+	SET MainT.RankMostWins = Ranked.Rank`
+
+	var rankTrigger2 = `
+	UPDATE Players AS MainT
+	JOIN 
+	(SELECT @rownum := @rownum+1 as Rank, ID
+	 FROM (  
+			SELECT * 
+			FROM Players
+			ORDER BY Players.GoalsScored DESC) AS P2, (
+			SELECT @rownum := 0 
+		  ) r
+	) AS Ranked
+	ON MainT.ID = Ranked.ID
+	SET MainT.RankMostScored = Ranked.Rank`
+
+	_, rankErr := db.Exec(rankTrigger)
+	if rankErr != nil {
+		return rankErr
+	}
+	_, rankErr = db.Exec(rankTrigger2)
+	if rankErr != nil {
+		return rankErr
+	}
+	return nil
 }

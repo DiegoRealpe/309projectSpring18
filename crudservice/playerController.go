@@ -51,17 +51,31 @@ func (a *App) getPlayer(w http.ResponseWriter, r *http.Request) {
 	}
 	//Obtaining one value, ID from mux parameters to create player
 	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["ID"])
+	id, err := strconv.Atoi(vars["AppToken"])
 	if err != nil {
-		handleDBErrors(w, errors.New("Invalid user ID"))
+		handleDBErrors(w, errors.New("Invalid Apptoken"))
 		return
 	}
+
+	nickname, dberr := QueryAssertToken(a.db, token)
+	if dberr != nil {
+		handleDBErrors(w, dberr)
+		return
+	}
+
 	p := Player{ID: strconv.Itoa(id)}
 
 	//Executing search query
 	err = QuerySearchPlayer(a.db, &p)
 	if err != nil {
 		handleDBErrors(w, err)
+	}
+
+	//Updating table to reflect rank
+	rankErr := QueryRankTrigger(a.db)
+	if rankErr != nil {
+		handleDBErrors(w, rankErr)
+		return
 	}
 
 	respondWithJSON(w, http.StatusOK, p)
@@ -121,6 +135,13 @@ func (a *App) updatePlayer(w http.ResponseWriter, r *http.Request) {
 	dberr := QueryUpdatePlayer(a.db, &p)
 	if dberr != nil {
 		handleDBErrors(w, errors.New("Update Error"))
+		return
+	}
+
+	//Updating table to reflect rank
+	rankErr := QueryRankTrigger(a.db)
+	if rankErr != nil {
+		handleDBErrors(w, rankErr)
 		return
 	}
 

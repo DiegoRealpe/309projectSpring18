@@ -1,6 +1,7 @@
 package main
 
 import (
+	"strconv"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -93,11 +94,11 @@ func (a *App) loginPlayer(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) statsPlayer(w http.ResponseWriter, r *http.Request) {
 	//1 assert the ID sent in header
-	//token := r.Header.Get("FacebookID")
-	//nickname, dberr := QueryAssertToken(a.db, token)
-	//if dberr != nil {
-	//	handleDBErrors(w, dberr)
-	//	return
+	token := r.Header.Get("FacebookID")
+	ID, dberr := QueryAssertToken(a.db, token)
+	if dberr != nil {
+		handleDBErrors(w, dberr)
+		return
 	//}
 
 	//2 Look for the stats in the database
@@ -113,11 +114,11 @@ func (a *App) checkToken(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token := r.Header.Get("ApplicationToken")
-	nickname, dberr := QueryAssertToken(a.db, token)
+	//token := r.Header.Get("ApplicationToken")
+	ID, dberr := QueryAssertToken(a.db, token)
 	if dberr != nil {
 		handleDBErrors(w, dberr)
 		return
 	}
-	respondWithJSON(w, http.StatusOK, map[string]string{"Nickname": nickname})
+	respondWithJSON(w, http.StatusOK, map[string]string{"playerID": strconv.Itoa(ID)})
 }
