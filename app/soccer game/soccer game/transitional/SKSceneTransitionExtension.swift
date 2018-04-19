@@ -12,7 +12,6 @@ enum Scene {
     case gameScene
     case mainMenu
     case matchMakingScene
-    case commTestScreen
     case newAccountOrLogin
     case lobbyScene
 }
@@ -21,7 +20,6 @@ let sceneToFileDict : [Scene:String] = [
     .gameScene : "GameScene",
     .mainMenu : "MainMenu",
     .matchMakingScene : "MatchMakingScene",
-    .commTestScreen : "CommTestScreen",
     .newAccountOrLogin : "NewAccountOrLogin",
     .lobbyScene : "LobbyScene",
 ]

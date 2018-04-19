@@ -14,7 +14,6 @@ class MainMenu: SKScene {
     private var title : SKLabelNode?
     private var practiceBG : SKNode?
     private var joinBG : SKNode?
-    private var comm : SKNode?
     private var account:SKNode?
     
     override func didMove(to view: SKView) {
@@ -24,7 +23,6 @@ class MainMenu: SKScene {
         self.title = self.childNode(withName: "TitleLabel") as? SKLabelNode
         self.practiceBG = self.childNode(withName: "Practice Background")
         self.joinBG = self.childNode(withName: "Join Background")
-        self.comm = self.childNode(withName: "Comm Label")
         self.account = self.childNode(withName: "Account")
         
         fadeInLabel(label: self.title)
@@ -33,7 +31,7 @@ class MainMenu: SKScene {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         //if necesarry nodes and one touch exist
-        if let t = touches.first ,let practice = self.practiceBG, let join = self.joinBG, let comm = self.comm, let account = self.account{
+        if let t = touches.first ,let practice = self.practiceBG, let join = self.joinBG, let account = self.account{
             let point = t.location(in: self)
             
             //see if touch contains first
@@ -41,9 +39,6 @@ class MainMenu: SKScene {
                 self.moveToScene(.gameScene,dataFunction: assignUserDataForGameScene(_:))
             }else if join.contains(point){
                 self.moveToScene(.matchMakingScene)
-            }
-            else if comm.contains(point){
-                self.moveToScene(.commTestScreen)
             }
             else if account.contains(point)
             {

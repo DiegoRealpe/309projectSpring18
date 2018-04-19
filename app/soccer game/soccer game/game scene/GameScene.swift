@@ -32,9 +32,12 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     var blueTeamScore:SKLabelNode?
     var scoreBoard:ScoreBoard?
     let forceUpdateWaits = 50
+    
     var waitsSinceLastPlayerUpdate = 0
     var waitsSinceLastBallUpdate = 0
    
+    var kickCoolDownTime : Double = 0.0
+    let kickCoolDownInterval = 0.5
     
     //after didMove is called players is initialized with the exact size of maxPlayers
     var pm : GamePlayerManager!
@@ -414,17 +417,25 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     func doKick(){
         
         let playerPosition = self.pm!.selectPlayer(playerNum: self.pm!.playerNumber).position
-        
         let distanceBetweenBallAndPlayer : Float = self.ballNode!.position.distanceTo(playerPosition)
+        let now : Double = CACurrentMediaTime();
         
         print("distnce was: \(distanceBetweenBallAndPlayer))")
         
-        if distanceBetweenBallAndPlayer < GameScene.maxKickDistance {
+        print("time is \(now) and coolDownTime is \(kickCoolDownTime)")
+        if distanceBetweenBallAndPlayer < GameScene.maxKickDistance, now > self.kickCoolDownTime {
             let vector : CGVector =  playerPosition.vectorTo(self.ballNode!.position,ofMagnitude: 300)
             
             print("kick",vector)
             self.ballNode!.physicsBody!.velocity = vector
+            sendKickPacketIfApplicable()
+            
+            self.kickCoolDownTime = now + kickCoolDownInterval
         }
+    }
+    
+    private func sendKickPacketIfApplicable(){
+        
     }
     
     func isPractice() -> Bool {
