@@ -107,11 +107,19 @@ func QueryProfileFromToken(db *sql.DB, FacebookID string) PlayerProfile {
 		pro.Error = err.Error()
 		return pro
 	}
+	var tok, id, gp, gw, gs, rw, rs int
+	var n, l string
 	row.Next()
-	err2 := row.Scan(pro.AppToken,
-		pro.Profile.Nickname, pro.Profile.ID, pro.Profile.GamesPlayed,
-		pro.Profile.GamesWon, pro.Profile.GoalsScored, pro.Profile.RankWin,
-		pro.Profile.RankScore, pro.Profile.LastAvatar)
+	err2 := row.Scan(&tok, &n, &id, &gp, &gw, &gs, &rw, &rs, &l)
+	pro.AppToken = strconv.Itoa(tok)
+	pro.Profile.Nickname = n
+	pro.Profile.ID = strconv.Itoa(id)
+	pro.Profile.GamesPlayed = strconv.Itoa(gp)
+	pro.Profile.GamesWon = strconv.Itoa(gw)
+	pro.Profile.GoalsScored = strconv.Itoa(gs)
+	pro.Profile.RankWin = strconv.Itoa(rw)
+	pro.Profile.RankScore = strconv.Itoa(rs)
+	pro.Profile.LastAvatar = l
 	if err2 != nil {
 		pro.Error = err2.Error()
 		return pro
