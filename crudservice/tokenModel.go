@@ -66,10 +66,10 @@ func QueryGetToken(db *sql.DB, ID string) (string, error) {
 	return tok, nil
 }
 
-//QueryAssertToken returns the nickname of the given apptoken or 404
+//QueryAssertToken returns the ID of the given apptoken or 404
 func QueryAssertToken(db *sql.DB, AppToken string) (string, error) {
 	if AppToken == "" {
-		return "", errors.New("Empty AppToken")
+		return "", errors.New("Empty Parameter")
 	}
 	row, err := db.Query(`SELECT ID, expiration FROM TokenTable 
 	JOIN Players ON TokenTable.playerID = Players.ID WHERE applicationToken = ?`, AppToken)
@@ -86,4 +86,35 @@ func QueryAssertToken(db *sql.DB, AppToken string) (string, error) {
 		return "", errors.New("Application Token Expired" + err.Error())
 	}
 	return strconv.Itoa(int(ID)), nil
+}
+
+//QueryProfileFromToken Gets the whole player profile from the Facebook ID of the user
+func QueryProfileFromToken(db *sql.DB, FacebookID string) PlayerProfile {
+	const definedQuery = `SELECT applicationToken, Nickname, ID, GamesPlayed, GamesWon, GoalsScored, RankMostWins, RankMostScored, LastAvatar
+	FROM Players
+	JOIN FacebookData 
+	ON Players.ID = FacebookData.PlayerID
+	JOIN TokenTable
+	ON Players.ID = TokenTable.playerID
+	WHERE FacebookID = ?`
+	pro := PlayerProfile{}
+	if FacebookID == "" {
+		pro.Error = "Empty Parameter"
+		return pro
+	}
+	row, err := db.Query(definedQuery, FacebookID)
+	if err != nil {
+		pro.Error = err.Error()
+		return pro
+	}
+	row.Next()
+	err2 := row.Scan(pro.AppToken,
+		pro.Profile.Nickname, pro.Profile.ID, pro.Profile.GamesPlayed,
+		pro.Profile.GamesWon, pro.Profile.GoalsScored, pro.Profile.RankWin,
+		pro.Profile.RankScore, pro.Profile.LastAvatar)
+	if err2 != nil {
+		pro.Error = err2.Error()
+		return pro
+	}
+	return pro
 }

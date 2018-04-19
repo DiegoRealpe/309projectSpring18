@@ -100,17 +100,15 @@ func (a *App) loginPlayer(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) statsPlayer(w http.ResponseWriter, r *http.Request) {
-	//1 assert the ID sent in header
-	//token := r.Header.Get("FacebookID")
-	//nickname, dberr := QueryAssertToken(a.db, token)
-	//if dberr != nil {
-	//	handleDBErrors(w, dberr)
-	//	return
-	//}
-
+	//1 obtain ID
+	FacebookID := r.Header.Get("FacebookID")
 	//2 Look for the stats in the database
-
+	profile := QueryProfileFromToken(a.db, FacebookID)
+	if profile.Error != "" {
+		respondWithError(w, http.StatusInternalServerError, profile.Error)
+	}
 	//3 send struct of stats
+	respondWithJSON(w, http.StatusOK, profile)
 }
 
 func (a *App) checkToken(w http.ResponseWriter, r *http.Request) {
