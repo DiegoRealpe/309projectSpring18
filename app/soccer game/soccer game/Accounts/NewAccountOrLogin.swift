@@ -122,8 +122,13 @@ class NewAccountOrLogin: SKScene{
                     let JSON = result as! NSDictionary
                     
                     print(JSON)
-                    let playerStats = JSON["Profile"] as! Profile
-                    self.buildStatsNodes(player: playerStats)
+                    
+                    
+                    let blog = try? JSONDecoder().decode(Profile.self, from: JSON as! Data)
+                    self.buildStatsNodes(player: blog!)
+                    
+                    //let playerStats = JSON["Profile"] as! Profile
+                    //self.buildStatsNodes(player: playerStats)
                 }
                 
         }
@@ -137,7 +142,7 @@ class NewAccountOrLogin: SKScene{
     {
         print(player.gamesplayed)
     }
-    struct Profile: Codable {
+    struct Profile: Decodable {
         /*var name: String
         var points: Int
         var description: String?*/
