@@ -14,14 +14,24 @@ import (
 
 var testApp App
 
+//to get a new token login to facebook and get one from one of our test user
+
+const tok = "EAACqvTZC1964BAL2gZCqzlzJNmvs0XDyFUnhMeGCqUB9afu8yFkmSgI5oLakRJWP8lZBq7z85pYz2SK4StQMZBFYk49cFmMglaBv9tuEQZBFTZCZBAN27RThzSezGOJYOieZCDn60fAKa01aWgdWd1xZCJtZBIlTciqdE8fdVomzTP9QZDZD"
+const tok2 = "EAACqvTZC1964BAIrQcZAfscdEAebGdE5mWMheieBOObRMcZCAEjOXHCuCEqlttHpj8iZCPEcHqTQ7bfhJc8HWS9fmSrZCevqLwo2Un7wCoIeBx8ZCtpjKsRsC1vd9xoZA5cN3jVa9l1SKZButuOZBBh7M3j5FlfcCHFckEZC5nZBGOxg9xJGNFPCZA5A"
+const tok3 = "EAACqvTZC1964BAGTnB9Iu2Rq5MXxiwMqhJh5V6FoTy0e6Gwh0ZCdjYlt29hhZAYm11mwXYBdGJDnFMDxFr1Sm6oWCQWlUWlyoA09bIj7rQuSYob3QdKqB4zy7lHrexBpecHFbYeLQAZBRX8EOWyugNAfMIVYZBbdQWRWWyrdTbC0vTZCXj8OaT"
+const tok4 = "EAACqvTZC1964BAKjWuwNnziCBBDx5puhvU8yIlJyZBGMaJX6EzwzFb7lSZC4oo7w5O3c85QeFuZBYQn243fMgn9sJ2hNBlTH2ONGKBOXaZCXaESajcLc9U8RKOueNDRz18kCUThjpPzRBZCV1ZC1yISDTCg095lmK3HR7PGvzX6y57eZBuAlxYqX"
+const tok5 = "EAACqvTZC1964BAHQpHTwBk0L9Xhq8tsliKUHVENyGO8tFTohDIVAtFBHGA7i5FVIboF6juuV8mog0JfBT9xZBm8l5zoifUFGC33OdFHKE99EEbQfayX40uUw0WS76ZC63uHQaTNlZAUUkJhZC8Y8yCewPIvMPuTpPPjGzF9cECZCh5kWlacgU1"
+const tok6 = "EAACqvTZC1964BANFWVcg5mZAQRcZCJrfj1uLMz9uyxZA7BdEscEfyvDGU43pEYZCfrSgZAgthDJPofgEHlkUZAABtmDL6zj2zZAUC0s8MLJNzwrrZAwtCvsZCG3RBKDwCoOUuNvcb6kpGDgK6oBLjBlPptH1dEU8mJjc8gYOtRYgJVxu1NIbkMqYDJ"
+
+var tokens = []string{tok, tok2, tok3, tok4, tok5, tok6}
+
 var tableCreationQuery = `
-CREATE TABLE Players (
+CREATE TABLE Players1 (
 ID INT PRIMARY KEY,
 Nickname VARCHAR(50) NOT NULL,
 GamesPlayed INT NOT NULL,
 GamesWon INT NOT NULL,
-GoalsScored INT NOT NULL,
-Active INT NOT NULL)`
+GoalsScored INT NOT NULL)`
 
 //Main Testing
 func Testmain(t *testing.M) {
@@ -40,40 +50,36 @@ func TestGetNonExistentUser(t *testing.T) {
 	testApp.Initialize()
 
 	clearTable()
-	req, _ := http.NewRequest("GET", "/player/45", nil)
+	req, _ := http.NewRequest("GET", "/player/486074", nil)
 	req.Header.Set("AppUser", "MG_6")
 	req.Header.Set("AppSecret", "goingforthat#1bois")
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusNotFound, response.Code)
 	var m map[string]string
 	json.Unmarshal(response.Body.Bytes(), &m)
-	if m["error"] != "" {
+	if m["error"] != "Player Not Found" {
 		t.Errorf("Expected the 'error' key of the response to be set to 'User not found'. Got '%s'", m["error"])
 	}
 }
 
-func TestCreateUser(t *testing.T) {
+func TestFillUpTable(t *testing.T) {
 	testApp = App{}
 	testApp.Initialize()
-
 	clearTable()
-	payload := []byte(`{"Nickname":"Knuckles"}`)
-	req, _ := http.NewRequest("POST", "/player", bytes.NewBuffer(payload))
-	req.Header.Set("AppUser", "MG_6")
-	req.Header.Set("AppSecret", "goingforthat#1bois")
-	response := executeRequest(req)
-	checkResponseCode(t, http.StatusCreated, response.Code)
-	var jsonPlayer Player
-	json.Unmarshal(response.Body.Bytes(), &jsonPlayer)
 
-	if jsonPlayer.Nickname != "Knuckles" {
-		t.Errorf("Expected user name to be 'Knuckles'. Got '%v', this user doesn't know de wey", jsonPlayer.Nickname)
-	}
-	if jsonPlayer.GamesPlayed != "0" {
-		t.Errorf("Expected games won in new user to be to be '0'. Got '%v'", jsonPlayer.GamesPlayed)
-	}
-	if jsonPlayer.GoalsScored != "0" {
-		t.Errorf("Expected goals scored to be '0'. Got '%v'", jsonPlayer.GoalsScored)
+	for i, tokenAt := range tokens {
+		payload := []byte(`{"Nickname":"Dummy#` + strconv.Itoa(i) + `"}`)
+		req, _ := http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
+		req.Header.Set("FacebookToken", tokenAt)
+		response := executeRequest(req)
+
+		var m PlayerProfile
+		json.Unmarshal(response.Body.Bytes(), &m)
+		if m.Error != "" {
+			t.Errorf(m.Error)
+		}
+		fmt.Println(m.Profile.Nickname)
+		checkResponseCode(t, http.StatusCreated, response.Code)
 	}
 }
 
@@ -82,11 +88,16 @@ func TestGetUser(t *testing.T) {
 	testApp.Initialize()
 
 	clearTable()
-	addUsers(1)
-	req, _ := http.NewRequest("GET", "/player/1", nil)
+	payload := []byte(`{"Nickname":"dumdum1"}`)
+	req, _ := http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
+	req.Header.Set("FacebookToken", tok)
+	response := executeRequest(req)
+	checkResponseCode(t, http.StatusCreated, response.Code)
+
+	req, _ = http.NewRequest("GET", "/player/486074", nil)
 	req.Header.Set("AppUser", "MG_6")
 	req.Header.Set("AppSecret", "goingforthat#1bois")
-	response := executeRequest(req)
+	response = executeRequest(req)
 	var m map[string]string
 	json.Unmarshal(response.Body.Bytes(), &m)
 	if m["error"] != "" {
@@ -101,24 +112,41 @@ func TestUpdateUser(t *testing.T) {
 	testApp = App{}
 	testApp.Initialize()
 	clearTable()
-	addUsers(1)
+
+	payload := []byte(`{"Nickname":"User 1"}`)
+	req, _ := http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
+	req.Header.Set("FacebookToken", tok)
+	response := executeRequest(req)
+
+	var pro PlayerProfile
+	json.Unmarshal(response.Body.Bytes(), &pro)
+	if pro.Error != "" {
+		t.Errorf(pro.Error)
+	}
+	checkResponseCode(t, http.StatusCreated, response.Code)
 
 	//Get player that was just added
-	req, _ := http.NewRequest("GET", "/player/1", nil)
+	req, _ = http.NewRequest("GET", "/player/486074", nil)
 	req.Header.Set("AppUser", "MG_6")
 	req.Header.Set("AppSecret", "goingforthat#1bois")
-	response := executeRequest(req)
+	response = executeRequest(req)
 	//Unmarshal the result
 	var jsonPlayer Player
 	json.Unmarshal(response.Body.Bytes(), &jsonPlayer)
 
 	//Update Player
-	payload := []byte(`{"Nickname":"newname","GamesPlayed":"21"}`)
-	req, _ = http.NewRequest("PUT", "/player/1", bytes.NewBuffer(payload))
+	payload = []byte(`{"Nickname":"newname","GamesPlayed":"21"}`)
+	req, _ = http.NewRequest("PUT", "/player/486074", bytes.NewBuffer(payload))
 	req.Header.Set("AppUser", "MG_6")
 	req.Header.Set("AppSecret", "goingforthat#1bois")
 	response = executeRequest(req)
 	checkResponseCode(t, http.StatusOK, response.Code)
+	var m map[string]string
+	json.Unmarshal(response.Body.Bytes(), &m)
+	if m["error"] != "" {
+		t.Errorf(m["error"])
+	}
+
 	//Modifying updated object
 	jsonPlayer.Nickname = "newname"
 	jsonPlayer.GamesPlayed = "21"
@@ -131,10 +159,10 @@ func TestUpdateUser(t *testing.T) {
 		t.Errorf("Expected the id to remain the same (%s). Got %s", jsonPlayer.ID, jsonPlayerR.ID)
 	}
 	if jsonPlayer.GamesPlayed != jsonPlayerR.GamesPlayed {
-		t.Errorf("Expected the name to change from '%v' to '%v'. Got '%v'", jsonPlayer.GamesPlayed, "21", jsonPlayerR.GamesPlayed)
+		t.Errorf("Expected the played games to change from '%v' to '%v'. Got '%v'", jsonPlayer.GamesPlayed, "21", jsonPlayerR.GamesPlayed)
 	}
 	if jsonPlayer.Nickname != jsonPlayerR.Nickname {
-		t.Errorf("Expected the age to change from '%v' to '%v'. Got '%v'", jsonPlayer.Nickname, "newname", jsonPlayerR.Nickname)
+		t.Errorf("Expected the name to change from '%v' to '%v'. Got '%v'", jsonPlayer.Nickname, "newname", jsonPlayerR.Nickname)
 	}
 }
 
@@ -143,29 +171,29 @@ func TestDeleteUser(t *testing.T) {
 	testApp.Initialize()
 
 	clearTable()
-	addUsers(1)
 
-	req, _ := http.NewRequest("GET", "/player/1", nil)
+	payload := []byte(`{"Nickname":"User 1"}`)
+	req, _ := http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
+	req.Header.Set("FacebookToken", tok)
+	response := executeRequest(req)
+	checkResponseCode(t, http.StatusCreated, response.Code)
+
+	req, _ = http.NewRequest("GET", "/player/486074", nil)
 	req.Header.Set("AppUser", "MG_6")
 	req.Header.Set("AppSecret", "goingforthat#1bois")
-	response := executeRequest(req)
+	response = executeRequest(req)
 	checkResponseCode(t, http.StatusOK, response.Code)
 
-	req, _ = http.NewRequest("DELETE", "/player/1", nil)
+	req, _ = http.NewRequest("DELETE", "/player/486074", nil)
 	req.Header.Set("AppUser", "MG_6")
 	req.Header.Set("AppSecret", "goingforthat#1bois")
 	response = executeRequest(req)
 	checkResponseCode(t, http.StatusAccepted, response.Code)
 
-	req, _ = http.NewRequest("GET", "/player/1", nil)
+	req, _ = http.NewRequest("GET", "/player/486074", nil)
 	req.Header.Set("AppUser", "MG_6")
 	req.Header.Set("AppSecret", "goingforthat#1bois")
 	response = executeRequest(req)
-	var m map[string]string
-	json.Unmarshal(response.Body.Bytes(), &m)
-	if m["error"] != "" {
-		t.Errorf(m["error"])
-	}
 	checkResponseCode(t, http.StatusNotFound, response.Code)
 }
 
@@ -177,14 +205,14 @@ func TestRegisterUser(t *testing.T) {
 
 	payload := []byte(`{"Nickname":"dumdum1"}`)
 	req, _ := http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
-	req.Header.Set("FacebookToken", testUserToken)
+	req.Header.Set("FacebookToken", tok)
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusCreated, response.Code)
 
-	//payload = []byte(`{"Nickname":"dumdum2"}`)
-	//req, _ = http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
-	//req.Header.Set("FacebookToken", testUserToken2)
-	//response = executeRequest(req)
+	payload = []byte(`{"Nickname":"dumdum2"}`)
+	req, _ = http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
+	req.Header.Set("FacebookToken", tok2)
+	response = executeRequest(req)
 	var m map[string]string
 	json.Unmarshal(response.Body.Bytes(), &m)
 	if m["error"] != "" {
@@ -204,11 +232,10 @@ func TestLoginUser(t *testing.T) {
 	if reqerr != nil {
 		t.Errorf(reqerr.Error())
 	}
-	req0.Header.Set("FacebookToken", testUserToken)
+	req0.Header.Set("FacebookToken", tok)
 	response0 := executeRequest(req0)
 	var na map[string]string
 	json.Unmarshal(response0.Body.Bytes(), &na)
-	fmt.Println(na["error"])
 	if na["error"] == "" {
 		t.Errorf("Expected an error message and recieved none")
 	}
@@ -216,7 +243,7 @@ func TestLoginUser(t *testing.T) {
 
 	payload := []byte(`{"Nickname":"dumdum1"}`)
 	req1, _ := http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
-	req1.Header.Set("FacebookToken", testUserToken)
+	req1.Header.Set("FacebookToken", tok)
 	response1 := executeRequest(req1)
 	checkResponseCode(t, http.StatusCreated, response1.Code)
 
@@ -224,7 +251,7 @@ func TestLoginUser(t *testing.T) {
 	if err != nil {
 		t.Errorf(err.Error())
 	}
-	req2.Header.Set("FacebookToken", testUserToken)
+	req2.Header.Set("FacebookToken", tok)
 	response2 := executeRequest(req2)
 
 	var m map[string]string
@@ -244,7 +271,7 @@ func TestCheckToken(t *testing.T) {
 
 	payload := []byte(`{"Nickname":"User 1"}`)
 	req, _ := http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
-	req.Header.Set("FacebookToken", testUserToken)
+	req.Header.Set("FacebookToken", tok)
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusCreated, response.Code)
 
@@ -268,39 +295,22 @@ func TestTokenQuery(t *testing.T) {
 
 	payload := []byte(`{"Nickname":"dumdum1"}`)
 	req, _ := http.NewRequest("POST", "/player/register", bytes.NewBuffer(payload))
-	req.Header.Set("FacebookToken", testUserToken)
+	req.Header.Set("FacebookToken", tok)
 	response := executeRequest(req)
 	checkResponseCode(t, http.StatusCreated, response.Code)
-
 	s, err := QueryAssertToken(testApp.db, "486074")
-	if s != "dumdum1" {
-		t.Errorf("returning nickname expected to be 'dumdum1'. Got '%s'", s)
+	if s != "1" {
+		t.Errorf("returning ID expected to be '1'. Got '%s'", s)
 	}
 	if err != nil {
 		t.Errorf(err.Error())
 	}
-
 }
-
-//to get a new token login to facebook and get one from one of our test user
-const testUserToken = "EAACqvTZC1964BAPYWCUC1fz8CXcLZCZCUKHLm6UjXDKCekQsiJ5VDXyHAMyami19ZCBB13G2oSgGDishdQHVo6ZCvjv97e15jflxUqZBC5gSQsmWu2N0sEE3XPQTbwIsm9ktxfqZBHsbzNDpYkg1fudxcMLnEIUzSMM98ZBkhUYIVl29HEF0SMqoJYQg6nQSZCeltFVF1yNIZB7L1760axoDmqXCw4q0ZCTsUUHvHQHRGVnRQZDZD"
-const testUserToken2 = "EAACqvTZC1964BAFAfCzz9c5YSj4hzo20JZCV8GYZA3dEBC8nlpz9iSzYeTyY55fK6DU0Bs2uzzutjpfcg5OPNSNnWdF14P31a1hNZB6AUvoiZBJbaKPmx3RXYomdceq4tSVIzWQSvTouchqsudZCqlBh3SxeEebxbq4v5a6zejXXY3DYrxLKzTdRgVlCwHbvudukh9NnvVGHa6YlXET9Rl87qkGbmIBSMvic0roRxXJzeogK1INg1h"
-
 func TestFBApiAccess(t *testing.T) {
-	getFBUser(testUserToken)
+	getFBUser(tok)
 }
 
 /*********Test Helpers*********/
-
-func addUsers(count int) {
-	if count < 1 {
-		count = 1
-	}
-	for i := 0; i < count; i++ {
-		statement := fmt.Sprintf("INSERT INTO Players(Nickname, GamesPlayed, GamesWon, GoalsScored, RankMostWins, RankMostScored) VALUES('%s', %d, 0,0,0,0)", ("User " + strconv.Itoa(i+1)), ((i + 1) * 10))
-		testApp.db.Exec(statement)
-	}
-}
 
 func ensureTableExists() {
 	if _, err := testApp.db.Exec(tableCreationQuery); err != nil {
@@ -309,8 +319,6 @@ func ensureTableExists() {
 }
 
 func clearTable() {
-	testApp.db.Exec("DELETE FROM TokenTable")
-	testApp.db.Exec("DELETE FROM FacebookData")
 	testApp.db.Exec("DELETE FROM Players")
 	testApp.db.Exec("ALTER TABLE Players AUTO_INCREMENT = 1")
 }

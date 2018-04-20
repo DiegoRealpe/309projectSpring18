@@ -54,28 +54,29 @@ func verifyAccess(r *http.Request) error {
 	reqUser := r.Header.Get("AppUser")
 	reqSecret := r.Header.Get("AppSecret")
 	if reqUser != "MG_6" || reqSecret != "goingforthat#1bois" {
-		return errors.New("Invalid Credentials")
+
+		fmt.Println("This shouldnt be showing up")
+		return errors.New("Invalid Credentialss")
 	}
 	return nil
 }
 
 func handleDBErrors(w http.ResponseWriter, dberr error) {
-	switch dberr {
 
-	case errors.New("Not Modified"):
+	switch dberr.Error() {
+
+	case "Not Modified":
 		respondWithError(w, http.StatusNotModified, dberr.Error())
-	case errors.New("Create Fail"):
+	case "Create Fail":
 		respondWithError(w, http.StatusNotImplemented, dberr.Error())
-	case errors.New("Invalid user ID"):
-		respondWithError(w, http.StatusBadRequest, dberr.Error())
-	case sql.ErrNoRows:
+	case sql.ErrNoRows.Error():
 		respondWithError(w, http.StatusNotFound, dberr.Error())
-	case errors.New("Player Not Found"):
+	case "Player Not Found":
 		respondWithError(w, http.StatusNotFound, dberr.Error())
-	case errors.New("Application Token Expired"):
+	case "Application Token Expired":
 		respondWithError(w, http.StatusUnauthorized, dberr.Error())
 	default:
-		respondWithError(w, http.StatusBadRequest, "idk"+dberr.Error()+"lol")
+		respondWithError(w, http.StatusBadRequest, dberr.Error())
 	}
 	return
 }

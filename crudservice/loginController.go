@@ -27,10 +27,14 @@ func (a *App) registerPlayer(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusBadRequest, "Invalid request body")
 		return
 	}
+	nickLength := len(p.Nickname)
+	if nickLength > 15 || nickLength < 1 {
+		respondWithError(w, http.StatusNotImplemented, "Nickname Length Error")
+		return
+	}
 	defer r.Body.Close()
 	dberr := QueryCreatePlayer(a.db, &p)
 	if dberr != nil {
-		fmt.Println(dberr.Error())
 		handleDBErrors(w, dberr)
 		return
 	}
@@ -48,6 +52,14 @@ func (a *App) registerPlayer(w http.ResponseWriter, r *http.Request) {
 		handleDBErrors(w, dberr)
 		return
 	}
+
+	//Updating table to reflect rank
+	rankErr := QueryRankTrigger(a.db)
+	if rankErr != nil {
+		handleDBErrors(w, rankErr)
+		return
+	}
+
 	profile := PlayerProfile{Profile: p, AppToken: apptoken}
 	respondWithJSON(w, http.StatusCreated, profile)
 }
@@ -88,17 +100,15 @@ func (a *App) loginPlayer(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) statsPlayer(w http.ResponseWriter, r *http.Request) {
-	//1 assert the token sent in header
-	//token := r.Header.Get("ApplicationToken")
-	//nickname, dberr := QueryAssertToken(a.db, token)
-	//if dberr != nil {
-	//	handleDBErrors(w, dberr)
-	//	return
-	//}
-
+	//1 obtain ID
+	FacebookID := r.Header.Get("FacebookID")
 	//2 Look for the stats in the database
-
-	//3 prepare to
+	profile := QueryProfileFromToken(a.db, FacebookID)
+	if profile.Error != "" {
+		respondWithError(w, http.StatusInternalServerError, profile.Error)
+	}
+	//3 send struct of stats
+	respondWithJSON(w, http.StatusOK, profile)
 }
 
 func (a *App) checkToken(w http.ResponseWriter, r *http.Request) {
