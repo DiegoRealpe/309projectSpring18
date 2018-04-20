@@ -42,6 +42,11 @@ func startLobby(mmm *matchMakingModel) {
 			lobbyFull = lc.l.size == NUMPLAYERS
 		case packet := <-lc.packetIn:
 			lc.handleSinglePacket(packet)
+			if packet.data[0] == 125 {
+				fmt.Println("Lobby closing")
+				lc.mmm.decrementOpenSpacesBy(lc.l.size)
+				return
+			}
 		}
 	}
 

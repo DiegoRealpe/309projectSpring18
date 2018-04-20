@@ -85,7 +85,11 @@ func connectionToWaitingPlayer(connection *playerConnection) waitingPlayer {
 }
 
 func (mmm *matchMakingModel) decrementOpenSpaces() {
+	mmm.decrementOpenSpacesBy(1)
+}
+
+func (mmm *matchMakingModel) decrementOpenSpacesBy(by int) {
 	mmm.openSpacesMut.Lock()
-	mmm.openSpaces -= 1
+	mmm.openSpaces -= by
 	mmm.openSpacesMut.Unlock()
 }

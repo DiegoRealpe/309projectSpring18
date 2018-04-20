@@ -42,6 +42,10 @@ type packet124 struct {
 	timestamp         float32
 }
 
+type packet134 struct { //server sends a kick
+	playerNumber	uint8
+}
+
 type packet206 struct {
 	playerNumber int
 	username string
@@ -179,6 +183,10 @@ func ParseBytesTo208(rawData []byte) packet208{
 	return packet208{
 		Emoji: string,
 	}
+}
+
+func (p packet134) toBytes() []byte {
+	return []byte{134,p.playerNumber}
 }
 
 func (p packet204) toBytes() []byte{
