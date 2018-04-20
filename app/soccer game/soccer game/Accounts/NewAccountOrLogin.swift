@@ -102,29 +102,54 @@ class NewAccountOrLogin: SKScene{
         print("Getting stats with CRUD Service at URL",requestURL,"\nwith headers : \(headers)")
         
         //.responseJSON(completionHandler: statsRequestResponse(_:))
-        Alamofire.request(requestURL , method : .get , headers : headers).responseJSON
-        {
-            response in switch response.result
-        {
-            case .success(let JSON):
-                print("Success with JSON: \(JSON)")
-                
-                let response = JSON as! NSDictionary
-                
-                
-                self.buildStatsNodes(JSONResponse: response)
-                
-            case .failure(let error):
-                print("Request failed with error: \(error)")
+        //Alamofire.request(requestURL , method : .get , headers : headers).responseString(completionHandler: statsRequestHandler(_:))
+       
+        
+        Alamofire.request(requestURL , method : .get , headers : headers)
+            .responseJSON { response in
+               
+                //to get status code
+                if let status = response.response?.statusCode {
+                    switch(status){
+                    case 200:
+                        print("success")
+                    default:
+                        print("error with response status: \(status)")
+                    }
                 }
+                //to get JSON return value
+                if let result = response.result.value {
+                    let JSON = result as! NSDictionary
+                    
+                    print(JSON)
+                    let playerStats = JSON["Profile"] as! Profile
+                    self.buildStatsNodes(player: playerStats)
+                }
+                
         }
         
-    }
 
-    func buildStatsNodes(JSONResponse: NSDictionary)
+        
+    }
+  
+    //gives the labels the correct strings/values
+    func buildStatsNodes(player: Profile)
     {
-        print(JSONResponse);
-       
+        print(player.gamesplayed)
+    }
+    struct Profile: Codable {
+        /*var name: String
+        var points: Int
+        var description: String?*/
+        
+        var gamesplayed:Int
+        var gameswon: Int
+        var goalsscored: Int
+        var id : Int
+        var lastavatar:String
+        var nickname:String
+        var rankscore : Int
+        var rankwin :Int
     }
     
 }
