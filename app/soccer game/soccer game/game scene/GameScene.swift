@@ -31,7 +31,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     var redTeamScore: SKLabelNode?
     var blueTeamScore:SKLabelNode?
     var scoreBoard:ScoreBoard?
-    let forceUpdateWaits = 50
+    let forceUpdateWaits = 1
     
     var waitsSinceLastPlayerUpdate = 0
     var waitsSinceLastBallUpdate = 0

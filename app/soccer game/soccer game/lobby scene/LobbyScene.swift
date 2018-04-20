@@ -61,10 +61,6 @@ class LobbyScene: SKScene {
         }
     }
     
-    private func hideChat(){
-        chatView.isHidden = true
-    }
-    
     private func unpackTransitionDictionary(){
         self.mtcp = self.userData!.value(forKey: UserDataKeys.managedTCPConnection.rawValue) as! ManagedTCPConnection
         self.spr = self.userData!.value(forKey: UserDataKeys.socketPacketResponder.rawValue) as! SocketPacketResponder
@@ -88,7 +84,7 @@ class LobbyScene: SKScene {
     private func handle207(data: [UInt8]){
         print("quitting player was",data[1])
         
-        DispatchQueue.main.sync(execute: hideChat)
+        DispatchQueue.main.sync(execute: self.chatView.hideAndClose)
         self.mtcp.stop()
         self.moveToScene(.mainMenu)
     }
@@ -98,7 +94,7 @@ class LobbyScene: SKScene {
         self.mtcp.sendTCP(data : [125])
         self.mtcp.stop()
         
-        hideChat()
+        self.chatView.hideAndClose()
         self.moveToScene(.mainMenu)
     }
     
@@ -184,7 +180,7 @@ class LobbyScene: SKScene {
     func movingToGameHandler(data : [UInt8]){
         print("moving to game scene")
         
-        DispatchQueue.main.sync(execute: self.hideChat)
+        DispatchQueue.main.sync(execute: self.chatView.hideAndClose )
         
         self.moveToScene(.gameScene, dataFunction: makeGameSceneTransitionDisctionary(dict:))
     }

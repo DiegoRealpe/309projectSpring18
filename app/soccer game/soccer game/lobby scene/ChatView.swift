@@ -73,6 +73,12 @@ class ChatView: UIView, UITableViewDataSource, UITextFieldDelegate {
             return nil
         }
     }
+    
+    //should be called when leaving the view
+    func hideAndClose(){
+        self.isHidden = true
+        self.endEditing(true)
+    }
 
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
