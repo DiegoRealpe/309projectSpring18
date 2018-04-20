@@ -194,7 +194,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
             self.joyStick = Joystick(parent : self, radius : self.joystickRadius, touch : touch)
         }
         if self.kickButton.contains(position){
-            doKick()
+            doLocalKick()
         }
         if self.quitLabel?.contains(position) == true{
             self.quitWasPressed()
@@ -354,6 +354,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         self.packetTypeDict[126] = PacketType(dataSize: 2, handlerFunction: executePlayerLeftGamePacket(data:))
         self.packetTypeDict[204] = PacketType(dataSize: 2, handlerFunction: stub(_:))
         self.packetTypeDict[127] = PacketType(dataSize: 1, handlerFunction: executeHostAssignmentPacket(data:))
+        self.packetTypeDict[134] = PacketType(dataSize: 2, handlerFunction: executeKickPacket(data:))
     }
     
     func executePlayerPositionPacket(data : [UInt8]){
@@ -413,10 +414,13 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         print("got host assignment packet 😎")
     }
     
+    func doLocalKick(){
+        doKick(playerNum: self.pm.playerNumber)
+    }
     
-    func doKick(){
+    func doKick(playerNum : Int){
         
-        let playerPosition = self.pm!.selectPlayer(playerNum: self.pm!.playerNumber).position
+        let playerPosition = self.pm!.selectPlayer(playerNum: playerNum).position
         let distanceBetweenBallAndPlayer : Float = self.ballNode!.position.distanceTo(playerPosition)
         let now : Double = CACurrentMediaTime();
         
@@ -428,14 +432,26 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
             
             print("kick",vector)
             self.ballNode!.physicsBody!.velocity = vector
-            sendKickPacketIfApplicable()
+            sendKickPacket()
             
             self.kickCoolDownTime = now + kickCoolDownInterval
         }
     }
     
-    private func sendKickPacketIfApplicable(){
+    private func executeKickPacket(data : [UInt8]){
+        let packet = ServerBallKickedPacket(data: data)
         
+        doKick(playerNum: packet.playerNumber)
+    }
+    
+    private func sendKickPacket(){
+        guard let mtcp = self.managedTcpConnection else {
+            return //the game is local
+        }
+        
+        let packet = ClientBallKickedPacket()
+        
+        mtcp.sendTCP(packet: packet)
     }
     
     func isPractice() -> Bool {
