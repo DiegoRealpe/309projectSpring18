@@ -1,15 +1,17 @@
 package main
 
-//to be started as a goroutine
-func listenAndDispersePackets(dispersionMap map[int]chan<- PacketOut, toDisperse <-chan PacketOut) {
-	for packet := range toDisperse {
-		disperseSinglePacket(packet, dispersionMap)
-	}
+
+/*
+	to be used to disperse packets to a channel based on a map of ints to channels to send on,
+	not naturally thread safe
+ */
+
+type packetDisperser struct{
+	connections map[int]chan<- PacketOut
 }
 
-func disperseSinglePacket(packet PacketOut, dispersionMap map[int]chan<- PacketOut) {
-	for _, val := range packet.targetIds {
-		connectionChan := dispersionMap[val]
-		connectionChan <- packet
+func (pd *packetDisperser) send(packet PacketOut){
+	for _, id := range packet.targetIds{
+		pd.connections[id] <- packet
 	}
 }

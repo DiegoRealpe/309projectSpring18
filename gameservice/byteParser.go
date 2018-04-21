@@ -42,6 +42,21 @@ type packet124 struct {
 	timestamp         float32
 }
 
+type packet130 struct {
+	scoringPlayer uint8
+	scoringTeam uint8
+}
+
+type packet131 struct {
+	team1Score uint8
+	team2score uint8
+	lastScoringPlayer uint8
+}
+
+type packet134 struct { //server sends a kick
+	playerNumber	uint8
+}
+
 type packet206 struct {
 	playerNumber int
 	username string
@@ -169,6 +184,13 @@ func ParseBytesTo123(rawData []byte) packet123 {
 	return resultPacket
 }
 
+func parseBytesTo130(rawData []byte) packet130 {
+	return packet130{
+		scoringPlayer: rawData[1],
+		scoringTeam: rawData[2],
+	}
+}
+
 func ParseBytesTo208(rawData []byte) packet208{
 	if len(rawData) != 25 {
 		panic(rawData)
@@ -179,6 +201,19 @@ func ParseBytesTo208(rawData []byte) packet208{
 	return packet208{
 		Emoji: string,
 	}
+}
+
+func (p packet131) toBytes() []byte {
+	return []byte{
+		131,
+		p.team1Score,
+		p.team2score,
+		p.lastScoringPlayer,
+	}
+}
+
+func (p packet134) toBytes() []byte {
+	return []byte{134,p.playerNumber}
 }
 
 func (p packet204) toBytes() []byte{
