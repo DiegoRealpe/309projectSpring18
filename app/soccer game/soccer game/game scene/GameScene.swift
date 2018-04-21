@@ -137,15 +137,21 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
             print("Player hit ball")
             localBallStateWasUpdates = true
         }
-        else if(otherCategory == GameScene.leftGoalCategory)
-        {
-            scoreBoard?.redTeamScored()
-            print("Left Goal Scored")
-        }
-        else if(otherCategory == GameScene.rightGoalCategory)
-        {
-            scoreBoard?.blueTeamScored()
-            print("Right Goal Scored")
+        else if isScorekeeper() {
+            if(otherCategory == GameScene.leftGoalCategory)
+            {
+                scoreBoard?.redTeamScored()
+                print("Left Goal Scored")
+                let scorePacket = ClientGoalScoredPacket(playerNum: 0, scoringTeam: 0)
+                managedTcpConnection?.sendTCP(packet: scorePacket)
+            }
+            else if(otherCategory == GameScene.rightGoalCategory)
+            {
+                scoreBoard?.blueTeamScored()
+                print("Right Goal Scored")
+                let scorePacket = ClientGoalScoredPacket(playerNum: 0, scoringTeam: 0)
+                managedTcpConnection?.sendTCP(packet: scorePacket)
+            }
         }
     }
     
@@ -354,6 +360,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         self.packetTypeDict[126] = PacketType(dataSize: 2, handlerFunction: executePlayerLeftGamePacket(data:))
         self.packetTypeDict[204] = PacketType(dataSize: 2, handlerFunction: stub(_:))
         self.packetTypeDict[127] = PacketType(dataSize: 1, handlerFunction: executeHostAssignmentPacket(data:))
+        self.packetTypeDict[131] = PacketType(dataSize: 4, handlerFunction: executeScoreUpdatePacket(data:))
         self.packetTypeDict[134] = PacketType(dataSize: 2, handlerFunction: executeKickPacket(data:))
     }
     
@@ -454,12 +461,22 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         mtcp.sendTCP(packet: packet)
     }
     
+    func isScorekeeper() -> Bool {
+        return self.isHost || isPractice()
+    }
+    
     func isPractice() -> Bool {
         return self.managedTcpConnection == nil
     }
     
     private func stub(_: [UInt8]) {
         return
+    }
+    
+    func executeScoreUpdatePacket(data : [UInt8]){
+        let packet = ServerScoreUpdatePacket(raw : data)
+        
+        self.scoreBoard?.forceScore(team1: packet.team1Score, team2: packet.team2Score)
     }
 }
 

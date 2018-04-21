@@ -14,8 +14,8 @@ import SpriteKit
 
 class ScoreBoard{
     
-    var redTeamScore:Int32
-    var blueTeamScore:Int32
+    var redTeamScore: Int
+    var blueTeamScore: Int
     var redTeamLabel : SKLabelNode?
     var blueTeamLabel : SKLabelNode?
     
@@ -34,6 +34,13 @@ class ScoreBoard{
     func blueTeamScored()
     {
         blueTeamScore += 1
+        blueTeamLabel?.text = String(blueTeamScore)
+    }
+    
+    func forceScore(team1: Int, team2: Int){
+        redTeamScore = team1
+        blueTeamScore = team2
+        redTeamLabel?.text = String(redTeamScore)
         blueTeamLabel?.text = String(blueTeamScore)
     }
     
