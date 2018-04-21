@@ -14,6 +14,8 @@ type Game struct {
 	numPlayers int
 	connectionIDToPlayerNumberMap map[int]byte
 	players [NUMPLAYERS]gamePlayer
+
+	scoreboard scoreboard
 }
 
 type gamePlayer struct{
@@ -22,6 +24,14 @@ type gamePlayer struct{
 	isHost bool
 	username string
 	emoji string
+	goals int
+
+	hasUnrespondedPing bool
+}
+
+type scoreboard struct {
+	team0 int
+	team1 int
 }
 
 func (gOpts GameOptions) buildGame() (g Game) {
@@ -86,10 +96,34 @@ func (g *Game) respondTo123(in *PacketIn, sendOut func(PacketOut)) {
 	sendOut(packetOut)
 }
 
+func (g *Game) respondTo130(in *PacketIn, sendOut func(PacketOut)){
+	packet130 := parseBytesTo130(in.data)
+
+	fmt.Println("player",packet130.scoringPlayer,"scores for team",packet130.scoringTeam)
+
+	if packet130.scoringTeam == 0 {
+		g.scoreboard.team0++
+	}else{
+		g.scoreboard.team1++
+	}
+
+	packet131 := packet131{
+		team1Score: byte(g.scoreboard.team0),
+		team2score: byte(g.scoreboard.team1),
+		lastScoringPlayer: 0,
+	}
+
+	packetOut := PacketOut{
+		size: 4,
+		data: packet131.toBytes(),
+		targetIds: g.allConnectionIds(),
+	}
+	sendOut(packetOut)
+}
 
 func (g *Game) respondTo133(in *PacketIn, sendOut func(PacketOut)){
 
-	fmt.Println("recieved 133")
+	fmt.Println("recieved 133 (kicked ball) packet")
 
 	playerNumber := g.connectionIDToPlayerNumberMap[in.connectionId]
 
@@ -105,6 +139,13 @@ func (g *Game) respondTo133(in *PacketIn, sendOut func(PacketOut)){
 
 	sendOut(packetOut)
 }
+
+func (g *Game) respondTo138(in *PacketIn, sendOut func(PacketOut)){
+	playerNum := g.connectionIDToPlayerNumberMap[in.connectionId]
+
+	g.players[playerNum].hasUnrespondedPing = false
+}
+
 
 func (g *Game) respondTo125(in *PacketIn, sendOut func(PacketOut)){
 	fmt.Println("recieved 125 packet...")
@@ -183,4 +224,24 @@ func (g *Game) allConnectionIds() []int{
 		rtn[i] = g.players[i].connection.id
 	}
 	return rtn
+}
+
+func (g *Game) haveAllPlayersPingedBack() bool{
+	for _, player := range g.players{
+		if player.hasUnrespondedPing {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+func (g *Game) makeStartGameFunction(sendOut func(PacketOut)) func() {
+	return func(){
+		g.sendReadyAndStarPackets(sendOut)
+	}
+}
+
+func (g *Game) sendReadyAndStarPackets(sendOut func(PacketOut)){
+	fmt.Println("sending ready to start packets")
 }
