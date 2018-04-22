@@ -65,14 +65,10 @@ func (portHttpController *portHttpController) handlePortRequested(w http.Respons
 
 	stringport := strconv.Itoa(usedport)
 
-	fmt.Println(token)
-
 	io.WriteString(w, stringport)
 
 	go func(apptoken int64) { //accept the first attempted connection on the port
 		ln, _ := net.Listen("tcp", ":"+stringport)
-
-		fmt.Println(apptoken)
 
 		conn, _ := ln.Accept()
 
@@ -80,7 +76,7 @@ func (portHttpController *portHttpController) handlePortRequested(w http.Respons
 
 		ln.Close()// close connection so no new connections are accepted after player has quit
 
-		fmt.Println("nick:" + connClient.playerInfo.Username)
+		fmt.Println("New connection from: " + connClient.playerInfo.Username)
 
 		portHttpController.connPasser <- connClient
 	}(apptoken)
@@ -95,7 +91,6 @@ func checkTokenWithCrudService(internlToken int64) (connectionPlayerInfo, int) {
 	url := "http://proj-309-mg-6.cs.iastate.edu:8000/player/"
 	strtoken:= strconv.Itoa(int(internlToken))
 	url = url + strtoken
-	fmt.Println(url)
 	request, _ := http.NewRequest("GET", url, nil)
 	request.Header.Set("ApplicationToken", strconv.Itoa(int(internlToken)))
 	request.Header.Set("AppUser", "MG_6")
