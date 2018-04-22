@@ -144,6 +144,11 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
                 print("Left Goal Scored")
                 let scorePacket = ClientGoalScoredPacket(playerNum: 0, scoringTeam: 0)
                 managedTcpConnection?.sendTCP(packet: scorePacket)
+                
+                if isPractice() {
+                    self.pm.setToStartingPositions()
+                    self.setBallToStartingPosition()
+                }
             }
             else if(otherCategory == GameScene.rightGoalCategory)
             {
@@ -151,6 +156,11 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
                 print("Right Goal Scored")
                 let scorePacket = ClientGoalScoredPacket(playerNum: 0, scoringTeam: 0)
                 managedTcpConnection?.sendTCP(packet: scorePacket)
+                
+                if isPractice() {
+                    self.pm.setToStartingPositions()
+                    self.setBallToStartingPosition()
+                }
             }
         }
     }
@@ -477,12 +487,14 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         let packet = ServerScoreUpdatePacket(raw : data)
         
         self.scoreBoard?.forceScore(team1: packet.team1Score, team2: packet.team2Score)
-        self.pm.setInitialPositions()
+        self.pm.setToStartingPositions()
         self.setBallToStartingPosition()
     }
     
     func setBallToStartingPosition(){
-        self.ballNode?.position = .zero
+        self.ballNode!.position = .zero
+        self.ballNode!.physicsBody!.velocity = .zero
+        self.ballNode!.physicsBody!.angularVelocity = 0.0
     }
 }
 
