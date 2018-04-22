@@ -18,6 +18,8 @@ type playerConnection struct {
 	portIsOpen    bool
 	disconnectionMut sync.Mutex
 
+	playerInfo connectionPlayerInfo
+
 	packetLength int //if no packet is being read, packetLength should be 0
 }
 
@@ -43,6 +45,7 @@ func MakePlayerConnection(client client, packetIn chan<- PacketIn) *playerConnec
 	playerConnection.assignId()
 	playerConnection.isActive = true
 	playerConnection.portIsOpen = true
+	playerConnection.playerInfo = client.playerInfo
 
 	go playerConnection.startReading()
 	go playerConnection.startTransmitting()
