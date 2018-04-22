@@ -35,6 +35,7 @@
 		3A74A602201F7F6D00A1583F /* MatchMakingScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A74A601201F7F6D00A1583F /* MatchMakingScene.swift */; };
 		3A74A604201F86ED00A1583F /* SKSceneTransitionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A74A603201F86ED00A1583F /* SKSceneTransitionExtension.swift */; };
 		3A94062320699AEB0025D3B2 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A94062220699AEB0025D3B2 /* GameScene.sks */; };
+		3AAD3B41208CFDED007B34A2 /* TeamPolicies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AAD3B40208CFDED007B34A2 /* TeamPolicies.swift */; };
 		3AB377DE2023B5980019E73E /* Joystick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB377DD2023B5980019E73E /* Joystick.swift */; };
 		3AB377E02023B5C50019E73E /* CGPointExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB377DF2023B5C50019E73E /* CGPointExtension.swift */; };
 		3AB56A2B208ABFC300EC4462 /* ClientGoalScoredPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB56A2A208ABFC300EC4462 /* ClientGoalScoredPacket.swift */; };
@@ -140,6 +141,7 @@
 		3A74A601201F7F6D00A1583F /* MatchMakingScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchMakingScene.swift; sourceTree = "<group>"; };
 		3A74A603201F86ED00A1583F /* SKSceneTransitionExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKSceneTransitionExtension.swift; sourceTree = "<group>"; };
 		3A94062220699AEB0025D3B2 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
+		3AAD3B40208CFDED007B34A2 /* TeamPolicies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamPolicies.swift; sourceTree = "<group>"; };
 		3AB377DD2023B5980019E73E /* Joystick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Joystick.swift; sourceTree = "<group>"; };
 		3AB377DF2023B5C50019E73E /* CGPointExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGPointExtension.swift; sourceTree = "<group>"; };
 		3AB56A2A208ABFC300EC4462 /* ClientGoalScoredPacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientGoalScoredPacket.swift; sourceTree = "<group>"; };
@@ -294,6 +296,7 @@
 				3A2EFC62206D58D200C7E36B /* GamePlayerManager.swift */,
 				3A1987A420729FA000514B81 /* KickButton.swift */,
 				3AC8B6F1208119900075C468 /* GameScenePlayerImport.swift */,
+				3AAD3B40208CFDED007B34A2 /* TeamPolicies.swift */,
 			);
 			path = "game scene";
 			sourceTree = "<group>";
@@ -530,6 +533,7 @@
 				3A1987A520729FA000514B81 /* KickButton.swift in Sources */,
 				3ADAD6E0207E536B005C94C8 /* OutgoingChatMessagePacket.swift in Sources */,
 				3AC8B6FC20893B980075C468 /* ServerBallKickedPacket.swift in Sources */,
+				3AAD3B41208CFDED007B34A2 /* TeamPolicies.swift in Sources */,
 				3ADAD6DA207E5354005C94C8 /* ChatView.swift in Sources */,
 				3ACF30282032ACF4009DC766 /* TCPResultExtension.swift in Sources */,
 				3ADAD6DF207E536B005C94C8 /* IncommingChatMessagePacket.swift in Sources */,

@@ -196,6 +196,7 @@ class LobbyScene: SKScene {
         dict.setValue(self.playerNumber, forKey: UserDataKeys.playerNumber.rawValue)
         dict.setValue(self.mtcp, forKey: UserDataKeys.managedTCPConnection.rawValue)
         dict.setValue(self.spr, forKey: UserDataKeys.socketPacketResponder.rawValue)
+        dict.setValue(TwoPlayerTeamPolicy(), forKey: UserDataKeys.teamPolicy.rawValue)
         
     }
 }

@@ -11,6 +11,8 @@ import SpriteKit
 
 class GamePlayerManager {
     
+    var teamPolicy : TeamPolicy
+    
     var players : [SKSpriteNode] = []
     var playerNumber : Int
     
@@ -23,7 +25,8 @@ class GamePlayerManager {
     
     var scene : GameScene
     
-    init(playerNumber: Int,scene : GameScene, playerImport : GameScenePlayerImport){
+    init(playerNumber: Int,scene : GameScene, playerImport : GameScenePlayerImport, teamPolicy : TeamPolicy){
+        self.teamPolicy = teamPolicy
         self.playerNumber = playerNumber
         self.scene = scene
         self.playerNumber = playerNumber
@@ -62,14 +65,10 @@ class GamePlayerManager {
         
         //add color to player
         let coloringNode = SKShapeNode(circleOfRadius: 25.0)
-        let team = teamNumber(forPlayer: i)
-        if team == 0{
-            coloringNode.fillColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
-            coloringNode.strokeColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
-        }else {
-            coloringNode.fillColor = #colorLiteral(red: 0.01680417731, green: 0.1983509958, blue: 1, alpha: 1)
-            coloringNode.strokeColor = #colorLiteral(red: 0.01680417731, green: 0.1983509958, blue: 1, alpha: 1)
-        }
+        let color = teamPolicy.teamColor(forPlayer: i)
+        coloringNode.fillColor = color
+        coloringNode.strokeColor = color
+        
         players[i].addChild(coloringNode)
     }
     
@@ -127,15 +126,11 @@ class GamePlayerManager {
 
     func setToStartingPositions(){
         
-        let numPlayers = scene.isPractice() ? 1 : GameScene.maxPlayers
+        let numPlayers = scene.isLocalGame() ? 1 : GameScene.maxPlayers
         for i in 0..<numPlayers {
-            players[i].position = defaultPlayerStartingPositions[i]!
+            players[i].position = teamPolicy.startingPosition(forPlayer: i)
             players[i].physicsBody!.velocity = .zero
         }
         
-    }
-    
-    func teamNumber(forPlayer num: Int) -> Int{
-        return num
     }
 }

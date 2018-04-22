@@ -59,6 +59,7 @@ class MainMenu: SKScene {
         let playerImport = makePracticePlayerImport()
         
         dict.setValue(Int(0), forKey: UserDataKeys.playerNumber.rawValue)
+        dict.setValue(PracticeTeamPolicy(), forKey: UserDataKeys.teamPolicy.rawValue)
         dict.setValue(playerImport, forKey: UserDataKeys.gameSecnePlayerImport.rawValue)
     }
     

@@ -81,9 +81,10 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     }
     
     func configurePlayerManager(){
+        let teamPolicy = self.userData!.value(forKey: UserDataKeys.teamPolicy.rawValue) as! TeamPolicy
         let playerImport = self.userData!.value(forKey: UserDataKeys.gameSecnePlayerImport.rawValue) as! GameScenePlayerImport
         let playerNumber = self.userData!.value(forKey: UserDataKeys.playerNumber.rawValue) as! Int
-        self.pm = GamePlayerManager(playerNumber: playerNumber, scene: self, playerImport: playerImport)
+        self.pm = GamePlayerManager(playerNumber: playerNumber, scene: self, playerImport: playerImport, teamPolicy : teamPolicy)
     }
     
     fileprivate func configureCollisions() {
@@ -145,7 +146,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
                 let scorePacket = ClientGoalScoredPacket(playerNum: 0, scoringTeam: 0)
                 managedTcpConnection?.sendTCP(packet: scorePacket)
                 
-                if isPractice() {
+                if isLocalGame() {
                     self.pm.setToStartingPositions()
                     self.setBallToStartingPosition()
                 }
@@ -157,7 +158,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
                 let scorePacket = ClientGoalScoredPacket(playerNum: 0, scoringTeam: 0)
                 managedTcpConnection?.sendTCP(packet: scorePacket)
                 
-                if isPractice() {
+                if isLocalGame() {
                     self.pm.setToStartingPositions()
                     self.setBallToStartingPosition()
                 }
@@ -472,10 +473,10 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     }
     
     func isScorekeeper() -> Bool {
-        return self.isHost || isPractice()
+        return self.isHost || isLocalGame()
     }
     
-    func isPractice() -> Bool {
+    func isLocalGame() -> Bool {
         return self.managedTcpConnection == nil
     }
     

@@ -9,7 +9,8 @@
 import Foundation
 import SpriteKit
 
-var defaultPlayerStartingPositions = [
-    0: CGPoint(x: -100,y: -100),
-    1: CGPoint(x: 100,y: -100),
-]
+struct GameProperties {
+    //static game configuration properties that are consistant between all modes
+    //...
+    
+}
