@@ -3,8 +3,11 @@ package main
 import (
 	"io"
 	"net"
+	"fmt"
 	"net/http"
 	"strconv"
+	"encoding/json"
+	"io/ioutil"
 )
 
 type clientConnection struct {
@@ -15,7 +18,14 @@ type clientConnection struct {
 }
 
 type connectionPlayerInfo struct {
-	username string
+	Id string `json:"id"`
+	Username string `json:"nickname"`
+	Gamesplayed string `json:"gamesplayed"`
+	Gameswon string `json:"gameswon"`
+	Goalsscored string `json:"goalsscored"`
+	Rankwin string `json:"rankwin"`
+	Rankscore string `json:"rankscore"`
+	Lastavatar string `json:"lastavatar"`
 }
 
 type portHttpController struct {
@@ -41,10 +51,18 @@ func (portHttpController *portHttpController) handlePortRequested(w http.Respons
 
 	stringport := strconv.Itoa(usedport)
 
+	token, _ := strconv.Atoi(r.Header.Get("AppToken"))
+
+	fmt.Println(token)
+
+	apptoken := int64(token)
+
 	io.WriteString(w, stringport)
 
-	go func() { //accept the first attempted connection on the port
+	go func(apptoken int64) { //accept the first attempted connection on the port
 		ln, _ := net.Listen("tcp", ":"+stringport)
+
+		fmt.Println(apptoken)
 
 		conn, _ := ln.Accept()
 
@@ -55,18 +73,42 @@ func (portHttpController *portHttpController) handlePortRequested(w http.Respons
 			port:				usedport,
 		}
 
+		connClient.playerInfo = checkTokenWithCrudService(apptoken)
+
+		fmt.Println("nick:" + connClient.playerInfo.Username)
+
 		portHttpController.connPasser <- connClient
-	}()
+	}(apptoken)
 
 }
 
 
 func checkTokenWithCrudService(internlToken int64) connectionPlayerInfo {
-	info := connectionPlayerInfo{}
+	Info := connectionPlayerInfo{}
+	client := http.Client{}
+	url := "http://proj-309-mg-6.cs.iastate.edu:8000/player/"
+	strtoken:= strconv.Itoa(int(internlToken))
+	url = url + strtoken
+	fmt.Println(url)
+	request, _ := http.NewRequest("GET", url, nil)
+	request.Header.Set("ApplicationToken", strconv.Itoa(int(internlToken)))
+	request.Header.Set("AppUser", "MG_6")
+	request.Header.Set("AppSecret", "goingforthat#1bois")
 
+	resp, err := client.Do(request)
+	if err != nil {
+		fmt.Println("crud request error")
+		panic(err)
+	}
 
-	//todo
+	bodyByte, _ := ioutil.ReadAll(resp.Body)
 
-	return info
+	fmt.Println(resp.Body)
+	err3 := json.Unmarshal(bodyByte, &Info)
+	if err3 != nil {
+		fmt.Println("unmarshal error")
+		panic(err3)
+	}
+
+	return Info
 }
-
