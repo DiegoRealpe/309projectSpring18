@@ -48,8 +48,6 @@ class GamePlayerManager {
         players[i].physicsBody = modelPlayer.physicsBody?.copy() as? SKPhysicsBody
         players[i].physicsBody?.mass = modelPlayer.physicsBody!.mass //don't know why this is necesarry
         
-        players[i].position = defaultPlayerStartingPositions[i]!
-        
         print("mass of player is",players[i].physicsBody!.mass)
         
         scene.addChild(players[i])
@@ -71,6 +69,8 @@ class GamePlayerManager {
         for player in playerImport.players {
             self.addPlayer(importedPlayer: player)
         }
+        
+        setInitialPositions()
     }
     
     
@@ -91,4 +91,11 @@ class GamePlayerManager {
         playerToRemove.removeFromParent()
     }
 
+    func setInitialPositions(){
+        
+        for i in 0..<GameScene.maxPlayers {
+            players[i].position = defaultPlayerStartingPositions[i]!
+        }
+        
+    }
 }

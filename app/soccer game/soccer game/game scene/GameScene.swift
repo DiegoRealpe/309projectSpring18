@@ -477,6 +477,12 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         let packet = ServerScoreUpdatePacket(raw : data)
         
         self.scoreBoard?.forceScore(team1: packet.team1Score, team2: packet.team2Score)
+        self.pm.setInitialPositions()
+        self.setBallToStartingPosition()
+    }
+    
+    func setBallToStartingPosition(){
+        self.ballNode?.position = .zero
     }
 }
 
