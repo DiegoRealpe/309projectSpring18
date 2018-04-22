@@ -87,9 +87,9 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate{
         
         print("🍆🍆🍆status code",response.response!.statusCode) //todo handle 404 without it being a fatal error
         
-        
         if(response.response!.statusCode == 202)
         {
+            self.unwrapLoginResponse(response: response.result.value!)
             self.moveToGameViewController()
         }
         else if(response.response!.statusCode == 404)//if player not found --> create account
@@ -102,6 +102,15 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate{
             print("SERVER MACHINE 🅱️ROKE")
         }
         
+    }
+    
+    func unwrapLoginResponse(response : String){
+        let decoder = JSONDecoder()
+        let resultStruct = try! decoder.decode(CrudServiceLoginResponse.self, from: response.data(using: .utf8)!)
+        
+        LocalPlayerInfo.username = resultStruct.profile?.nickname
+        LocalPlayerInfo.gamesPlayed = Int(resultStruct.profile!.gamesPlayed!)
+        LocalPlayerInfo.goalsScored = Int(resultStruct.profile!.gamesWon!)
     }
     
     func showCreateAccountView(){
@@ -133,6 +142,8 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate{
         Alamofire.request(requestURL, method: .post, parameters: parameter, encoding: JSONEncoding.default, headers: headers).responseString(completionHandler: createAccountResponse(_:))
         
         LocalPlayerInfo.username = nickname
+        
+        print("got username:",LocalPlayerInfo.username,"👾👾👾👾")
     }
     func createAccountResponse(_ response : DataResponse<String>)
     {

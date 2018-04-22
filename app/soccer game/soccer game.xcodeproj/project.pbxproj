@@ -349,7 +349,6 @@
 				4C98FBC5201E658700378614 /* LaunchScreen.storyboard */,
 				4C98FBC8201E658700378614 /* Info.plist */,
 				3A74A608201FB90D00A1583F /* main menu */,
-				3AC8B6F52082B5420075C468 /* LoginViewController.swift */,
 			);
 			path = "soccer game";
 			sourceTree = "<group>";
@@ -369,6 +368,7 @@
 				3A31696D2037505900DA2DCC /* NewAccountOrLogin.sks */,
 				4CC91D9D20339BA700FB9236 /* NewAccountOrLogin.swift */,
 				3AC8B6F720851C420075C468 /* LocalPlayerInfo.swift */,
+				3AC8B6F52082B5420075C468 /* LoginViewController.swift */,
 			);
 			path = Accounts;
 			sourceTree = "<group>";

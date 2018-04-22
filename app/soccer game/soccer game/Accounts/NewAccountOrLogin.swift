@@ -124,8 +124,8 @@ class NewAccountOrLogin: SKScene{
                     print(JSON)
                     
                     
-                    let blog = try? JSONDecoder().decode(Profile.self, from: JSON as! Data)
-                    self.buildStatsNodes(player: blog!)
+                    //let blog = try? JSONDecoder().decode(Profile.self, from: JSON as! Data)
+                    //self.buildStatsNodes(player: blog!)
                     
                     //let playerStats = JSON["Profile"] as! Profile
                     //self.buildStatsNodes(player: playerStats)
