@@ -9,6 +9,11 @@
 import Foundation
 import UIKit
 
+/*
+ Team policies dictate the configuration related aspects of multiplayer and single-
+ player games. Such properties include, team colors, which teams players belong to and
+ other similar items.
+ */
 protocol TeamPolicy {
     var numPlayers : Int {get}
     
