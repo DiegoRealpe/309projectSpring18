@@ -12,6 +12,7 @@ import GameplayKit
 import FBSDKLoginKit
 import FacebookCore
 import FacebookLogin
+import Alamofire
 
 class GameViewController:
 
@@ -23,9 +24,6 @@ UIViewController,FBSDKLoginButtonDelegate {
     
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!)
     {
-        
-       // setGameScene(loginButton)
-        
         
         if ((error) != nil)
         {
@@ -39,10 +37,12 @@ UIViewController,FBSDKLoginButtonDelegate {
             // should check if specific permissions missing
             if result.grantedPermissions.contains("email")
             {
-               
+               //sendCRUDServiceLoginRequest(FBToken : AccessToken.current.unsafelyUnwrapped.authenticationToken)
             }
-             setGameScene(loginButton)
-             print("User Logged In")
+            
+            
+           //sendCRUDServiceLoginRequest(FBToken : AccessToken.current!.authenticationToken)
+            loginButton.removeFromSuperview()
         }
     }
     
@@ -53,19 +53,19 @@ UIViewController,FBSDKLoginButtonDelegate {
         view.addSubview(loginButton)
     }
     
-    func setGameScene(_ loginButton: FBSDKLoginButton!)
+    func setGameScene(/*_ loginButton: FBSDKLoginButton!*/)
     {
         
         if let view = self.view as! SKView? {
             // Load the SKScene from 'GameScene.sks'
             if let scene = MainMenu(fileNamed: "MainMenu") {
                 // Set the scale mode to scale to fit the window
-                scene.scaleMode = .aspectFill
+                scene.scaleMode = .fill
                 
                 // Present the scene
                 view.presentScene(scene)
             }
-            loginButton.removeFromSuperview()
+           // loginButton.removeFromSuperview()
             view.ignoresSiblingOrder = true
             
             view.showsFPS = true
@@ -76,29 +76,18 @@ UIViewController,FBSDKLoginButtonDelegate {
         hideChatView()
         GameViewController.globalChatView = chatView
         
-        print("token was",AccessToken.current!)
+        
     }
     
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let loginButton = FBSDKLoginButton()
-        // Do any additional setup after loading the view, typically from a nib.
         
-        if AccessToken.current != nil{
-           setGameScene(loginButton)
-        }
-        
-        else
-        {
-        let loginButton = FBSDKLoginButton()
-        loginButton.center = view.center
-        loginButton.delegate = self // Remember to set the delegate of the loginButton
-        view.addSubview(loginButton)
-        }
-        
+        setGameScene()
     }
+    
+    
 
     override var shouldAutorotate: Bool {
         return true
@@ -122,11 +111,25 @@ UIViewController,FBSDKLoginButtonDelegate {
     }
     
     
+
+    
+    struct loginCompletion {
+        var finished = false
+        var token: Int
+    }
+    
     func hideChatView(){
         self.chatView.isHidden = true
     }
+
     
     func unhideChatView(){
         self.chatView.isHidden = false
     }
+    //currently not doing anything until crud service is sorted out
+    /*func loginResponse(_ response : DataResponse<String>){
+        print("login response was",String(describing : response.data))
+        
+    }*/
+
 }

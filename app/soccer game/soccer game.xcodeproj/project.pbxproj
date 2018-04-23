@@ -36,11 +36,14 @@
 		3A74A604201F86ED00A1583F /* SKSceneTransitionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A74A603201F86ED00A1583F /* SKSceneTransitionExtension.swift */; };
 		3A94062320699AEB0025D3B2 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 3A94062220699AEB0025D3B2 /* GameScene.sks */; };
 		3AAD3B41208CFDED007B34A2 /* TeamPolicies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AAD3B40208CFDED007B34A2 /* TeamPolicies.swift */; };
+		3AAD3B43208E2CD0007B34A2 /* GameNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AAD3B42208E2CCF007B34A2 /* GameNotifier.swift */; };
 		3AB377DE2023B5980019E73E /* Joystick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB377DD2023B5980019E73E /* Joystick.swift */; };
 		3AB377E02023B5C50019E73E /* CGPointExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB377DF2023B5C50019E73E /* CGPointExtension.swift */; };
 		3AB56A2B208ABFC300EC4462 /* ClientGoalScoredPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB56A2A208ABFC300EC4462 /* ClientGoalScoredPacket.swift */; };
 		3AB56A2D208B82EE00EC4462 /* ServerScoreUpdatePacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB56A2C208B82EE00EC4462 /* ServerScoreUpdatePacket.swift */; };
 		3AC8B6F2208119900075C468 /* GameScenePlayerImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC8B6F1208119900075C468 /* GameScenePlayerImport.swift */; };
+		3AC8B6F62082B5420075C468 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC8B6F52082B5420075C468 /* LoginViewController.swift */; };
+		3AC8B6F820851C420075C468 /* LocalPlayerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC8B6F720851C420075C468 /* LocalPlayerInfo.swift */; };
 		3AC8B6FA20893B110075C468 /* ClientBallKickedPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC8B6F920893B110075C468 /* ClientBallKickedPacket.swift */; };
 		3AC8B6FC20893B980075C468 /* ServerBallKickedPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AC8B6FB20893B980075C468 /* ServerBallKickedPacket.swift */; };
 		3ACF30282032ACF4009DC766 /* TCPResultExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACF30272032ACF4009DC766 /* TCPResultExtension.swift */; };
@@ -142,11 +145,14 @@
 		3A74A603201F86ED00A1583F /* SKSceneTransitionExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKSceneTransitionExtension.swift; sourceTree = "<group>"; };
 		3A94062220699AEB0025D3B2 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
 		3AAD3B40208CFDED007B34A2 /* TeamPolicies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamPolicies.swift; sourceTree = "<group>"; };
+		3AAD3B42208E2CCF007B34A2 /* GameNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameNotifier.swift; sourceTree = "<group>"; };
 		3AB377DD2023B5980019E73E /* Joystick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Joystick.swift; sourceTree = "<group>"; };
 		3AB377DF2023B5C50019E73E /* CGPointExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGPointExtension.swift; sourceTree = "<group>"; };
 		3AB56A2A208ABFC300EC4462 /* ClientGoalScoredPacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientGoalScoredPacket.swift; sourceTree = "<group>"; };
 		3AB56A2C208B82EE00EC4462 /* ServerScoreUpdatePacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerScoreUpdatePacket.swift; sourceTree = "<group>"; };
 		3AC8B6F1208119900075C468 /* GameScenePlayerImport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScenePlayerImport.swift; sourceTree = "<group>"; };
+		3AC8B6F52082B5420075C468 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		3AC8B6F720851C420075C468 /* LocalPlayerInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPlayerInfo.swift; sourceTree = "<group>"; };
 		3AC8B6F920893B110075C468 /* ClientBallKickedPacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientBallKickedPacket.swift; sourceTree = "<group>"; };
 		3AC8B6FB20893B980075C468 /* ServerBallKickedPacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerBallKickedPacket.swift; sourceTree = "<group>"; };
 		3ACF30272032ACF4009DC766 /* TCPResultExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCPResultExtension.swift; sourceTree = "<group>"; };
@@ -297,6 +303,7 @@
 				3A1987A420729FA000514B81 /* KickButton.swift */,
 				3AC8B6F1208119900075C468 /* GameScenePlayerImport.swift */,
 				3AAD3B40208CFDED007B34A2 /* TeamPolicies.swift */,
+				3AAD3B42208E2CCF007B34A2 /* GameNotifier.swift */,
 			);
 			path = "game scene";
 			sourceTree = "<group>";
@@ -384,6 +391,8 @@
 			children = (
 				3A31696D2037505900DA2DCC /* NewAccountOrLogin.sks */,
 				4CC91D9D20339BA700FB9236 /* NewAccountOrLogin.swift */,
+				3AC8B6F720851C420075C468 /* LocalPlayerInfo.swift */,
+				3AC8B6F52082B5420075C468 /* LoginViewController.swift */,
 			);
 			path = Accounts;
 			sourceTree = "<group>";
@@ -535,7 +544,10 @@
 				3AC8B6FC20893B980075C468 /* ServerBallKickedPacket.swift in Sources */,
 				3AAD3B41208CFDED007B34A2 /* TeamPolicies.swift in Sources */,
 				3ADAD6DA207E5354005C94C8 /* ChatView.swift in Sources */,
+				3AC8B6F62082B5420075C468 /* LoginViewController.swift in Sources */,
 				3ACF30282032ACF4009DC766 /* TCPResultExtension.swift in Sources */,
+				3AC8B6F820851C420075C468 /* LocalPlayerInfo.swift in Sources */,
+				3AAD3B43208E2CD0007B34A2 /* GameNotifier.swift in Sources */,
 				3ADAD6DF207E536B005C94C8 /* IncommingChatMessagePacket.swift in Sources */,
 				3A3A58282063207100E74D82 /* AbstractClientPositionVelocityPacket.swift in Sources */,
 				3A0C313E2038A4860011D18A /* UserDataKeys.swift in Sources */,
@@ -701,8 +713,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = R4RLVQP887;
+				DEVELOPMENT_TEAM = P72MR55P62;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 					"$(inherited)",
@@ -711,8 +724,9 @@
 				INFOPLIST_FILE = "soccer game/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "edu.309.mg6.soccer-game-ryan";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.309.mg6.soccer-game-diego";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -722,8 +736,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = R4RLVQP887;
+				DEVELOPMENT_TEAM = P72MR55P62;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 					"$(inherited)",
@@ -732,8 +747,9 @@
 				INFOPLIST_FILE = "soccer game/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "edu.309.mg6.soccer-game-ryan";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.309.mg6.soccer-game-diego";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

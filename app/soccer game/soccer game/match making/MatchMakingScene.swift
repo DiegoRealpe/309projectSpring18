@@ -58,9 +58,10 @@ class MatchMakingScene: SKScene {
     private func askServerForTCPPort(){
         self.connectLabel?.text = "connecting ..."
         
-        let requestString = "http://\(CommunicationProperties.host):\(CommunicationProperties.httpport)/tcpport"
+        let headers = ["AppToken" : LocalPlayerInfo.applicationToken!]
+        let requestString = "http://\(CommunicationProperties.gameServiceHost):\(CommunicationProperties.gameServiceHttpPort)/tcpport"
         print("sending get to \(requestString)")
-        Alamofire.request(requestString, method: .get)
+        Alamofire.request(requestString, method: .get, headers: headers)
             .responseString(completionHandler: respondToPortHandshake(_:))
     }
     
@@ -79,7 +80,7 @@ class MatchMakingScene: SKScene {
             spr.packetTypeDict = makePacketTypeDict(spr:spr)
             
             //set ManagedTCPConnection to use spr as responder
-            self.tcpConn = ManagedTCPConnection(address : CommunicationProperties.host, port : port, dataHandler : spr.respond(data:))
+            self.tcpConn = ManagedTCPConnection(address : CommunicationProperties.gameServiceHost, port : port, dataHandler : spr.respond(data:))
         }
         
         self.connectLabel?.text = "Waiting for a match"

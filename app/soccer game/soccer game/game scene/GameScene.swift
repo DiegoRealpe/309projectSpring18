@@ -10,6 +10,7 @@
 
 import SpriteKit
 import GameplayKit
+import AudioToolbox
 
 class GameScene: SKScene , SKPhysicsContactDelegate {
     
@@ -23,14 +24,14 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     var quitLabel : SKLabelNode?
     var joyStick : Joystick?
     var kickButton : KickButton!
-    var ballNode : SKSpriteNode?
+    var ballNode : SKSpriteNode!
     var managedTcpConnection : ManagedTCPConnection?
-    var leftGoal: SKSpriteNode?
-    var rightGoal: SKSpriteNode?
-    var northBound : SKSpriteNode?
-    var redTeamScore: SKLabelNode?
-    var blueTeamScore:SKLabelNode?
-    var scoreBoard:ScoreBoard?
+    var leftGoal: SKSpriteNode!
+    var rightGoal: SKSpriteNode!
+    var northBound : SKSpriteNode!
+    var redTeamScore: SKLabelNode!
+    var blueTeamScore:SKLabelNode!
+    var scoreBoard:ScoreBoard!
     let forceUpdateWaits = 1
     
     var waitsSinceLastPlayerUpdate = 0
@@ -39,9 +40,13 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     var kickCoolDownTime : Double = 0.0
     let kickCoolDownInterval = 0.5
     
+    var lastGoal = 0.0
+    
     //after didMove is called players is initialized with the exact size of maxPlayers
     var pm : GamePlayerManager!
     var isHost = false
+    
+    var notifier : GameNotifier!
     
     var localPlayerStateWasUpdated = true
     var localBallStateWasUpdates = true //make true when contact is detected
@@ -60,6 +65,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         getNodesFromScene()
         configureCollisions()
         configurePlayerManager()
+        self.notifier = GameNotifier(scene: self)
         
         //give all children of the north bounds(all the bounds) the same physics category
         for child in (northBound?.children)!
@@ -78,6 +84,8 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         configurePacketResponder()
         
         kickButton = KickButton(scene: self)
+        
+        notifier.displayMessage("Hello")
     }
     
     func configurePlayerManager(){
@@ -90,17 +98,17 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     fileprivate func configureCollisions() {
         self.physicsWorld.contactDelegate = self
         
-        self.ballNode?.physicsBody?.categoryBitMask = GameScene.ballCategory
-        self.ballNode?.physicsBody?.contactTestBitMask = GameScene.playerCategory | GameScene.leftGoalCategory |  GameScene.rightGoalCategory
+        self.ballNode.physicsBody?.categoryBitMask = GameScene.ballCategory
+        self.ballNode.physicsBody?.contactTestBitMask = GameScene.playerCategory | GameScene.leftGoalCategory |  GameScene.rightGoalCategory
         
-        self.leftGoal?.physicsBody?.categoryBitMask = GameScene.leftGoalCategory
-        self.leftGoal?.physicsBody?.contactTestBitMask = GameScene.ballCategory
+        self.leftGoal.physicsBody?.categoryBitMask = GameScene.leftGoalCategory
+        self.leftGoal.physicsBody?.contactTestBitMask = GameScene.ballCategory
         
-        self.rightGoal?.physicsBody?.categoryBitMask = GameScene.rightGoalCategory
-        self.rightGoal?.physicsBody?.contactTestBitMask = GameScene.ballCategory
+        self.rightGoal.physicsBody?.categoryBitMask = GameScene.rightGoalCategory
+        self.rightGoal.physicsBody?.contactTestBitMask = GameScene.ballCategory
         
-        self.northBound?.physicsBody?.categoryBitMask = GameScene.boundsCategory
-        self.northBound?.physicsBody?.contactTestBitMask = GameScene.ballCategory
+        self.northBound.physicsBody?.categoryBitMask = GameScene.boundsCategory
+        self.northBound.physicsBody?.contactTestBitMask = GameScene.ballCategory
         
     }
     
@@ -136,31 +144,40 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         else if(otherCategory == GameScene.playerCategory)
         {
             print("Player hit ball")
+            let num = pm.playerNumberFor(sprite: other)!
+            pm.recordInteractionWithBall(playerNum: num)
             localBallStateWasUpdates = true
         }
         else if isScorekeeper() {
-            if(otherCategory == GameScene.leftGoalCategory)
+            if(otherCategory == GameScene.leftGoalCategory && self.lastGoal + 0.5 < CACurrentMediaTime())
             {
-                scoreBoard?.redTeamScored()
+                self.lastGoal = CACurrentMediaTime();
+                scoreBoard?.blueTeamScored()
                 print("Left Goal Scored")
-                let scorePacket = ClientGoalScoredPacket(playerNum: 0, scoringTeam: 0)
+                let playerNum = self.pm.lastTouchForTeam(team: 1)
+                let scorePacket = ClientGoalScoredPacket(playerNum: playerNum, scoringTeam: 1)
                 managedTcpConnection?.sendTCP(packet: scorePacket)
                 
                 if isLocalGame() {
                     self.pm.setToStartingPositions()
                     self.setBallToStartingPosition()
+                    AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+                    
                 }
             }
-            else if(otherCategory == GameScene.rightGoalCategory)
+            else if(otherCategory == GameScene.rightGoalCategory && self.lastGoal + 0.5 < CACurrentMediaTime())
             {
-                scoreBoard?.blueTeamScored()
+                self.lastGoal = CACurrentMediaTime()
+                scoreBoard?.redTeamScored()
                 print("Right Goal Scored")
-                let scorePacket = ClientGoalScoredPacket(playerNum: 0, scoringTeam: 0)
+                let playerNum = self.pm.lastTouchForTeam(team: 0)
+                let scorePacket = ClientGoalScoredPacket(playerNum: playerNum, scoringTeam: 0)
                 managedTcpConnection?.sendTCP(packet: scorePacket)
                 
                 if isLocalGame() {
                     self.pm.setToStartingPositions()
                     self.setBallToStartingPosition()
+                    AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
                 }
             }
         }
@@ -220,13 +237,8 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     }
     
     private func setBallPositionAndVelocity(position : CGPoint, velocity : CGVector){
-        guard let ball = self.ballNode else{
-            print("ball was not found")
-            return
-        }
-        
-        ball.position = position
-        ball.physicsBody?.velocity = velocity
+        self.ballNode.position = position
+        self.ballNode.physicsBody?.velocity = velocity
     }
     
     fileprivate func sendBallStatePacketIfNecesarry() {
@@ -234,7 +246,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
             return
         }
         
-        if (self.localBallStateWasUpdates && self.ballNode != nil) || self.waitsSinceLastBallUpdate >= self.forceUpdateWaits {
+        if self.localBallStateWasUpdates  || self.waitsSinceLastBallUpdate >= self.forceUpdateWaits {
             let packet = self.makeBallStatePacket()
             
             print("sending ball packet, ",packet.toByteArray())
@@ -289,8 +301,8 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     
     func makeBallStatePacket() -> ClientBallStatePacket {
         
-        let position = ballNode!.position
-        let velocity = ballNode!.physicsBody!.velocity
+        let position = ballNode.position
+        let velocity = ballNode.physicsBody!.velocity
         
         print(Int32(position.x))
         print(Int32(position.y))
@@ -402,8 +414,8 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         
         let sbsp = ServerBallStatePacket(rawData: data)
         
-        self.ballNode?.position = sbsp.position
-        self.ballNode?.physicsBody?.velocity = sbsp.velocity
+        self.ballNode.position = sbsp.position
+        self.ballNode.physicsBody?.velocity = sbsp.velocity
     }
     
     
@@ -425,6 +437,9 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         print("got player left game packet with data:",data)
         
         self.pm.removePlayerFromGame(playerNumber: Int(data[1]))
+        if pm.countActive() == 1 {
+            self.isHost = true
+        }
     }
     
     func executeHostAssignmentPacket(data : [UInt8]){
@@ -439,20 +454,22 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     func doKick(playerNum : Int){
         
         let playerPosition = self.pm!.selectPlayer(playerNum: playerNum).position
-        let distanceBetweenBallAndPlayer : Float = self.ballNode!.position.distanceTo(playerPosition)
+        let distanceBetweenBallAndPlayer : Float = self.ballNode.position.distanceTo(playerPosition)
         let now : Double = CACurrentMediaTime();
         
         print("distnce was: \(distanceBetweenBallAndPlayer))")
         
         print("time is \(now) and coolDownTime is \(kickCoolDownTime)")
         if distanceBetweenBallAndPlayer < GameScene.maxKickDistance, now > self.kickCoolDownTime {
-            let vector : CGVector =  playerPosition.vectorTo(self.ballNode!.position,ofMagnitude: 300)
+            let vector : CGVector =  playerPosition.vectorTo(self.ballNode.position,ofMagnitude: 300)
             
             print("kick",vector)
-            self.ballNode!.physicsBody!.velocity = vector
+            self.ballNode.physicsBody!.velocity = vector
             sendKickPacket()
             
             self.kickCoolDownTime = now + kickCoolDownInterval
+            
+            self.pm.recordInteractionWithBall(playerNum: self.pm.playerNumber)
         }
     }
     
@@ -460,6 +477,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         let packet = ServerBallKickedPacket(data: data)
         
         doKick(playerNum: packet.playerNumber)
+        self.pm.recordInteractionWithBall(playerNum: packet.playerNumber)
     }
     
     private func sendKickPacket(){
@@ -490,12 +508,21 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         self.scoreBoard?.forceScore(team1: packet.team1Score, team2: packet.team2Score)
         self.pm.setToStartingPositions()
         self.setBallToStartingPosition()
+        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+        let scoringPlayerUsername = pm.usernameFor(playerNumber: packet.scoringPlayer)
+        let teamEmoji = pm.teamPolicy.teamNumber(forPlayer: pm.playerNumber) == pm.teamPolicy.teamNumber(forPlayer : packet.scoringPlayer) ? "😻":"🙀"
+        self.notifier.displayMessage("\(scoringPlayerUsername) scored \(teamEmoji)\(teamEmoji)\(teamEmoji)")
     }
     
     func setBallToStartingPosition(){
-        self.ballNode!.position = .zero
-        self.ballNode!.physicsBody!.velocity = .zero
-        self.ballNode!.physicsBody!.angularVelocity = 0.0
+        DispatchQueue.main.async {
+            print("resetting ball")
+            print("ball position is",self.ballNode.position)
+            self.ballNode.position = .zero
+            self.ballNode.physicsBody!.velocity = .zero
+            self.ballNode.physicsBody!.angularVelocity = 0.0
+        }
     }
+    
 }
 

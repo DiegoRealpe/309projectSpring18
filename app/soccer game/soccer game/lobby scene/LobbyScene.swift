@@ -36,7 +36,7 @@ class LobbyScene: SKScene {
         
         self.quitLabel = self.childNode(withName: "Quit Label") as? SKLabelNode
         
-        self.pm!.addPlayer(playerNumber: playerNumber , username: "NENENEHdhe 🐥🇺🇸")
+        self.pm!.addPlayer(playerNumber: playerNumber , username: localUsername())
         
         populatePacketTypeDict()
         
@@ -57,7 +57,7 @@ class LobbyScene: SKScene {
             chatView.onNewMessage = self.newLocalMessage(text:)
             chatView.onEmojiChange = self.onLocalEmojiChange(for:is:)
             
-            chatView.addPlayer(playerNum: self.playerNumber ,username: "NENENEHdhe 🐥🇺🇸",emojiEditable: true)
+            chatView.addPlayer(playerNum: self.playerNumber ,username: localUsername() ,emojiEditable: true)
         }
     }
     
@@ -198,5 +198,13 @@ class LobbyScene: SKScene {
         dict.setValue(self.spr, forKey: UserDataKeys.socketPacketResponder.rawValue)
         dict.setValue(TwoPlayerTeamPolicy(), forKey: UserDataKeys.teamPolicy.rawValue)
         
+    }
+    
+    func localUsername() -> String{
+        if let name = LocalPlayerInfo.username {
+            return name
+        }else{
+            return "Default Username"
+        }
     }
 }

@@ -35,7 +35,7 @@ extension SKScene{
         
         if let skScene = SKScene(fileNamed: sceneName){
             // Set the scale mode to scale to fit the window
-            skScene.scaleMode = .aspectFill
+            skScene.scaleMode = .fill
             skScene.userData = NSMutableDictionary()
             let userData: NSMutableDictionary = skScene.userData!
             dataFunction(userData)

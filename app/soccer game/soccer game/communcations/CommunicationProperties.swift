@@ -10,8 +10,12 @@ import Foundation
 
 
 struct CommunicationProperties{
-    //static let host = "proj-309-MG-6.cs.iastate.edu"
-    static let host = "localhost"
-    static let httpport = 6000
- 
+    static let gameServiceHost = "proj-309-MG-6.cs.iastate.edu"
+    //static let gameServiceHost = "localhost"
+    static let gameServiceHttpPort = 6000
+    
+    
+    static let crudServiceHost = "proj-309-MG-6.cs.iastate.edu"
+    //static let crudServiceHost = "localhost"
+    static let crudServicePort = 8000
 }

@@ -50,7 +50,7 @@ class TwoPlayerTeamPolicy : TeamPolicy {
     private let color0 = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
     private let color1 = #colorLiteral(red: 0.01680417731, green: 0.1983509958, blue: 1, alpha: 1)
     private let startingPositions = [ //I recognize that an array might be more efficient
-        0 : CGPoint(x: -100,y: -100), //but a dictionary better expresses the let's purpose
+        0 : CGPoint(x: -100,y: 100), //but a dictionary better expresses the let's purpose
         1 : CGPoint(x: 100,y: -100),
     ]
     
