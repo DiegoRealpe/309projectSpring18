@@ -11,10 +11,15 @@ import SpriteKit
 
 class LobbyPlayerManager{
 
-    var players : [PlayerInfo?] = Array(repeating: nil, count: 2)
+    var players : [PlayerInfo?] = []
     var scene : SKScene
     
-    init(scene : SKScene){
+    var teamPolicy : TeamPolicy
+    
+    init(scene : SKScene, teamPolicy : TeamPolicy){
+        
+        self.teamPolicy = teamPolicy
+        self.players = Array(repeating: nil,count: teamPolicy.numPlayers)
         self.scene = scene
     }
     
@@ -52,7 +57,7 @@ struct PlayerInfo{
 }
 
 class PlayerExport {
-    var players : [PlayerInfo?] = Array(repeating: nil, count: 2)
+    var players : [PlayerInfo?]
     
     init(players : [PlayerInfo?]){
         self.players = players

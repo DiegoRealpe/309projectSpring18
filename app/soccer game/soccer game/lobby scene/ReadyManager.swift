@@ -13,6 +13,7 @@ class ReadyManager{
     
     var scene : SKScene
     var readyLabel : SKLabelNode
+    var pm : LobbyPlayerManager
     
     var numReady = 0
     var currentPlayerReady = false
@@ -20,7 +21,8 @@ class ReadyManager{
     var onReady : () -> ()
     var onUnready : () -> ()
     
-    init(scene : SKScene, onReady : @escaping () -> (), onUnready : @escaping () -> () ){
+    init(scene : SKScene, onReady : @escaping () -> (), onUnready : @escaping () -> (), lpm: LobbyPlayerManager ){
+        self.pm = lpm
         self.scene = scene
         self.readyLabel = scene.childNode(withName: "Ready Label") as! SKLabelNode
         self.onReady = onReady
@@ -33,7 +35,7 @@ class ReadyManager{
         let actionText = currentPlayerReady ? "I'm not ready 😡" : "Ready Up"
         self.readyLabel.fontColor = currentPlayerReady ? UIColor.red : UIColor.green
         
-        self.readyLabel.text = "\(actionText) (\(numReady)/\(2))"
+        self.readyLabel.text = "\(actionText) (\(numReady)/\(pm.teamPolicy.numPlayers))"
     }
     
     func acceptTouch(touch : UITouch){

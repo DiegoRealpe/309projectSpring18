@@ -115,7 +115,7 @@ class MatchMakingScene: SKScene {
     private func makeLobbySceneDataFunction(spr : SocketPacketResponder, playerNum : UInt8) -> (NSMutableDictionary) -> Void{
         
         return { (dict) -> Void in
-            
+            dict.setValue(TwoPlayerTeamPolicy(), forKey: UserDataKeys.teamPolicy.rawValue)
             dict.setValue(playerNum, forKey: UserDataKeys.playerNumber.rawValue)
             dict.setValue(self.tcpConn, forKey: UserDataKeys.managedTCPConnection.rawValue)
             dict.setValue(spr, forKey: UserDataKeys.socketPacketResponder.rawValue)

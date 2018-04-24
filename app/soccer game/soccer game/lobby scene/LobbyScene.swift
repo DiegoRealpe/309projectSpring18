@@ -31,9 +31,10 @@ class LobbyScene: SKScene {
         
         unpackTransitionDictionary()
         
-        self.pm = LobbyPlayerManager(scene : self)
-        self.rm = ReadyManager(scene: self, onReady: self.localPlayerReadied, onUnready: self.localPlayerUnreadied)
+        let tp = unpackTeamPolicy()
+        self.pm = LobbyPlayerManager(scene : self, teamPolicy: tp)
         
+        self.rm = ReadyManager(scene: self, onReady: self.localPlayerReadied, onUnready: self.localPlayerUnreadied, lpm : self.pm)
         self.quitLabel = self.childNode(withName: "Quit Label") as? SKLabelNode
         
         self.pm!.addPlayer(playerNumber: playerNumber , username: localUsername())
@@ -47,6 +48,7 @@ class LobbyScene: SKScene {
         DispatchQueue.main.sync {
             chatView = GameViewController.globalChatView
             print(chatView)
+            chatView.lpm = self.pm
             chatView.loadChat()
             chatView.isHidden = false
             chatView.textInput.delegate = chatView
@@ -206,5 +208,9 @@ class LobbyScene: SKScene {
         }else{
             return "Default Username"
         }
+    }
+    
+    private func unpackTeamPolicy() -> TeamPolicy {
+        return self.userData!.value(forKey: UserDataKeys.teamPolicy.rawValue) as! TeamPolicy
     }
 }

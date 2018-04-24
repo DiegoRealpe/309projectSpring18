@@ -73,3 +73,34 @@ class TwoPlayerTeamPolicy : TeamPolicy {
         return startingPositions[num]!
     }
 }
+
+class FourPlayerTeamPolicy : TeamPolicy {
+    private let color0 = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
+    private let color1 = #colorLiteral(red: 0.01680417731, green: 0.1983509958, blue: 1, alpha: 1)
+    var numPlayers = 4
+    
+    private let startingPositions = [ //I recognize that an array might be more efficient
+        0 : CGPoint(x: -100,y: 100), //but a dictionary better expresses the let's purpose
+        1 : CGPoint(x: 100,y: -100),
+        2 : CGPoint(x: -100,y: -100),
+        3 : CGPoint(x: 100,y: 100),
+        ]
+    
+    func teamNumber(forPlayer num: Int) -> Int {
+        return num%2 //odds are team 1
+    }
+    
+    func teamColor(forPlayer num: Int) -> UIColor {
+        let team = teamNumber(forPlayer: num)
+        return team == 0 ? color0 : color1
+    }
+    
+    func teamColor(forTeam team: Int) -> UIColor {
+        return team == 0 ? color0 : color1
+    }
+    
+    func startingPosition(forPlayer num: Int) -> CGPoint {
+        return startingPositions[num]!
+    }
+    
+}

@@ -33,6 +33,8 @@ class ChatView: UIView, UITableViewDataSource, UITextFieldDelegate {
     var onNewMessage: ( (String) -> () )?
     var onEmojiChange: ( (Int,String) -> () )?
     
+    var lpm : LobbyPlayerManager!
+    
     var size = 0
     static let defaultEmoji = "🐱"
     
@@ -176,8 +178,8 @@ class ChatView: UIView, UITableViewDataSource, UITextFieldDelegate {
     func addPlayer(playerNum : Int, username : String, emojiEditable : Bool){
         self.size += 1
         
-        let label = self.labelForPlayer(2 * playerNum)!//skip from 0 to 2 until we are ready for 4 players
-        let emoji = self.emojiForPlayer(2 * playerNum)!
+        let label = self.labelForPlayer(playerNum)!
+        let emoji = self.emojiForPlayer(playerNum)!
         
         label.isHidden = false
         label.text = username
@@ -211,7 +213,7 @@ class ChatView: UIView, UITableViewDataSource, UITextFieldDelegate {
     }
     
     func changeEmoji(playerNumber: Int,emoji: String){
-        self.emojiForPlayer(playerNumber * 2)?.text = emoji
+        self.emojiForPlayer(playerNumber)?.text = emoji
     }
     
     func allowEmojiInput(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool{
@@ -230,7 +232,7 @@ class ChatView: UIView, UITableViewDataSource, UITextFieldDelegate {
     func tellLobbySceneAboutEmojiChange(textField: UITextField,_ emoji : String){
         for i in 0..<4{
             if self.emojiForPlayer(i) == textField {
-                self.onEmojiChange?(i/2,emoji)
+                self.onEmojiChange?(i,emoji)
                 return
             }
         }
