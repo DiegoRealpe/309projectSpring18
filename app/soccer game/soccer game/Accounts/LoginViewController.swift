@@ -14,8 +14,10 @@ import Alamofire
 
 class LoginViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFieldDelegate {
     
-    @IBOutlet weak var ChooseNicknameView: UIView!
+    @IBOutlet weak var chooseNicknameView: UIView!
     @IBOutlet weak var nicknameInput: UITextField!
+
+    var registerRequestInProgress = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,6 +89,7 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFie
     {
         
         print("🍆🍆🍆status code",response.response!.statusCode) //todo handle 404 without it being a fatal error
+        print("response was",try! response.result.unwrap())
         
         if(response.response!.statusCode == 202)
         {
@@ -117,10 +120,15 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFie
     }
     
     func showCreateAccountView(){
-        self.ChooseNicknameView.isHidden = false
+        self.chooseNicknameView.isHidden = false
     }
     
     @IBAction func nicknameButtonPressed(){
+        guard !registerRequestInProgress else{
+            return
+        }
+        registerRequestInProgress = true
+        
         print("nickname submit button pressed")
         createAccount(FBToken: AccessToken.current!.authenticationToken, nickname: self.nicknameInput.text!)
     }
@@ -152,6 +160,7 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFie
     func createAccountResponse(_ response : DataResponse<String>)
     {
         print("💌💌💌status code",response.response!.statusCode)
+        print("response was",try! response.result.unwrap())
         
         if(response.response!.statusCode == 201)
         {
@@ -181,11 +190,14 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFie
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
+        self.chooseNicknameView.frame.origin.y += 100
         return false
     }
     
-    func keyboardWillShow(){
-        print("keyboard showed")
+    @IBAction func editingBegan(_ sender: UITextField) {
+        print("EDDITTTTTIIINNNNGGGGG began")
+        self.chooseNicknameView.frame.origin.y -= 100
     }
+
 
 }
