@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"encoding/json"
 	"io/ioutil"
+	"bytes"
 )
 
 type clientConnection struct {
@@ -18,8 +19,9 @@ type clientConnection struct {
 }
 
 type connectionPlayerInfo struct {
+	apptoken int
 	Id string `json:"id"`
-	Username string `json:"nickname"`
+	Nickname string `json:"nickname"`
 	Gamesplayed string `json:"gamesplayed"`
 	Gameswon string `json:"gameswon"`
 	Goalsscored string `json:"goalsscored"`
@@ -76,7 +78,7 @@ func (portHttpController *portHttpController) handlePortRequested(w http.Respons
 
 		ln.Close()// close connection so no new connections are accepted after player has quit
 
-		fmt.Println("New connection from: " + connClient.playerInfo.Username)
+		fmt.Println("New connection from: " + connClient.playerInfo.Nickname)
 
 		portHttpController.connPasser <- connClient
 	}(apptoken)
@@ -86,6 +88,7 @@ func (portHttpController *portHttpController) handlePortRequested(w http.Respons
 
 func checkTokenWithCrudService(internlToken int64) (connectionPlayerInfo, int) {
 	Info := connectionPlayerInfo{}
+	Info.apptoken = int(internlToken)
 	client := http.Client{}
 	Error := 0
 	url := "http://proj-309-mg-6.cs.iastate.edu:8000/player/"
@@ -118,4 +121,33 @@ func checkTokenWithCrudService(internlToken int64) (connectionPlayerInfo, int) {
 	}
 
 	return Info, Error
+}
+
+func (g *Game) sendEndgameDataToCrud(winningTeam int){
+	url := "http://proj-309-mg-6.cs.iastate.edu:8000/player/"
+	for n, p := range g.players {
+		go func(p *playerConnection, n int) {
+			playerurl := url + strconv.Itoa(p.playerInfo.apptoken)
+			client := http.Client{}
+			if n <= 1 && winningTeam == 0{
+				newgameswon, _ := strconv.Atoi(p.playerInfo.Gameswon)
+				p.playerInfo.Gameswon = strconv.Itoa(newgameswon + 1)
+			}
+			if n > 1 && winningTeam == 1{
+				newgameswon, _ := strconv.Atoi(p.playerInfo.Gameswon)
+				p.playerInfo.Gameswon = strconv.Itoa(newgameswon + 1)
+			}
+			bod, _ := json.Marshal(p.playerInfo)
+			requestput, _ := http.NewRequest("PUT", playerurl, bytes.NewBuffer(bod))
+			requestput.Header.Set("AppUser", "MG_6")
+			requestput.Header.Set("AppSecret", "goingforthat#1bois")
+			requestput.Header.Set("Content-Type", "application/json")
+
+			resp, err := client.Do(requestput)
+			fmt.Println("Got response with code ", resp.StatusCode)
+			if err != nil {
+				panic(err)
+			}
+		}(p.connection, n)
+	}
 }

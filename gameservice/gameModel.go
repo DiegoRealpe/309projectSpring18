@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 )
 
 type GameOptions struct {
@@ -103,6 +104,10 @@ func (g *Game) respondTo130(in *PacketIn, sendOut func(PacketOut)){
 	packet130 := parseBytesTo130(in.data)
 
 	fmt.Println("player",packet130.scoringPlayer,"scores for team",packet130.scoringTeam)
+
+	newgoals, _ := strconv.Atoi(g.players[packet130.scoringPlayer].connection.playerInfo.Goalsscored)
+
+	g.players[packet130.scoringPlayer].connection.playerInfo.Goalsscored = strconv.Itoa(newgoals + 1)
 
 	if packet130.scoringTeam == 0 {
 		g.scoreboard.team0++
@@ -246,10 +251,12 @@ func (g *Game) endGameIfScoreLimitReached(sendOut func(out PacketOut)){
 	if g.scoreboard.team0 >= GOAL_LIMIT {
 		g.sendMessagePacket("Red Team Wins !!!",sendOut)
 		g.sendEndGamePacket(sendOut)
+		g.sendEndgameDataToCrud(0)
 		g.gameShouldEnd = true
 	}else if g.scoreboard.team1 >= GOAL_LIMIT {
 		g.sendMessagePacket("Blue Team Wins !!!",sendOut)
 		g.sendEndGamePacket(sendOut)
+		g.sendEndgameDataToCrud(1)
 		g.gameShouldEnd = true
 	}
 }
