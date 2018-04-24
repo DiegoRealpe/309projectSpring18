@@ -13,7 +13,7 @@ import(
 	"time"
 )
 
-const DEFAULT_EMOJI = "😘"
+const DEFAULT_EMOJI = "🐱"
 
 type Lobby struct{
 	players [NUMPLAYERS]lobbyPlayer
