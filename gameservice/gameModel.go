@@ -245,9 +245,11 @@ func (g *Game) haveAllPlayersPingedBack() bool{
 func (g *Game) endGameIfScoreLimitReached(sendOut func(out PacketOut)){
 	if g.scoreboard.team0 >= GOAL_LIMIT {
 		g.sendMessagePacket("Red Team Wins !!!",sendOut)
+		g.sendEndGamePacket(sendOut)
 		g.gameShouldEnd = true
 	}else if g.scoreboard.team1 >= GOAL_LIMIT {
 		g.sendMessagePacket("Blue Team Wins !!!",sendOut)
+		g.sendEndGamePacket(sendOut)
 		g.gameShouldEnd = true
 	}
 }
@@ -257,6 +259,15 @@ func (g *Game) sendMessagePacket(text string, sendOut func(out PacketOut)){
 	packetOut := PacketOut{
 		size: 81,
 		data: messagePacket.toBytes(),
+		targetIds: g.allConnectionIds(),
+	}
+	sendOut(packetOut)
+}
+
+func (g *Game) sendEndGamePacket(sendOut func(out PacketOut)){
+	packetOut := PacketOut{
+		size: 1,
+		data: []byte{141},
 		targetIds: g.allConnectionIds(),
 	}
 	sendOut(packetOut)
