@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	)
+	"time"
+)
 
 type gameController struct {
 	g               Game
@@ -36,6 +37,7 @@ func runGameController(gameOptions GameOptions, in <-chan PacketIn) {
 
 		//close lobby if game ended
 		if controller.g.gameShouldEnd {
+			time.Sleep(time.Second)
 			controller.freeAllPorts()
 			return
 		}
