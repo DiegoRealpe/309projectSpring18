@@ -57,6 +57,10 @@ type packet134 struct { //server sends a kick
 	playerNumber	uint8
 }
 
+type packet140 struct {
+	message string
+}
+
 type packet206 struct {
 	playerNumber int
 	username string
@@ -214,6 +218,17 @@ func (p packet131) toBytes() []byte {
 
 func (p packet134) toBytes() []byte {
 	return []byte{134,p.playerNumber}
+}
+
+func (p packet140) toBytes() []byte {
+	rawData := make([]byte, 81)
+
+	rawData[0] = 140
+
+	messageBytes := stringToUtf8Slice(p.message,80)
+	copy(rawData[1:81],messageBytes)
+
+	return rawData
 }
 
 func (p packet204) toBytes() []byte{

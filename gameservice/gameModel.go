@@ -16,6 +16,7 @@ type Game struct {
 	players [NUMPLAYERS]gamePlayer
 
 	scoreboard scoreboard
+	gameShouldEnd bool
 }
 
 type gamePlayer struct{
@@ -33,6 +34,8 @@ type scoreboard struct {
 	team0 int
 	team1 int
 }
+
+const GOAL_LIMIT = 5
 
 func (gOpts GameOptions) buildGame() (g Game) {
 	g.numPlayers = gOpts.numPlayers
@@ -119,6 +122,8 @@ func (g *Game) respondTo130(in *PacketIn, sendOut func(PacketOut)){
 		targetIds: g.allConnectionIds(),
 	}
 	sendOut(packetOut)
+
+	g.endGameIfScoreLimitReached(sendOut)
 }
 
 func (g *Game) respondTo133(in *PacketIn, sendOut func(PacketOut)){
@@ -236,12 +241,23 @@ func (g *Game) haveAllPlayersPingedBack() bool{
 	return true;
 }
 
-func (g *Game) makeStartGameFunction(sendOut func(PacketOut)) func() {
-	return func(){
-		g.sendReadyAndStarPackets(sendOut)
+
+func (g *Game) endGameIfScoreLimitReached(sendOut func(out PacketOut)){
+	if g.scoreboard.team0 >= GOAL_LIMIT {
+		g.sendMessagePacket("Red Team Wins !!!",sendOut)
+		g.gameShouldEnd = true
+	}else if g.scoreboard.team1 >= GOAL_LIMIT {
+		g.sendMessagePacket("Blue Team Wins !!!",sendOut)
+		g.gameShouldEnd = true
 	}
 }
 
-func (g *Game) sendReadyAndStarPackets(sendOut func(PacketOut)){
-	fmt.Println("sending ready to start packets")
+func (g *Game) sendMessagePacket(text string, sendOut func(out PacketOut)){
+	messagePacket := packet140{text}
+	packetOut := PacketOut{
+		size: 81,
+		data: messagePacket.toBytes(),
+		targetIds: g.allConnectionIds(),
+	}
+	sendOut(packetOut)
 }

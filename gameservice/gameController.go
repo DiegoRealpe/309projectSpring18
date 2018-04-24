@@ -34,7 +34,11 @@ func runGameController(gameOptions GameOptions, in <-chan PacketIn) {
 	for p := range in {
 		controller.respondToSinglePacket(&p)
 
-		//TODO we need to make sure goroutine ends
+		//close lobby if game ended
+		if controller.g.gameShouldEnd {
+			controller.freeAllPorts()
+			return
+		}
 	}
 }
 
@@ -55,7 +59,7 @@ func (controller *gameController) respondToSinglePacket(in *PacketIn) {
 
 //builds a map of packet types to handler functions
 func (controller *gameController) buildPacketMap() {
-	packetMap := map[byte]func(*PacketIn, func(PacketOut) ){}
+	packetMap := map[byte]func(*PacketIn, func(PacketOut)){}
 
 	packetMap[120] = controller.g.respondTo120
 	packetMap[123] = controller.g.respondTo123
@@ -75,6 +79,14 @@ func (controller *gameController) callHandlerFor(packetType byte, in *PacketIn) 
 		fmt.Println("ERROR : Packet did not have recognized type. type was", packetType)
 	} else {
 		handlerFunc(in, controller.disperser.send)
+	}
+}
+
+func (controller gameController) freeAllPorts() {
+	for _, v := range controller.g.players {
+		if v.isConnected {
+			v.connection.disconnect()
+		}
 	}
 }
 
