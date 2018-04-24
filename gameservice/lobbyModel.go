@@ -46,7 +46,7 @@ func (l *Lobby) addPlayer(newPlayer *waitingPlayer, sendOut func(PacketOut)){
 
 	l.players[i] = lobbyPlayer{
 		ready: false,
-		username : "∆∆∆™∆∆∆∆🐥🇺🇸語",
+		username : newPlayer.connection.playerInfo.Username,
 		emoji: DEFAULT_EMOJI,
 		connection: newPlayer.connection,
 	}
@@ -205,7 +205,7 @@ func (l *Lobby) sendAllCurrentEmojis(to chan<- PacketOut){
 func (l *Lobby) tellOtherPlayersYouJoined(player *waitingPlayer, sendOut func(PacketOut)){
 	packet := packet206{
 		playerNumber: l.playerNumberForConnectionID(player.connection.id),
-		username: "temp",
+		username: player.connection.playerInfo.Username,
 	}
 
 	packetOut := PacketOut{

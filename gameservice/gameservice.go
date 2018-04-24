@@ -13,6 +13,8 @@ type client struct {
 	writer     *bufio.Writer
 	clientNum  int
 	port int
+
+	playerInfo connectionPlayerInfo
 }
 
 const debug = true
@@ -48,6 +50,7 @@ func listenForConnections(connPasser <-chan clientConnection, matchMakingFunctio
 		client.writer = bufio.NewWriter(conn.connection)
 		client.clientNum = currentClientNumber
 		client.port = conn.port
+		client.playerInfo = conn.playerInfo
 
 		currentClientNumber++
 

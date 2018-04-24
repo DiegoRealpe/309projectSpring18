@@ -47,35 +47,36 @@ func (portHttpController *portHttpController) handlePortRequested(w http.Respons
 		return
 	}
 
-	usedport := requestPort()
-
-	stringport := strconv.Itoa(usedport)
-
 	token, _ := strconv.Atoi(r.Header.Get("AppToken"))
 
-	fmt.Println(token)
-
 	apptoken := int64(token)
+
+	connClient := clientConnection{}
+	Error := 0
+	connClient.playerInfo, Error = checkTokenWithCrudService(apptoken)
+
+	if Error == 1 {
+			fmt.Println("Invalid client")
+			return;
+	}
+
+	usedport := requestPort()
+	connClient.port = usedport
+
+	stringport := strconv.Itoa(usedport)
 
 	io.WriteString(w, stringport)
 
 	go func(apptoken int64) { //accept the first attempted connection on the port
 		ln, _ := net.Listen("tcp", ":"+stringport)
 
-		fmt.Println(apptoken)
-
 		conn, _ := ln.Accept()
+
+		connClient.connection = conn
 
 		ln.Close()// close connection so no new connections are accepted after player has quit
 
-		connClient := clientConnection{
-			connection: conn,
-			port:				usedport,
-		}
-
-		connClient.playerInfo = checkTokenWithCrudService(apptoken)
-
-		fmt.Println("nick:" + connClient.playerInfo.Username)
+		fmt.Println("New connection from: " + connClient.playerInfo.Username)
 
 		portHttpController.connPasser <- connClient
 	}(apptoken)
@@ -83,13 +84,13 @@ func (portHttpController *portHttpController) handlePortRequested(w http.Respons
 }
 
 
-func checkTokenWithCrudService(internlToken int64) connectionPlayerInfo {
+func checkTokenWithCrudService(internlToken int64) (connectionPlayerInfo, int) {
 	Info := connectionPlayerInfo{}
 	client := http.Client{}
+	Error := 0
 	url := "http://proj-309-mg-6.cs.iastate.edu:8000/player/"
 	strtoken:= strconv.Itoa(int(internlToken))
 	url = url + strtoken
-	fmt.Println(url)
 	request, _ := http.NewRequest("GET", url, nil)
 	request.Header.Set("ApplicationToken", strconv.Itoa(int(internlToken)))
 	request.Header.Set("AppUser", "MG_6")
@@ -101,6 +102,12 @@ func checkTokenWithCrudService(internlToken int64) connectionPlayerInfo {
 		panic(err)
 	}
 
+	fmt.Println("Got response with status code", resp.StatusCode)
+
+	if resp.StatusCode != 200{
+		Error = 1
+	}
+
 	bodyByte, _ := ioutil.ReadAll(resp.Body)
 
 	fmt.Println(resp.Body)
@@ -110,5 +117,5 @@ func checkTokenWithCrudService(internlToken int64) connectionPlayerInfo {
 		panic(err3)
 	}
 
-	return Info
+	return Info, Error
 }
