@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"unicode/utf8"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -27,7 +28,7 @@ func (a *App) registerPlayer(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusBadRequest, "Invalid request body")
 		return
 	}
-	nickLength := len(p.Nickname)
+	nickLength := utf8.RuneCountInString(p.Nickname)
 	if nickLength > 15 || nickLength < 1 {
 		respondWithError(w, http.StatusNotImplemented, "Nickname Length Error")
 		return
