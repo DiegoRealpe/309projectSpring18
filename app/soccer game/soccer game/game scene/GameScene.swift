@@ -84,8 +84,6 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         configurePacketResponder()
         
         kickButton = KickButton(scene: self)
-        
-        notifier.displayMessage("Hello")
     }
     
     func configurePlayerManager(){
@@ -224,7 +222,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     private func touchBegins(_ touch : UITouch) {
         let position = touch.location(in: self)
         
-        if self.joyStick == nil && (isInBottomLeftQuadrant(_ : touch) || true) {
+        if self.joyStick == nil {
             self.joyStick = Joystick(parent : self, radius : self.joystickRadius, touch : touch)
         }
         if self.kickButton.contains(position){
@@ -334,8 +332,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         
-        //unwrap joystick
-        if let js = self.joyStick{
+        if let js = joyStick {
             js.acceptTouchMoved(touches: touches)
             
             //capture and react to joystick position
@@ -385,6 +382,8 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
         self.packetTypeDict[127] = PacketType(dataSize: 1, handlerFunction: executeHostAssignmentPacket(data:))
         self.packetTypeDict[131] = PacketType(dataSize: 4, handlerFunction: executeScoreUpdatePacket(data:))
         self.packetTypeDict[134] = PacketType(dataSize: 2, handlerFunction: executeKickPacket(data:))
+        self.packetTypeDict[140] = PacketType(dataSize: 81, handlerFunction: executeMessagePacket(data:))
+        self.packetTypeDict[141] = PacketType(dataSize: 1, handlerFunction: executeEndGamePacket(data:))
     }
     
     func executePlayerPositionPacket(data : [UInt8]){
@@ -522,6 +521,26 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
             self.ballNode.physicsBody!.velocity = .zero
             self.ballNode.physicsBody!.angularVelocity = 0.0
         }
+    }
+    
+    func executeMessagePacket(data : [UInt8]){
+        let messagePacket = ServerMessagePacket(data: data)
+        
+        self.notifier.displayMessage(messagePacket.message)
+    }
+    
+    func executeEndGamePacket(data : [UInt8]){
+        let endAction = SKAction.run {
+            //if tcp connection exists, disconnect from server
+            if let mtcp = self.managedTcpConnection {
+                mtcp.sendTCP(data: [125]) //send packet to disconnect
+                mtcp.stop()
+            }
+            
+            self.moveToScene(.mainMenu)
+        }
+        let endSequence = SKAction.sequence([SKAction.wait(forDuration: 1.0),endAction])
+        self.run(endSequence)
     }
     
 }

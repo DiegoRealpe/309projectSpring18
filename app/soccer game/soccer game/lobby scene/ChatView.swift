@@ -124,6 +124,7 @@ class ChatView: UIView, UITableViewDataSource, UITextFieldDelegate {
         textInput.text = ""
         
         self.onNewMessage?(text)
+        self.endEditing(true)
     }
     
     func addRemoteMessage(_ message : String, from : String){
@@ -234,6 +235,19 @@ class ChatView: UIView, UITableViewDataSource, UITextFieldDelegate {
             }
         }
     }
+    
+    @IBAction func editingBegan(_ sender: Any) {
+        print("editing began")
+        self.textInput.frame.origin.y -= 100
+        self.sendButton.frame.origin.y -= 100
+    }
+    
+    @IBAction func editingEnded(_ sender: Any) {
+        print("editing ended")
+        self.textInput.frame.origin.y += 100
+        self.sendButton.frame.origin.y += 100
+    }
+    
 }
 
 struct ChatMessage{

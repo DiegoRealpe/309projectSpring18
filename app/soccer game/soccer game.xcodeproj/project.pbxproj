@@ -56,6 +56,7 @@
 		3ADAD6E6207EA71A005C94C8 /* EmojiTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADAD6E5207EA71A005C94C8 /* EmojiTextField.swift */; };
 		3ADAD6EA20800074005C94C8 /* OutgoingEmojiChangedPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADAD6E920800073005C94C8 /* OutgoingEmojiChangedPacket.swift */; };
 		3ADAD6EC20800318005C94C8 /* IncomingEmojiChangedPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADAD6EB20800318005C94C8 /* IncomingEmojiChangedPacket.swift */; };
+		3AE5FBB5208EB8C100106E94 /* ServerMessagePacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AE5FBB4208EB8C100106E94 /* ServerMessagePacket.swift */; };
 		4C45B86F2045C37E00F717B7 /* FacebookCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C45B8672045C37400F717B7 /* FacebookCore.framework */; };
 		4C45B8702045C37E00F717B7 /* FacebookCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4C45B8672045C37400F717B7 /* FacebookCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4C45B8712045C37E00F717B7 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C45B8682045C37500F717B7 /* Alamofire.framework */; };
@@ -165,6 +166,7 @@
 		3ADAD6E5207EA71A005C94C8 /* EmojiTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiTextField.swift; sourceTree = "<group>"; };
 		3ADAD6E920800073005C94C8 /* OutgoingEmojiChangedPacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutgoingEmojiChangedPacket.swift; sourceTree = "<group>"; };
 		3ADAD6EB20800318005C94C8 /* IncomingEmojiChangedPacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomingEmojiChangedPacket.swift; sourceTree = "<group>"; };
+		3AE5FBB4208EB8C100106E94 /* ServerMessagePacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerMessagePacket.swift; sourceTree = "<group>"; };
 		4C45B8672045C37400F717B7 /* FacebookCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookCore.framework; sourceTree = "<group>"; };
 		4C45B8682045C37500F717B7 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Alamofire.framework; sourceTree = "<group>"; };
 		4C45B8692045C37600F717B7 /* FacebookLogin.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookLogin.framework; sourceTree = "<group>"; };
@@ -276,6 +278,7 @@
 				3AC8B6FB20893B980075C468 /* ServerBallKickedPacket.swift */,
 				3AB56A2A208ABFC300EC4462 /* ClientGoalScoredPacket.swift */,
 				3AB56A2C208B82EE00EC4462 /* ServerScoreUpdatePacket.swift */,
+				3AE5FBB4208EB8C100106E94 /* ServerMessagePacket.swift */,
 			);
 			path = packets;
 			sourceTree = "<group>";
@@ -538,6 +541,7 @@
 				3A3A5821205FFDB700E74D82 /* ServerPlayerStatePacket.swift in Sources */,
 				3A3A582C2063238500E74D82 /* ServerBallStatePacket.swift in Sources */,
 				4C98FBB7201E658600378614 /* AppDelegate.swift in Sources */,
+				3AE5FBB5208EB8C100106E94 /* ServerMessagePacket.swift in Sources */,
 				3A54756C20372C230082947E /* CommunicationProperties.swift in Sources */,
 				3A1987A520729FA000514B81 /* KickButton.swift in Sources */,
 				3ADAD6E0207E536B005C94C8 /* OutgoingChatMessagePacket.swift in Sources */,
@@ -715,7 +719,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = P72MR55P62;
+				DEVELOPMENT_TEAM = R4RLVQP887;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 					"$(inherited)",
@@ -724,7 +728,7 @@
 				INFOPLIST_FILE = "soccer game/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "edu.309.mg6.soccer-game-diego";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.309.mg6.soccer-game-ryan";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
@@ -738,7 +742,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = P72MR55P62;
+				DEVELOPMENT_TEAM = R4RLVQP887;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 					"$(inherited)",
@@ -747,7 +751,7 @@
 				INFOPLIST_FILE = "soccer game/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "edu.309.mg6.soccer-game-diego";
+				PRODUCT_BUNDLE_IDENTIFIER = "edu.309.mg6.soccer-game-ryan";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
