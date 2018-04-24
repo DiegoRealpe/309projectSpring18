@@ -164,7 +164,7 @@ class LoginViewController: UIViewController, FBSDKLoginButtonDelegate, UITextFie
         
         if(response.response!.statusCode == 201)
         {
-            moveToGameViewController()
+            sendCRUDServiceLoginRequest(FBToken: AccessToken.current!.authenticationToken)//TODO, actually parse request, dont be jank af
         }
         else
         {

@@ -128,8 +128,7 @@ class GamePlayerManager {
 
     func setToStartingPositions(){
         
-        let numPlayers = scene.isLocalGame() ? 1 : GameScene.maxPlayers
-        for i in 0..<numPlayers {
+        for i in 0..<teamPolicy.numPlayers {
             players[i].node.position = teamPolicy.startingPosition(forPlayer: i)
             players[i].node.physicsBody!.velocity = .zero
         }

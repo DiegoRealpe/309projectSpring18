@@ -14,7 +14,6 @@ import AudioToolbox
 
 class GameScene: SKScene , SKPhysicsContactDelegate {
     
-    static let maxPlayers = 2
     static let maxKickDistance : Float = 80.0
     
     let movementSpeed = 100.0
@@ -32,7 +31,7 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     var redTeamScore: SKLabelNode!
     var blueTeamScore:SKLabelNode!
     var scoreBoard:ScoreBoard!
-    let forceUpdateWaits = 1
+    let forceUpdateWaits = 20
     
     var waitsSinceLastPlayerUpdate = 0
     var waitsSinceLastBallUpdate = 0

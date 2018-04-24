@@ -33,7 +33,7 @@ class ReadyManager{
         let actionText = currentPlayerReady ? "I'm not ready 😡" : "Ready Up"
         self.readyLabel.fontColor = currentPlayerReady ? UIColor.red : UIColor.green
         
-        self.readyLabel.text = "\(actionText) (\(numReady)/\(GameScene.maxPlayers))"
+        self.readyLabel.text = "\(actionText) (\(numReady)/\(2))"
     }
     
     func acceptTouch(touch : UITouch){

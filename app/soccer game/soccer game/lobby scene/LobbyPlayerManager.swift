@@ -11,7 +11,7 @@ import SpriteKit
 
 class LobbyPlayerManager{
 
-    var players : [PlayerInfo?] = Array(repeating: nil, count: GameScene.maxPlayers)
+    var players : [PlayerInfo?] = Array(repeating: nil, count: 2)
     var scene : SKScene
     
     init(scene : SKScene){
@@ -52,7 +52,7 @@ struct PlayerInfo{
 }
 
 class PlayerExport {
-    var players : [PlayerInfo?] = Array(repeating: nil, count: GameScene.maxPlayers)
+    var players : [PlayerInfo?] = Array(repeating: nil, count: 2)
     
     init(players : [PlayerInfo?]){
         self.players = players
