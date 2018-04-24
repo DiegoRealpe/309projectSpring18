@@ -189,7 +189,7 @@ class LobbyScene: SKScene {
     
     func makeGameSceneTransitionDisctionary(dict: NSMutableDictionary){
         var playerImport = GameScenePlayerImport(players: [])
-        for i in 0..<2 {
+        for i in 0..<self.pm.teamPolicy.numPlayers {
             let player = self.pm.export(playerNum: i)
             playerImport.players.append(player)
         }
@@ -198,7 +198,7 @@ class LobbyScene: SKScene {
         dict.setValue(self.playerNumber, forKey: UserDataKeys.playerNumber.rawValue)
         dict.setValue(self.mtcp, forKey: UserDataKeys.managedTCPConnection.rawValue)
         dict.setValue(self.spr, forKey: UserDataKeys.socketPacketResponder.rawValue)
-        dict.setValue(TwoPlayerTeamPolicy(), forKey: UserDataKeys.teamPolicy.rawValue)
+        dict.setValue(self.pm.teamPolicy, forKey: UserDataKeys.teamPolicy.rawValue)
         
     }
     

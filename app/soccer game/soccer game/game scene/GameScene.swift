@@ -58,6 +58,9 @@ class GameScene: SKScene , SKPhysicsContactDelegate {
     static let leftGoalCategory:UInt32 = 0b1 << 3;
     static let rightGoalCategory:UInt32 = 0b1 << 4;
     
+    var lastTeam0Touch = 0
+    var lastTeam1Touch = 1
+    
     override func didMove(to view: SKView) {
         print("moved to game scene")
         
