@@ -133,7 +133,9 @@ func (g *Game) respondTo130(in *PacketIn, sendOut func(PacketOut)){
 
 func (g *Game) respondTo133(in *PacketIn, sendOut func(PacketOut)){
 
-	fmt.Println("recieved 133 (kicked ball) packet")
+	if debug{
+		fmt.Println("recieved 133 (kicked ball) packet")
+	}
 
 	playerNumber := g.connectionIDToPlayerNumberMap[in.connectionId]
 
@@ -158,7 +160,9 @@ func (g *Game) respondTo138(in *PacketIn, sendOut func(PacketOut)){
 
 
 func (g *Game) respondTo125(in *PacketIn, sendOut func(PacketOut)){
-	fmt.Println("recieved 125 packet...")
+	if debug{
+		fmt.Println("recieved 125 packet...")
+	}
 	disconnectingPlayer := g.connectionIDToPlayerNumberMap[in.connectionId]
 
 	fmt.Println("Player", disconnectingPlayer, "has disconnected",)

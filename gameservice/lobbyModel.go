@@ -13,7 +13,7 @@ import(
 	"time"
 )
 
-const DEFAULT_EMOJI = "😘"
+const DEFAULT_EMOJI = "🐱"
 
 type Lobby struct{
 	players [NUMPLAYERS]lobbyPlayer
@@ -266,7 +266,9 @@ func (l *Lobby) sendExistingPlayersReady(out chan PacketOut) {
 }
 
 func (l *Lobby) respondTo125(in *PacketIn, sendOut func(PacketOut) ){
-	fmt.Println("125, AHHHHHHHHHH")
+	if debug {
+		fmt.Println("125, AHHHHHHHHHH")
+	}
 
 	packetOut := PacketOut{
 		size: 2,
