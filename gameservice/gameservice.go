@@ -17,7 +17,7 @@ type client struct {
 	playerInfo connectionPlayerInfo
 }
 
-const debug = true
+const debug = false
 
 const NUMPLAYERS = 2
 
