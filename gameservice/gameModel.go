@@ -118,7 +118,7 @@ func (g *Game) respondTo130(in *PacketIn, sendOut func(PacketOut)){
 	packet131 := packet131{
 		team1Score: byte(g.scoreboard.team0),
 		team2score: byte(g.scoreboard.team1),
-		lastScoringPlayer: 0,
+		lastScoringPlayer: packet130.scoringPlayer,
 	}
 
 	packetOut := PacketOut{
