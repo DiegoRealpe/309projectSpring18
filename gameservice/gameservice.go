@@ -13,6 +13,8 @@ type client struct {
 	writer     *bufio.Writer
 	clientNum  int
 	port int
+
+	playerInfo connectionPlayerInfo
 }
 
 const debug = false
@@ -24,19 +26,17 @@ func main() {
 	fmt.Println("starting game service!")
 	initPortService()
 
-	//ports = []int{6001, 6002, 6003, 6004, 6005, 6006, 6007, 6008, 6009, 6010, 6011, 6012} //todo: make a staic function with static variables for this
-
 	portHttpController := makePortHttpController()
 
-	matchMakingController := makeMatchmakingController()
+	matchMakingFunction := startMatchmakingController()
 
-	go listenForConnections(portHttpController.connPasser,matchMakingController)
+	go listenForConnections(portHttpController.connPasser,matchMakingFunction)
 
 	//start listening for http
 	startHttpServer(portHttpController)
 }
 
-func listenForConnections(connPasser <-chan clientConnection, matchMakingController matchMakingController) {
+func listenForConnections(connPasser <-chan clientConnection, matchMakingFunction func(connection *playerConnection)) {
 	fmt.Println("listening for connections")
 
 	currentClientNumber := 0
@@ -50,12 +50,13 @@ func listenForConnections(connPasser <-chan clientConnection, matchMakingControl
 		client.writer = bufio.NewWriter(conn.connection)
 		client.clientNum = currentClientNumber
 		client.port = conn.port
+		client.playerInfo = conn.playerInfo
 
 		currentClientNumber++
 
 		playerConnection := MakePlayerConnection(client,nil)
 
-		matchMakingController.addConnectionToPool(playerConnection)
+		matchMakingFunction(playerConnection)
 	}
 }
 

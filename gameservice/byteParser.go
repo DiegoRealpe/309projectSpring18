@@ -42,10 +42,55 @@ type packet124 struct {
 	timestamp         float32
 }
 
-type packet125 struct {
-	playerNumber			uint8
+type packet130 struct {
+	scoringPlayer uint8
+	scoringTeam uint8
 }
 
+type packet131 struct {
+	team1Score uint8
+	team2score uint8
+	lastScoringPlayer uint8
+}
+
+type packet134 struct { //server sends a kick
+	playerNumber	uint8
+}
+
+type packet140 struct {
+	message string
+}
+
+type packet206 struct {
+	playerNumber int
+	username string
+}
+
+type packet202 struct {//client sends a message in chat.
+	message					string
+}
+
+type packet203 struct {//server broadcasts a message to the rest of the clients
+	playerNumber			uint8
+	message					string
+}
+
+type packet204 struct {//server informs clients that one client is ready.
+	numReady				uint8
+}
+
+type packet205 struct {//server informs clients that one clinet is no longer ready.
+	numUnready				uint8
+}
+
+type packet208 struct {//client changes Emojis
+	Emoji					string
+}
+
+type packet209 struct {//server sends emoji change
+	PlayerNumber			uint8
+	Emoji					string
+}
 
 //ParseBytesTo120 Takes array of bytes and parses to a clientpacket struct
 func ParseBytesTo120(rawData []byte) packet120 {
@@ -114,6 +159,17 @@ func (packet *packet124) toBytes() []byte {
 	return rawData
 }
 
+func (packet *packet206) toBytes() []byte {
+	rawData := make([]byte, 82)
+	rawData[0] = 206
+	rawData[1] = byte(packet.playerNumber)
+
+	messageBytes := stringToUtf8Slice(packet.username,80)
+	copy(rawData[2:81],messageBytes)
+
+	return rawData
+}
+
 func ParseBytesTo123(rawData []byte) packet123 {
 	if len(rawData) != 17 {
 		panic(rawData)
@@ -132,19 +188,89 @@ func ParseBytesTo123(rawData []byte) packet123 {
 	return resultPacket
 }
 
-func ParseBytesTo125(rawData []byte) packet125{
-	if len(rawData) != 2 {
+func parseBytesTo130(rawData []byte) packet130 {
+	return packet130{
+		scoringPlayer: rawData[1],
+		scoringTeam: rawData[2],
+	}
+}
+
+func ParseBytesTo208(rawData []byte) packet208{
+	if len(rawData) != 25 {
 		panic(rawData)
 	}
 
-	playerNumberByte := rawData[1]
+	string := utf8toString(rawData[1:24])
 
-	resultPacket := packet125{
-		playerNumber:			uint8(playerNumberByte),
+	return packet208{
+		Emoji: string,
 	}
-	return resultPacket
-
 }
+
+func (p packet131) toBytes() []byte {
+	return []byte{
+		131,
+		p.team1Score,
+		p.team2score,
+		p.lastScoringPlayer,
+	}
+}
+
+func (p packet134) toBytes() []byte {
+	return []byte{134,p.playerNumber}
+}
+
+func (p packet140) toBytes() []byte {
+	rawData := make([]byte, 81)
+
+	rawData[0] = 140
+
+	messageBytes := stringToUtf8Slice(p.message,80)
+	copy(rawData[1:81],messageBytes)
+
+	return rawData
+}
+
+func (p packet204) toBytes() []byte{
+	return []byte{204,p.numReady}
+}
+
+func (p packet205) toBytes() []byte{
+	return []byte{205,p.numUnready}
+}
+
+func ParseBytesTo202(rawData []byte) packet202 {
+	if len(rawData) != 401 {
+		panic(rawData)
+	}
+
+	return packet202{
+		message: utf8toString(rawData[1:401]),
+	}
+}
+
+func (p packet203) toBytes() []byte{
+	rawData := make([]byte, 402)
+	rawData[0] = 203
+	rawData[1] = p.playerNumber
+
+	messageBytes := stringToUtf8Slice(p.message,400)
+	copy(rawData[2:402],messageBytes)
+
+	return rawData
+}
+
+func (p packet209)  toBytes() []byte{
+	rawData := make([]byte, 26)
+	rawData[0] = 209
+	rawData[1] = p.PlayerNumber
+
+	emojiBytes := stringToUtf8Slice(p.Emoji,24)
+	copy(rawData[2:25],emojiBytes[0:23])
+
+	return rawData
+}
+
 
 //BytestoFloat32 Turns only a 4 byte slice into a float32 primitive
 func BytestoFloat32(input []byte) float32 {
@@ -162,4 +288,30 @@ func Float32toBytes(input float32) []byte {
 	binary.Write(&bytebuffer, binary.LittleEndian, input)
 
 	return bytebuffer.Bytes()
+}
+
+func stringToUtf8Slice(s string, length int) []byte{
+	if length < len(s){
+		return []byte{}
+	}
+
+	b := make([]byte,length)
+	for i:= 0 ; i < len(s); i++ {
+		b[i] = s[i]
+	}
+	return b
+}
+
+func utf8toString(slice []byte) string{
+	str := string(slice)
+
+
+	for i, v := range str{
+		if v == 0 {
+			str = string(str[:i])
+			break
+		}
+	}
+
+	return str
 }

@@ -13,7 +13,8 @@
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
-
+gameservice/gameservice
+crudservice/crudservice
 
 
 
@@ -58,6 +59,7 @@ xcuserdata/
 ## Playgrounds
 timeline.xctimeline
 playground.xcworkspace
+.idea/
 
 # Carthage
 #

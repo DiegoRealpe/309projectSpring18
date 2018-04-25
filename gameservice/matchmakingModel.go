@@ -2,138 +2,94 @@ package main
 
 import (
 	"fmt"
+	"sync"
 )
 
 //long lived struct that should always be its own goroutine, it is initialized as the entry point for new connections and, when
 //pairing is successful launches a game controller as a goroutine and sets the player connection to send packets there instead.
 type matchMakingModel struct {
-	waitingPlayers []waitingPlayer //should only be modified by pairing routine
-	waitingPlayerChan chan waitingPlayer
+	playerChan chan *waitingPlayer
+
+	openSpaces int
+	openSpacesMut sync.Mutex
+
+	disconnected map[int]bool
+	disconnectedMut sync.Mutex
 }
 
 type waitingPlayer struct {
 	connection *playerConnection
 }
 
-func startMatchmakingModel() matchMakingModel{
+func startMatchmakingModel() matchMakingModel {
 	fmt.Println("starting match making model")
 
-	mmm := matchMakingModel{}
-
-	mmm.waitingPlayers = getWaitingPlayerSLice()
-	mmm.waitingPlayerChan = make(chan waitingPlayer, 10)
-
-	//start listening on waiting player channel
-	go mmm.startPairingRoutine()
+	mmm := matchMakingModel{openSpaces:0}
+	mmm.playerChan = make(chan *waitingPlayer, 50)
+	mmm.disconnected = make(map[int]bool)
 
 	return mmm
 }
 
-//make slice with underlying array size 50 to hold players and decrease tha ammount of re-allocation
-func getWaitingPlayerSLice() []waitingPlayer {
-	var underlyingArray [50]waitingPlayer
-	return underlyingArray[0:0]
-}
 
-//currently called whenever a player enters the lobby
-func (mmm *matchMakingModel) tryToPair(){
+func (mmm *matchMakingModel) acceptPlayer(connection *playerConnection){
 
-	fmt.Println("trying to pair")
-	for len(mmm.waitingPlayers) >= NUMPLAYERS {
+	waitingPlayer := connectionToWaitingPlayer(connection)
 
-		//split waiting players into a slice of players joining the game and a slice of those not
-		gamePlayers := mmm.waitingPlayers[0:NUMPLAYERS]
-		mmm.waitingPlayers = mmm.waitingPlayers[NUMPLAYERS:]
+	fmt.Println("added player to matchmaking pool with connection number",connection.client.clientNum)
 
-		mmm.startGame(gamePlayers)
+	mmm.playerChan <- &waitingPlayer
+
+	mmm.openSpacesMut.Lock()
+	if mmm.openSpaces == 0{
+		go mmm.runNewLobby()
+		mmm.openSpaces = NUMPLAYERS
 	}
+	mmm.openSpacesMut.Unlock()
 }
 
-func (mmm *matchMakingModel) startPairingRoutine() {
-	for player := range mmm.waitingPlayerChan {
-
-		mmm.waitingPlayers = append(mmm.waitingPlayers,player)
-
-		mmm.tryToPair()
-	}
+func (mmm *matchMakingModel) runNewLobby(){
+	go startLobby(mmm)
 }
 
-func (mmm *matchMakingModel) startGame(players []waitingPlayer){
-	fmt.Println("starting mock game with players:")
-	for _, val := range players{
-		fmt.Println("***",val.connection.client.clientNum)
-	}
+//method may be called twice due to concurrency setup, should have no functional difference
+//between one call and 2
+func (mmm *matchMakingModel) disconnectPlayer(id int) {
+	if debug {fmt.Println("connection with id",id,"quit from matchmaking")}
 
-	gameOpts := GameOptions{numPlayers:NUMPLAYERS}
-	for i, p := range players {
-		gameOpts.players[i] = p.connection
-	}
-
-	gameOpts.connectionIDToPlayerNumberMap = makePlayerNumberMap(players)
-
-	packetOutChannel := startPacketOutDispersionWithPlayers(players)
-	packetInChannel := makePacketInChannelForAllPlayers(players)
-
-	go runGameController(gameOpts,packetInChannel,packetOutChannel)
-	send122PacketsToPlayers(players)
+	mmm.disconnectedMut.Lock()
+	mmm.disconnected[id] = true
+	mmm.disconnectedMut.Unlock()
 }
 
-//assigned sequentially
-func makePlayerNumberMap(players []waitingPlayer) map[int]byte {
-	m := make(map[int]byte )
-
-	for i, val := range players{
-		m[val.connection.id] = byte(i)
-	}
-
-	fmt.Println("map is",m)
-
-	return m
+func (mmm *matchMakingModel) connectionIdHasDisconnected(id int) bool{
+	mmm.disconnectedMut.Lock()
+	_ , existed := mmm.disconnected[id]
+	mmm.disconnectedMut.Unlock()
+	return existed
 }
 
 
-//builds a single channel which sends to all clients
-func startPacketOutDispersionWithPlayers(players []waitingPlayer) chan<- PacketOut{
+func (mmm *matchMakingModel) respondTo125(in *PacketIn) {
+	fmt.Println("recieved 125 packet...")
 
-	idDispersionMap := makeIDDispersionMap(players)
-
-	toDisperse := make(chan PacketOut,50)
-	go listenAndDispersePackets(idDispersionMap,toDisperse)
-
-	return toDisperse
+	mmm.disconnectPlayer(in.connectionId)
 }
 
-func makeIDDispersionMap(players []waitingPlayer) map[int]chan<- PacketOut{
-	m := make(map[int]chan<- PacketOut)
+func connectionToWaitingPlayer(connection *playerConnection) waitingPlayer {
+	rtn := waitingPlayer{}
 
-	for _, val := range players {
-		m[val.connection.id] = val.connection.packetOut
-	}
+	rtn.connection = connection
 
-	return m
+	return rtn
 }
 
-func makePacketInChannelForAllPlayers(players []waitingPlayer) <-chan PacketIn{
-	packetInChannel := make(chan PacketIn, 50)
-
-	for _, player :=  range players{
-		player.connection.SetNewPacketInChannel(packetInChannel)
-	}
-
-	return packetInChannel
+func (mmm *matchMakingModel) decrementOpenSpaces() {
+	mmm.decrementOpenSpacesBy(1)
 }
 
-//should be in line with player numbers because both were assigned sequentially from the same slice
-func send122PacketsToPlayers(players []waitingPlayer){
-	for num, player := range players{
-		send122PacketToPlayer(player,num)
-	}
-}
-
-func send122PacketToPlayer(player waitingPlayer,playerNum int){
-	packet := PacketOut{}
-	packet.size = 2
-	packet.data = []byte{122,byte(playerNum)}
-
-	player.connection.packetOut <- packet
+func (mmm *matchMakingModel) decrementOpenSpacesBy(by int) {
+	mmm.openSpacesMut.Lock()
+	mmm.openSpaces -= by
+	mmm.openSpacesMut.Unlock()
 }

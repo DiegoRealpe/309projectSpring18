@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A01A4302090FB28005958FE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A01A42F2090FB28005958FE /* LaunchScreen.storyboard */; };
 		3A0A8BD22038F1CE001E073A /* SwiftSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A0A8BD02038F1C7001E073A /* SwiftSocket.framework */; };
 		3A0A8BD32038F1CE001E073A /* SwiftSocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A0A8BD02038F1C7001E073A /* SwiftSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3A0C313E2038A4860011D18A /* UserDataKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0C313D2038A4860011D18A /* UserDataKeys.swift */; };
@@ -79,7 +80,6 @@
 		4C98FBBF201E658600378614 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C98FBBE201E658600378614 /* GameViewController.swift */; };
 		4C98FBC2201E658600378614 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C98FBC0201E658600378614 /* Main.storyboard */; };
 		4C98FBC4201E658700378614 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C98FBC3201E658700378614 /* Assets.xcassets */; };
-		4C98FBC7201E658700378614 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4C98FBC5201E658700378614 /* LaunchScreen.storyboard */; };
 		4C98FBD2201E658700378614 /* soccer_gameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C98FBD1201E658700378614 /* soccer_gameTests.swift */; };
 		4CC91D9E20339BA700FB9236 /* NewAccountOrLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC91D9D20339BA700FB9236 /* NewAccountOrLogin.swift */; };
 		4CED0622203775D100B8F603 /* ClientPlayerStatePacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CED0621203775D000B8F603 /* ClientPlayerStatePacket.swift */; };
@@ -118,6 +118,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3A01A42F2090FB28005958FE /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3A0A8BD02038F1C7001E073A /* SwiftSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SwiftSocket.framework; sourceTree = "<group>"; };
 		3A0C313D2038A4860011D18A /* UserDataKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataKeys.swift; sourceTree = "<group>"; };
 		3A1987A420729FA000514B81 /* KickButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KickButton.swift; sourceTree = "<group>"; };
@@ -182,7 +183,6 @@
 		4C98FBBE201E658600378614 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		4C98FBC1201E658600378614 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		4C98FBC3201E658700378614 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		4C98FBC6201E658700378614 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4C98FBC8201E658700378614 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4C98FBCD201E658700378614 /* soccer gameTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "soccer gameTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C98FBD1201E658700378614 /* soccer_gameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = soccer_gameTests.swift; sourceTree = "<group>"; };
@@ -373,9 +373,9 @@
 				4C98FBB6201E658600378614 /* AppDelegate.swift */,
 				4C98FBC0201E658600378614 /* Main.storyboard */,
 				4C98FBC3201E658700378614 /* Assets.xcassets */,
-				4C98FBC5201E658700378614 /* LaunchScreen.storyboard */,
 				4C98FBC8201E658700378614 /* Info.plist */,
 				3A74A608201FB90D00A1583F /* main menu */,
+				3A01A42F2090FB28005958FE /* LaunchScreen.storyboard */,
 			);
 			path = "soccer game";
 			sourceTree = "<group>";
@@ -491,6 +491,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A01A4302090FB28005958FE /* LaunchScreen.storyboard in Resources */,
 				3A219ECF203B7CEE00FABE0A /* Players.sks in Resources */,
 				3A2EFC5F206C25C900C7E36B /* LobbyScene.sks in Resources */,
 				3A74A5FC201E6C3E00A1583F /* MainMenu.sks in Resources */,
@@ -499,7 +500,6 @@
 				3A74A600201F7E1900A1583F /* MatchMakingScene.sks in Resources */,
 				4C98FBC4201E658700378614 /* Assets.xcassets in Resources */,
 				3A94062320699AEB0025D3B2 /* GameScene.sks in Resources */,
-				4C98FBC7201E658700378614 /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -593,14 +593,6 @@
 				4C98FBC1201E658600378614 /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		4C98FBC5201E658700378614 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				4C98FBC6201E658700378614 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
