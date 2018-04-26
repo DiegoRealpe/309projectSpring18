@@ -12,4 +12,4 @@ Running the app
 what you need:
 - XCode and a Mac
 - a server and GO
-- a mySql database (although another db would also work)
+- a Sql database (works with mysql by default)
