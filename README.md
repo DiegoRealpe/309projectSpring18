@@ -13,3 +13,7 @@ what you need:
 - XCode and a Mac
 - a server and GO
 - a Sql database (works with mysql by default)
+
+Switching to 4 player mode:
+- use app from branch fourPlayerApp
+- on gameservice set constant NUMPLAYERS in gameservice.go to 4
