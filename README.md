@@ -2,7 +2,7 @@
 Soccer game for iOS made with my teammates for Computer Science 309 at Iowa State. 
 
 Collaborators were:
-- Myself, Ryan Toepfer (iOS app, game service)
+- Ryan Toepfer (iOS app, game service)
 - Nolan Kim (game service)
 - Diego Realpe (crud service)
 - Mark Schwartz (iOS app)
